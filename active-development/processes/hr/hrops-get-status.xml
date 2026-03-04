@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="HROpsConsole - Get Status" type="process" folderId="Rjo4MzYyNzAx">
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="[AI] hrops-get-status" type="process" folderId="Rjo4MzYyNzAx">
   <bns:encryptedValues/>
   <bns:description>Returns a static system status message for the HR Ops Console and AI Agent</bns:description>
   <bns:object>

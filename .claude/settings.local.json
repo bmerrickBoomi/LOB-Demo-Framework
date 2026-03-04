@@ -22,7 +22,8 @@
       "Bash(pip3 install:*)",
       "Bash(pip3:*)",
       "Bash(identify:*)",
-      "Bash(convert:*)"
+      "Bash(convert:*)",
+      "Bash(do:*)"
     ]
   }
 }

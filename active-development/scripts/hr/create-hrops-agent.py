@@ -44,7 +44,7 @@ from dotenv import load_dotenv
 
 # ── locate .env (workspace root, two levels up from scripts/) ────────────────
 SCRIPT_DIR     = Path(__file__).resolve().parent
-WORKSPACE_ROOT = SCRIPT_DIR.parent.parent          # scripts → active-development → workspace root
+WORKSPACE_ROOT = SCRIPT_DIR.parent.parent.parent   # hr → scripts → active-development → workspace root
 env_path       = WORKSPACE_ROOT / ".env"
 if env_path.exists():
     load_dotenv(env_path)
@@ -55,7 +55,7 @@ else:
 
 # ── add agent-garden-api.py to path ─────────────────────────────────────────
 AGENT_GARDEN_SCRIPT = (
-    SCRIPT_DIR.parent.parent.parent   # scripts → active-development → workspace → ClaudeCode
+    SCRIPT_DIR.parent.parent.parent.parent   # hr → scripts → active-development → workspace → ClaudeCode
     / "boomi-agent-tool-pr-v2.2" / "tools" / "agent-garden-api.py"
 )
 
