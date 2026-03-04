@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="HROpsConsole - Get Integrations" type="process" folderId="Rjo4MzYyNzAx">
+  <bns:encryptedValues/>
+  <bns:description>Returns integration health cards for all 5 connected systems with error details and resolution guidance</bns:description>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="ac9db15f-9820-4284-ac89-673e0941bb8c">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Integration Health - All 5 Systems" x="321.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"integrations":[{"id":"INT-01","name":"Workday HRIS","status":"healthy","lastSync":"2024-03-01T14:30:00","errors":2,"impacted":3,"errors_list":[{"id":"ERR-001","type":"Field Mismatch","field":"Department","severity":"medium","employees":["E002","E006"],"msg":"Department value mismatch for employees E002, E006","resolution":"Verify department code mapping in Workday connector config. Update canonical source to HRIS."},{"id":"ERR-002","type":"Stale Record","field":"Status","severity":"critical","employees":["E015"],"msg":"Terminated employee E015 still Active status in downstream systems","resolution":"Trigger offboarding workflow for E015. Update status to Terminated in all downstream connectors."}]},{"id":"INT-02","name":"ADP Payroll","status":"error","lastSync":"2024-03-01T08:00:00","errors":4,"impacted":4,"errors_list":[{"id":"ERR-003","type":"Salary Discrepancy","field":"Salary","severity":"critical","employees":["E003"],"msg":"Salary mismatch for E003: HRIS=$95,000 vs Payroll=$92,000","resolution":"Verify correct salary with Finance. Update whichever system is incorrect. File payroll correction if overpay occurred."},{"id":"ERR-004","type":"Salary Discrepancy","field":"Salary","severity":"high","employees":["E009"],"msg":"Salary mismatch for E009: HRIS=$112,000 vs Payroll=$115,000","resolution":"Cross-reference last merit increase letter. Confirm whether payroll or HRIS reflects approved amount."},{"id":"ERR-005","type":"Active Record","field":"Status","severity":"critical","employees":["E015"],"msg":"Terminated employee E015 still active in payroll with salary record","resolution":"Immediate: deactivate payroll record for E015. Contact payroll administrator to void any pending payments."},{"id":"ERR-006","type":"Dept Mismatch","field":"Department","severity":"medium","employees":["E002"],"msg":"Department code ADP:Marketing_Ops vs HRIS:Marketing for E002","resolution":"Standardize department codes. ADP code should match HRIS master. Update ADP department mapping table."}]},{"id":"INT-03","name":"Benefitfocus","status":"warning","lastSync":"2024-03-01T06:00:00","errors":2,"impacted":2,"errors_list":[{"id":"ERR-007","type":"Enrollment Gap","field":"Enrollment Status","severity":"high","employees":["E003"],"msg":"E003 shows unenrolled in benefits but HRIS indicates active employee","resolution":"Confirm if E003 waived benefits or enrollment failed. If waiver, document. If failure, trigger re-enrollment."},{"id":"ERR-008","type":"COBRA Required","field":"COBRA Status","severity":"critical","employees":["E015"],"msg":"E015 terminated - COBRA notification letter not generated","resolution":"Generate COBRA election notice immediately. Deadline: 44 days from termination date Feb 28."}]},{"id":"INT-04","name":"Lattice Performance","status":"healthy","lastSync":"2024-03-01T12:00:00","errors":1,"impacted":1,"errors_list":[{"id":"ERR-009","type":"Stale Review","field":"Review Date","severity":"medium","employees":["E003"],"msg":"E003 last review date Aug 2023 - over 6 months without review","resolution":"Schedule performance review with manager Sarah Kim. Update Lattice review cycle settings."}]},{"id":"INT-05","name":"Glint Engagement","status":"healthy","lastSync":"2024-02-28T23:00:00","errors":0,"impacted":0,"errors_list":[]}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="547.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" userlabel="Return Integrations JSON" x="572.0" y="94.0">
+          <configuration>
+            <returndocuments label="Return Integrations JSON"/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" componentId="797a2b7a-2639-4c81-bf48-743ef885bb61" folderId="Rjo4MzQ0NzY3" name="Hello World" type="process" version="">
+  <bns:encryptedValues/>
+  <bns:description/>
+  <bns:object>
+    <process allowSimultaneous="false" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="48.0" y="46.0">
+          <configuration>
+            <noaction/>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="224.0" y="56.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Set Hello World payload" x="273.0" y="46.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>Hello, World!</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="449.0" y="56.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="notify_icon" name="shape3" shapetype="notify" userlabel="Log output" x="498.0" y="46.0">
+          <configuration>
+            <notify disableEvent="true" enableUserLog="false" perExecution="false" title="">
+              <notifyMessage>Hello World output: {1}</notifyMessage>
+              <notifyMessageLevel>INFO</notifyMessageLevel>
+              <notifyParameters>
+                <parametervalue key="1" valueType="current"/>
+              </notifyParameters>
+            </notify>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape3.dragpoint1" toShape="shape4" x="674.0" y="56.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="stop_icon" name="shape4" shapetype="stop" x="723.0" y="46.0">
+          <configuration>
+            <stop continue="true"/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

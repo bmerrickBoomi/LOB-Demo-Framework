@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="HROpsConsole - Get Notifications" type="process" folderId="Rjo4MzYyNzAx">
+  <bns:encryptedValues/>
+  <bns:description>Returns system notifications and alerts for HR Ops Console header bell</bns:description>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="59ff58dc-9e73-438b-ac09-94d210011c7b">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="System Notifications" x="321.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"unreadCount":4,"notifications":[{"id":"N001","title":"CRITICAL: Payroll Exception - Terminated Employee","msg":"Omar Hassan (E015) is still active in ADP Payroll post-termination.","time":"10 min ago","read":false,"severity":"critical","caseId":"C-2024-005"},{"id":"N002","title":"SLA Warning: C-2024-003 Due in 9 days","msg":"Pay discrepancy grievance for Jordan Williams approaching SLA deadline.","time":"1 hr ago","read":false,"severity":"high","caseId":"C-2024-003"},{"id":"N003","title":"COBRA Deadline: E015 - 44 days remaining","msg":"COBRA election notice must be sent within 44 days of Feb 28 termination.","time":"2 hrs ago","read":false,"severity":"high","employeeId":"E015"},{"id":"N004","title":"Manager Action Overdue: Mike Torres","msg":"Written statement for C-2024-001 was due March 5.","time":"3 hrs ago","read":false,"severity":"medium","caseId":"C-2024-001"},{"id":"N005","title":"Integration Sync Warning: ADP Payroll","msg":"4 errors detected in last ADP sync. 4 employees impacted.","time":"5 hrs ago","read":true,"severity":"medium","integrationId":"INT-02"}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="547.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" userlabel="Return Notifications JSON" x="572.0" y="94.0">
+          <configuration>
+            <returndocuments label="Return Notifications JSON"/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

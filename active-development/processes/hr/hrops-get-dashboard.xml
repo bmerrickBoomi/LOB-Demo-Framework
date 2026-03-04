@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="HROpsConsole - Get Dashboard" type="process" folderId="Rjo4MzYyNzAx">
+  <bns:encryptedValues/>
+  <bns:description>Returns KPI metrics, time saved estimates, and priority queue for HR Ops Console dashboard</bns:description>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="29338f4c-513d-4585-87b1-b6a78313e2b7">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Dashboard KPIs and Priority Queue" x="321.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"kpis":{"openCases":7,"criticalCases":2,"overdueManagerActions":4,"complianceAlerts":12,"syncErrors":9,"payrollExceptions":4,"retentionRisk":3},"timeSavedDefaults":{"hourlyRate":50,"baselineHours":7,"weeklyHoursSaved":3,"weeklyDollarSavings":150,"annualSavings":7800},"casesByStatus":[{"status":"Open","count":3},{"status":"Investigation","count":1},{"status":"Under Review","count":1},{"status":"Critical","count":1},{"status":"Approved","count":1}],"priorityQueue":[{"title":"Terminated Employee Active in Payroll","severity":"Critical","category":"Integration","dueDate":"2024-03-03","caseId":"C-2024-005"},{"title":"Pay Discrepancy Grievance SLA Approaching","severity":"Critical","category":"Case","dueDate":"2024-03-10","caseId":"C-2024-003"},{"title":"COBRA Notice Required - Omar Hassan","severity":"Critical","category":"Benefits","dueDate":"2024-04-13","employeeId":"E015"},{"title":"Deactivate payroll record for E015","severity":"Critical","category":"Task","dueDate":"2024-03-02","caseId":"C-2024-005"},{"title":"Audit payroll records 6 months - Jordan Williams","severity":"High","category":"Task","dueDate":"2024-03-05","caseId":"C-2024-003"},{"title":"Collect manager written statement","severity":"High","category":"Task","dueDate":"2024-03-05","caseId":"C-2024-001"},{"title":"Harassment Prevention Training Overdue - Patel","severity":"High","category":"Compliance","dueDate":"2024-01-31","employeeId":"E002"},{"title":"Safety Training Module 1 Overdue - Thompson","severity":"High","category":"Compliance","dueDate":"2024-01-15","employeeId":"E005"},{"title":"PIP Initiated - Derek Thompson","severity":"High","category":"Case","dueDate":"2024-04-01","caseId":"C-2024-006"},{"title":"ADP Salary Discrepancy - Jordan Williams","severity":"Critical","category":"Integration","dueDate":null,"employeeId":"E003"}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="547.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" userlabel="Return Dashboard JSON" x="572.0" y="94.0">
+          <configuration>
+            <returndocuments label="Return Dashboard JSON"/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

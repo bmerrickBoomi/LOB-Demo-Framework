@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="HROpsConsole - Get Tasks" type="process" folderId="Rjo4MzYyNzAx">
+  <bns:encryptedValues/>
+  <bns:description>Returns all open and completed tasks across ER cases for HR Ops Console</bns:description>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="0477f14a-d268-461b-a36d-dfbc56afae3e">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Tasks Across All Cases" x="321.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"tasks":[{"id":"T001","title":"Collect manager written statement","caseId":"C-2024-001","owner":"Mike Torres","due":"2024-03-05","done":false,"severity":"High","overdue":true},{"id":"T002","title":"Review attendance records from Workday","caseId":"C-2024-001","owner":"Sarah Reynolds","due":"2024-03-07","done":true,"severity":"Medium","overdue":false},{"id":"T003","title":"Coordinate return-to-work plan with manager","caseId":"C-2024-002","owner":"Amanda Foster","due":"2024-03-20","done":false,"severity":"Medium","overdue":false},{"id":"T004","title":"Audit payroll records for 6 months","caseId":"C-2024-003","owner":"Sarah Reynolds","due":"2024-03-05","done":false,"severity":"Critical","overdue":true},{"id":"T005","title":"Schedule Finance reconciliation meeting","caseId":"C-2024-003","owner":"Amanda Foster","due":"2024-03-07","done":false,"severity":"Critical","overdue":false},{"id":"T006","title":"Send escalation to manager James Wilson","caseId":"C-2024-004","owner":"Amanda Foster","due":"2024-03-05","done":false,"severity":"Medium","overdue":true},{"id":"T007","title":"Deactivate payroll record for E015","caseId":"C-2024-005","owner":"Payroll Team","due":"2024-03-02","done":false,"severity":"Critical","overdue":true},{"id":"T008","title":"Confirm benefits deprovisioning for E015","caseId":"C-2024-005","owner":"Amanda Foster","due":"2024-03-03","done":false,"severity":"High","overdue":true},{"id":"T009","title":"Draft PIP document with manager","caseId":"C-2024-006","owner":"Sarah Reynolds","due":"2024-03-08","done":false,"severity":"High","overdue":false},{"id":"T010","title":"Schedule weekly PIP check-ins","caseId":"C-2024-006","owner":"Mike Torres","due":"2024-03-10","done":false,"severity":"Medium","overdue":false}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="547.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" userlabel="Return Tasks JSON" x="572.0" y="94.0">
+          <configuration>
+            <returndocuments label="Return Tasks JSON"/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

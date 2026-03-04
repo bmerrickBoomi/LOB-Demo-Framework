@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="HROpsConsole - Get Employees Operation" type="connector-action" subType="wss" folderId="Rjo4MzYyNzAx">
+  <bns:encryptedValues/>
+  <bns:description>GET /ws/simple/getHrOpsEmployees - Returns the full employee list for HR Ops Console</bns:description>
+  <bns:object>
+    <Operation>
+      <Archiving directory="" enabled="false"/>
+      <Configuration>
+        <WebServicesServerListenAction inputType="none" objectName="hrOpsEmployees" operationType="GET" outputType="singledata" responseContentType="application/json"/>
+      </Configuration>
+      <Tracking><TrackedFields/></Tracking>
+      <Caching/>
+    </Operation>
+  </bns:object>
+</bns:Component>

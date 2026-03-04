@@ -1,0 +1,1789 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HR Operations Console</title>
+<style>
+:root {
+  --primary: #2563eb; --primary-dark: #1d4ed8; --primary-light: #dbeafe;
+  --success: #16a34a; --success-light: #dcfce7;
+  --warning: #d97706; --warning-light: #fef3c7;
+  --danger: #dc2626; --danger-light: #fee2e2;
+  --purple: #7c3aed; --purple-light: #ede9fe;
+  --bg: #f1f5f9; --surface: #ffffff; --surface2: #f8fafc;
+  --border: #e2e8f0; --border2: #cbd5e1;
+  --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+  --sidebar-w: 220px; --header-h: 56px; --ai-w: 320px;
+  --radius: 8px; --radius-sm: 4px;
+  --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,.1), 0 4px 6px rgba(0,0,0,.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;font-size:inherit}
+input,textarea,select{font-family:inherit;font-size:inherit}
+/* Layout */
+#app{display:grid;grid-template-columns:var(--sidebar-w) 1fr var(--ai-w);grid-template-rows:var(--header-h) 1fr;height:100vh;overflow:hidden}
+#header{grid-column:1/-1;grid-row:1;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 16px;gap:12px;z-index:100;box-shadow:var(--shadow)}
+#sidebar{grid-column:1;grid-row:2;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+#main{grid-column:2;grid-row:2;overflow-y:auto;padding:24px}
+#ai-panel{grid-column:3;grid-row:2;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+/* Header */
+.header-logo{font-size:16px;font-weight:700;color:var(--primary);white-space:nowrap;margin-right:8px}
+.header-logo span{color:var(--text3);font-weight:400;font-size:12px;margin-left:4px}
+.search-wrap{flex:1;max-width:360px;position:relative}
+.search-wrap input{width:100%;padding:7px 12px 7px 36px;border:1px solid var(--border);border-radius:var(--radius);background:var(--surface2);color:var(--text);outline:none;transition:.2s}
+.search-wrap input:focus{border-color:var(--primary);background:#fff}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none}
+.search-results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:200;max-height:280px;overflow-y:auto;display:none}
+.search-results.show{display:block}
+.search-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.search-item:hover{background:var(--surface2)}
+.search-item:last-child{border-bottom:none}
+.search-item .emp-name{font-weight:600;font-size:13px}
+.search-item .emp-meta{font-size:11px;color:var(--text3);margin-top:1px}
+.header-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:none;font-weight:500;transition:.2s;line-height:1}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{opacity:.9}
+.btn-success{background:var(--success);color:#fff}.btn-success:hover{opacity:.9}
+.icon-btn{background:none;border:none;padding:6px;border-radius:var(--radius-sm);color:var(--text2);position:relative;display:flex;align-items:center;justify-content:center}.icon-btn:hover{background:var(--surface2)}
+.notif-badge{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.notif-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:320px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:200;display:none}
+.notif-dropdown.show{display:block}
+.notif-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.notif-item{padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s}
+.notif-item:hover{background:var(--surface2)}
+.notif-item:last-child{border-bottom:none}
+.notif-title{font-weight:500;font-size:12px;margin-bottom:2px}
+.notif-time{font-size:11px;color:var(--text3)}
+/* Sidebar Nav */
+.nav-section{padding:8px 0}
+.nav-label{padding:6px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 16px;color:var(--text2);cursor:pointer;transition:.15s;border-radius:0;font-size:13px;font-weight:500}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;background:var(--danger);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700}
+.nav-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.user-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);background:var(--surface2)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.avatar-lg{width:48px;height:48px;font-size:18px}
+.user-info{flex:1;min-width:0}
+.user-name{font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-role{font-size:10px;color:var(--text3)}
+/* Cards & KPIs */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-title{font-size:20px;font-weight:700}
+.page-subtitle{font-size:12px;color:var(--text3);margin-top:2px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.kpi-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px}
+.kpi-value{font-size:28px;font-weight:800;line-height:1}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.kpi-trend{display:inline-flex;align-items:center;gap:3px;font-size:11px;font-weight:600;padding:2px 6px;border-radius:10px;margin-top:6px}
+.trend-up{background:var(--danger-light);color:var(--danger)}
+.trend-down{background:var(--success-light);color:var(--success)}
+.kpi-danger .kpi-value{color:var(--danger)}
+.kpi-warning .kpi-value{color:var(--warning)}
+.kpi-success .kpi-value{color:var(--success)}
+.kpi-primary .kpi-value{color:var(--primary)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:600}
+.card-body{padding:16px}
+/* Badges & Severity */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-danger{background:var(--danger-light);color:var(--danger)}
+.badge-warning{background:var(--warning-light);color:var(--warning)}
+.badge-success{background:var(--success-light);color:var(--success)}
+.badge-primary{background:var(--primary-light);color:var(--primary)}
+.badge-neutral{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.badge-purple{background:var(--purple-light);color:var(--purple)}
+.sev{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sev-critical{background:var(--danger)}
+.sev-high{background:var(--warning)}
+.sev-medium{background:#3b82f6}
+.sev-low{background:var(--text3)}
+/* Tables */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 12px;text-align:left;font-weight:600;color:var(--text2);border-bottom:2px solid var(--border);background:var(--surface2);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:var(--surface2)}
+tr:last-child td{border-bottom:none}
+.link{color:var(--primary);cursor:pointer;font-weight:500}.link:hover{text-decoration:underline}
+/* Filters */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filter-bar select,.filter-bar input{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;color:var(--text);outline:none;font-size:12px}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--primary)}
+/* Employee 360 */
+.emp-360-header{display:flex;align-items:flex-start;gap:16px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px}
+.emp-meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px}
+.emp-meta-item .label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px}
+.emp-meta-item .value{font-size:13px;font-weight:500}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.tab{padding:9px 16px;cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+.conf-indicator{display:inline-flex;align-items:center;gap:4px;font-size:11px;padding:2px 7px;border-radius:10px}
+.conf-match{background:#dcfce7;color:#16a34a}
+.conf-mismatch{background:#fee2e2;color:#dc2626}
+.conf-unknown{background:#f1f5f9;color:#64748b}
+/* Cases */
+.case-timeline{display:flex;flex-direction:column;gap:0}
+.timeline-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.timeline-item:last-child{border-bottom:none}
+.timeline-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px}
+.timeline-dot.system{background:var(--text3)}
+.timeline-dot.alert{background:var(--danger)}
+/* Progress */
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--primary);transition:.3s}
+/* Integration Cards */
+.int-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.int-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
+.int-card:hover{box-shadow:var(--shadow-md);border-color:var(--border2)}
+.int-card.selected{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-light)}
+.int-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.status-dot{width:8px;height:8px;border-radius:50%}
+.status-ok{background:var(--success)}.status-warn{background:var(--warning)}.status-error{background:var(--danger)}
+/* Time Saved Widget */
+.ts-widget{background:linear-gradient(135deg,#2563eb 0%,#7c3aed 100%);color:#fff;border-radius:var(--radius);padding:20px;margin-bottom:20px}
+.ts-title{font-size:14px;font-weight:700;opacity:.9;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.ts-controls{display:flex;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.ts-control label{display:block;font-size:11px;opacity:.8;margin-bottom:4px;font-weight:600}
+.ts-control input[type=range]{width:160px;accent-color:#fff}
+.ts-control .val{font-size:13px;font-weight:700}
+.ts-results{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.ts-result{background:rgba(255,255,255,.15);border-radius:var(--radius-sm);padding:12px;text-align:center}
+.ts-result .num{font-size:24px;font-weight:800;line-height:1}
+.ts-result .lbl{font-size:10px;opacity:.8;margin-top:3px}
+/* Priority Queue */
+.pq-item{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.pq-item:last-child{border-bottom:none}
+.pq-item:hover{background:var(--surface2);margin:0 -16px;padding:12px 16px}
+.pq-content{flex:1;min-width:0}
+.pq-title{font-weight:500;font-size:13px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pq-meta{font-size:11px;color:var(--text3)}
+.pq-due{font-size:11px;color:var(--danger);font-weight:600}
+/* Modals */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-lg);max-width:560px;width:100%;max-height:90vh;overflow-y:auto;animation:modalIn .18s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700}
+.modal-body{padding:20px}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px}
+.form-control{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:.2s;background:#fff}
+.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+select.form-control{cursor:pointer}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* AI Panel */
+.ai-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ai-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes ai-bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:2px 0}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--text3);display:inline-block;animation:ai-bounce 1.2s infinite ease-in-out}
+.ai-typing span:nth-child(1){animation-delay:-0.24s}.ai-typing span:nth-child(2){animation-delay:-0.12s}.ai-typing span:nth-child(3){animation-delay:0s}
+.ai-api-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:10px;margin-top:6px;font-weight:600;letter-spacing:.02em}
+.ai-api-badge.ok{background:var(--success-light);color:var(--success)}.ai-api-badge.err{background:#f1f5f9;color:var(--text3);border:1px solid var(--border)}
+.ai-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:90%;padding:9px 12px;border-radius:var(--radius);font-size:12px;line-height:1.5}
+.ai-msg.user{background:var(--primary);color:#fff;align-self:flex-end;border-bottom-right-radius:2px}
+.ai-msg.assistant{background:var(--surface2);color:var(--text);align-self:flex-start;border-bottom-left-radius:2px;border:1px solid var(--border)}
+.ai-msg.system{background:var(--warning-light);color:var(--warning);align-self:center;font-size:11px;text-align:center;font-style:italic;border-radius:10px}
+.ai-suggestions{padding:8px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.ai-sugg-label{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.ai-sugg-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;text-align:left;font-size:11px;color:var(--text2);cursor:pointer;transition:.15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai-sugg-btn:hover{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.ai-composer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0}
+.ai-composer textarea{width:100%;resize:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:12px;line-height:1.4;outline:none;min-height:64px;max-height:120px;background:var(--surface2)}
+.ai-composer textarea:focus{border-color:var(--primary);background:#fff}
+.ai-composer-actions{display:flex;align-items:center;justify-content:space-between;margin-top:6px}
+.ai-toggle{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--text3)}
+.toggle{position:relative;display:inline-block;width:28px;height:15px}
+.toggle input{opacity:0;width:0;height:0}
+.toggle-slider{position:absolute;cursor:pointer;inset:0;background:var(--border2);border-radius:15px;transition:.2s}
+.toggle input:checked + .toggle-slider{background:var(--primary)}
+.toggle-slider:before{position:absolute;content:"";height:11px;width:11px;left:2px;top:2px;background:#fff;border-radius:50%;transition:.2s}
+.toggle input:checked + .toggle-slider:before{left:15px}
+/* Skeleton */
+.skeleton{background:linear-gradient(90deg,var(--border) 25%,var(--surface2) 50%,var(--border) 75%);background-size:200% 100%;animation:shimmer 1.2s infinite;border-radius:var(--radius-sm)}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* Misc */
+.empty{text-align:center;padding:40px 20px;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:8px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.flex{display:flex}.flex-col{flex-direction:column}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:8px}.gap-3{gap:12px}.gap-4{gap:16px}
+.mt-1{margin-top:4px}.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}
+.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+.p-2{padding:8px}.p-3{padding:12px}.p-4{padding:16px}
+.text-sm{font-size:12px}.text-xs{font-size:11px}.text-lg{font-size:16px}.text-xl{font-size:20px}
+.fw-600{font-weight:600}.fw-700{font-weight:700}
+.text-muted{color:var(--text3)}.text-danger{color:var(--danger)}.text-success{color:var(--success)}.text-warning{color:var(--warning)}.text-primary{color:var(--primary)}
+.rounded{border-radius:var(--radius)}.border{border:1px solid var(--border)}
+.w-full{width:100%}
+.tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:11px;background:var(--surface2);border:1px solid var(--border);color:var(--text2);margin:1px}
+.divider{height:1px;background:var(--border);margin:12px 0}
+@media(max-width:1100px){:root{--ai-w:260px;--sidebar-w:190px}}
+@media(max-width:820px){
+  #app{grid-template-columns:0 1fr 0;grid-template-rows:var(--header-h) 1fr}
+  #sidebar{position:fixed;left:-100%;top:var(--header-h);height:calc(100vh - var(--header-h));width:220px;z-index:90;transition:.3s;border-right:1px solid var(--border)}
+  #sidebar.open{left:0}
+  #ai-panel{position:fixed;right:-100%;top:var(--header-h);height:calc(100vh - var(--header-h));width:300px;z-index:90;transition:.3s}
+  #ai-panel.open{right:0}
+  #main{grid-column:1/-1}
+}
+.error-detail-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:12px}
+.recon-row{display:grid;grid-template-columns:1fr 1fr auto;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)}
+.recon-row:last-child{border-bottom:none}
+.recon-label{font-size:11px;color:var(--text3);margin-bottom:2px;font-weight:600;text-transform:uppercase}
+.recon-val{font-size:13px;font-weight:500;padding:4px 8px;border-radius:4px}
+.val-keep{background:var(--success-light);color:var(--success)}
+.val-discard{background:var(--danger-light);color:var(--danger);text-decoration:line-through;opacity:.6}
+.val-conflict{background:var(--warning-light);color:var(--warning)}
+</style>
+</head>
+<body>
+<div id="app">
+<!-- Header -->
+<header id="header">
+  <button class="icon-btn" id="menu-toggle" title="Toggle Menu" style="display:none">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+  </button>
+  <div class="header-logo">HR Ops <span>Console</span></div>
+  <div class="search-wrap">
+    <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+    <input type="text" id="global-search" placeholder="Search employees, cases, IDs…" autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-primary btn-sm" id="create-btn">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Create
+    </button>
+    <div style="position:relative">
+      <button class="icon-btn" id="notif-btn" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-badge" id="notif-count">4</span>
+      </button>
+      <div class="notif-dropdown" id="notif-dropdown"></div>
+    </div>
+    <button class="icon-btn" id="ai-toggle-btn" title="Toggle AI Panel">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/><path d="M8 9h8M8 12h5M8 15h4"/></svg>
+    </button>
+  </div>
+</header>
+<!-- Sidebar -->
+<nav id="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Navigation</div>
+    <div class="nav-item" data-route="/dashboard"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
+    <div class="nav-item" data-route="/employees"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Employees</div>
+    <div class="nav-item" data-route="/cases"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>Cases<span class="nav-badge" id="cases-badge">5</span></div>
+    <div class="nav-item" data-route="/compliance"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>Compliance<span class="nav-badge" id="compliance-badge">3</span></div>
+    <div class="nav-item" data-route="/integrations"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Integrations</div>
+    <div class="nav-item" data-route="/reports"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Reports</div>
+    <div class="nav-item" data-route="/settings"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a9 9 0 0 1 0 14.14M4.93 4.93a9 9 0 0 0 0 14.14"/></svg>Settings</div>
+  </div>
+  <div class="nav-footer">
+    <div class="user-chip">
+      <div class="avatar">SR</div>
+      <div class="user-info"><div class="user-name">Sarah Reynolds</div><div class="user-role">HR Business Partner</div></div>
+    </div>
+  </div>
+</nav>
+<!-- Main -->
+<main id="main"></main>
+<!-- AI Panel -->
+<aside id="ai-panel">
+  <div class="ai-header">
+    <div class="ai-title"><span class="ai-dot"></span>AI Copilot</div>
+    <div style="display:flex;gap:4px">
+      <button class="icon-btn btn-sm" id="ai-clear" title="Clear chat" style="font-size:11px;padding:3px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text2)">Clear</button>
+    </div>
+  </div>
+  <div class="ai-messages" id="ai-messages"></div>
+  <div class="ai-suggestions" id="ai-suggestions"></div>
+  <div class="ai-composer">
+    <textarea id="ai-input" placeholder="Ask anything about your HR data…"></textarea>
+    <div class="ai-composer-actions">
+      <label class="ai-toggle"><label class="toggle"><input type="checkbox" id="ai-context-toggle" checked><span class="toggle-slider"></span></label>Use context</label>
+      <button class="btn btn-primary btn-sm" id="ai-send">Send</button>
+    </div>
+  </div>
+</aside>
+</div>
+<!-- Modals container -->
+<div id="modals"></div>
+<script>
+// ===================== SEED DATA =====================
+const SEED = {
+settings:{hourlyRate:50,baselineHours:7,persistence:false},
+employees:[
+  {id:'E001',name:'Marcus Chen',email:'m.chen@acme.com',dept:'Engineering',title:'Senior Engineer',manager:'Linda Park',location:'Austin, TX',status:'Active',startDate:'2019-03-12',salary:135000,riskLevel:'Low',
+   systems:{hris:{dept:'Engineering',salary:135000,manager:'Linda Park'},payroll:{dept:'Engineering',salary:135000,manager:'Linda Park'},benefits:{enrolled:true,plan:'PPO Gold'},performance:{lastReview:'2024-01-15',rating:4.2},engagement:{score:78}},
+   compliance:{training:['completed','completed','overdue'],acks:['signed','signed'],docs:'complete'},
+   notes:'Strong performer. Interested in Staff Engineer track.'},
+  {id:'E002',name:'Priya Patel',email:'p.patel@acme.com',dept:'Marketing',title:'Marketing Director',manager:'James Wilson',location:'New York, NY',status:'Active',startDate:'2020-07-22',salary:145000,riskLevel:'Medium',
+   systems:{hris:{dept:'Marketing',salary:145000,manager:'James Wilson'},payroll:{dept:'Marketing Ops',salary:145000,manager:'James Wilson'},benefits:{enrolled:true,plan:'HMO Silver'},performance:{lastReview:'2024-02-10',rating:3.8},engagement:{score:62}},
+   compliance:{training:['completed','overdue','overdue'],acks:['signed','missing'],docs:'incomplete'},
+   notes:'Dept name mismatch between HRIS and Payroll. Two overdue training items.'},
+  {id:'E003',name:'Jordan Williams',email:'j.williams@acme.com',dept:'Finance',title:'Financial Analyst',manager:'Sarah Kim',location:'Chicago, IL',status:'Active',startDate:'2021-11-05',salary:95000,riskLevel:'High',
+   systems:{hris:{dept:'Finance',salary:95000,manager:'Sarah Kim'},payroll:{dept:'Finance',salary:92000,manager:'Sarah Kim'},benefits:{enrolled:false,plan:null},performance:{lastReview:'2023-08-30',rating:2.9},engagement:{score:41}},
+   compliance:{training:['overdue','overdue','completed'],acks:['missing','missing'],docs:'incomplete'},
+   notes:'Salary discrepancy: HRIS $95k vs Payroll $92k. Low engagement score. Benefits not enrolled.'},
+  {id:'E004',name:'Amanda Foster',email:'a.foster@acme.com',dept:'HR',title:'HR Specialist',manager:'Sarah Reynolds',location:'Austin, TX',status:'Active',startDate:'2022-04-18',salary:78000,riskLevel:'Low',
+   systems:{hris:{dept:'HR',salary:78000,manager:'Sarah Reynolds'},payroll:{dept:'HR',salary:78000,manager:'Sarah Reynolds'},benefits:{enrolled:true,plan:'PPO Gold'},performance:{lastReview:'2024-03-01',rating:4.5},engagement:{score:85}},
+   compliance:{training:['completed','completed','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'Excellent compliance record. Lead for onboarding redesign project.'},
+  {id:'E005',name:'Derek Thompson',email:'d.thompson@acme.com',dept:'Sales',title:'Account Executive',manager:'Mike Torres',location:'Remote',status:'Active',startDate:'2020-01-15',salary:82000,riskLevel:'High',
+   systems:{hris:{dept:'Sales',salary:82000,manager:'Mike Torres'},payroll:{dept:'Sales',salary:82000,manager:'Mike Torres'},benefits:{enrolled:true,plan:'PPO Silver'},performance:{lastReview:'2023-12-01',rating:2.5},engagement:{score:35}},
+   compliance:{training:['overdue','completed','overdue'],acks:['signed','missing'],docs:'incomplete'},
+   notes:'Flight risk. Low performance and engagement. Manager coaching recommended.'},
+  {id:'E006',name:'Lisa Nguyen',email:'l.nguyen@acme.com',dept:'Engineering',title:'Product Manager',manager:'Linda Park',location:'San Francisco, CA',status:'Active',startDate:'2018-09-03',salary:155000,riskLevel:'Low',
+   systems:{hris:{dept:'Engineering',salary:155000,manager:'Linda Park'},payroll:{dept:'Product',salary:155000,manager:'Linda Park'},benefits:{enrolled:true,plan:'PPO Gold'},performance:{lastReview:'2024-01-28',rating:4.7},engagement:{score:88}},
+   compliance:{training:['completed','completed','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'Dept classification inconsistency (Eng vs Product). Otherwise excellent record.'},
+  {id:'E007',name:'Carlos Martinez',email:'c.martinez@acme.com',dept:'Operations',title:'Operations Analyst',manager:'Rosa Diaz',location:'Miami, FL',status:'Leave',startDate:'2021-06-14',salary:88000,riskLevel:'Medium',
+   systems:{hris:{dept:'Operations',salary:88000,manager:'Rosa Diaz'},payroll:{dept:'Operations',salary:88000,manager:'Rosa Diaz'},benefits:{enrolled:true,plan:'HMO Gold'},performance:{lastReview:'2024-02-15',rating:3.5},engagement:{score:55}},
+   compliance:{training:['completed','overdue','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'On FMLA leave since Feb 14. Return date March 30.'},
+  {id:'E008',name:'Stephanie Brown',email:'s.brown@acme.com',dept:'Legal',title:'Corporate Counsel',manager:'David Lee',location:'New York, NY',status:'Active',startDate:'2017-04-10',salary:195000,riskLevel:'Low',
+   systems:{hris:{dept:'Legal',salary:195000,manager:'David Lee'},payroll:{dept:'Legal',salary:195000,manager:'David Lee'},benefits:{enrolled:true,plan:'PPO Platinum'},performance:{lastReview:'2024-01-10',rating:4.8},engagement:{score:82}},
+   compliance:{training:['completed','completed','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'Tenured. Key contributor to compliance program.'},
+  {id:'E009',name:'Ryan O\'Connor',email:'r.oconnor@acme.com',dept:'Sales',title:'Sales Manager',manager:'Mike Torres',location:'Denver, CO',status:'Active',startDate:'2019-08-27',salary:112000,riskLevel:'Medium',
+   systems:{hris:{dept:'Sales',salary:112000,manager:'Mike Torres'},payroll:{dept:'Sales',salary:115000,manager:'Mike Torres'},benefits:{enrolled:true,plan:'PPO Silver'},performance:{lastReview:'2023-11-15',rating:3.6},engagement:{score:60}},
+   compliance:{training:['completed','completed','overdue'],acks:['signed','signed'],docs:'complete'},
+   notes:'Salary discrepancy: +$3k in payroll vs HRIS. One overdue certification.'},
+  {id:'E010',name:'Tanya Jackson',email:'t.jackson@acme.com',dept:'Customer Success',title:'CS Team Lead',manager:'Chris Park',location:'Austin, TX',status:'Active',startDate:'2020-11-30',salary:98000,riskLevel:'High',
+   systems:{hris:{dept:'Customer Success',salary:98000,manager:'Chris Park'},payroll:{dept:'CS',salary:98000,manager:'Chris Park'},benefits:{enrolled:true,plan:'HMO Silver'},performance:{lastReview:'2023-10-01',rating:3.0},engagement:{score:44}},
+   compliance:{training:['overdue','completed','overdue'],acks:['missing','signed'],docs:'incomplete'},
+   notes:'Flight risk indicators present. Benefits plan discrepancy minor.'},
+  {id:'E011',name:'Ben Okafor',email:'b.okafor@acme.com',dept:'Engineering',title:'DevOps Engineer',manager:'Linda Park',location:'Remote',status:'Active',startDate:'2022-09-01',salary:128000,riskLevel:'Low',
+   systems:{hris:{dept:'Engineering',salary:128000,manager:'Linda Park'},payroll:{dept:'Engineering',salary:128000,manager:'Linda Park'},benefits:{enrolled:true,plan:'PPO Gold'},performance:{lastReview:'2024-02-20',rating:4.3},engagement:{score:79}},
+   compliance:{training:['completed','completed','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'New hire onboarding fully complete. Strong remote contributor.'},
+  {id:'E012',name:'Natalie Cruz',email:'n.cruz@acme.com',dept:'Finance',title:'Senior Accountant',manager:'Sarah Kim',location:'Chicago, IL',status:'Active',startDate:'2016-02-08',salary:108000,riskLevel:'Low',
+   systems:{hris:{dept:'Finance',salary:108000,manager:'Sarah Kim'},payroll:{dept:'Finance',salary:108000,manager:'Sarah Kim'},benefits:{enrolled:true,plan:'PPO Platinum'},performance:{lastReview:'2024-03-05',rating:4.6},engagement:{score:81}},
+   compliance:{training:['completed','completed','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'Most tenured in Finance. Mentors junior team members.'},
+  {id:'E013',name:'Kevin Zhao',email:'k.zhao@acme.com',dept:'Engineering',title:'ML Engineer',manager:'Linda Park',location:'San Francisco, CA',status:'Active',startDate:'2023-01-23',salary:148000,riskLevel:'Medium',
+   systems:{hris:{dept:'Engineering',salary:148000,manager:'Linda Park'},payroll:{dept:'Engineering',salary:148000,manager:'Linda Park'},benefits:{enrolled:true,plan:'PPO Gold'},performance:{lastReview:'2024-01-05',rating:3.7},engagement:{score:66}},
+   compliance:{training:['completed','overdue','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'One overdue safety training. Otherwise on track.'},
+  {id:'E014',name:'Dana Willis',email:'d.willis@acme.com',dept:'HR',title:'Recruiter',manager:'Sarah Reynolds',location:'Austin, TX',status:'Active',startDate:'2023-06-15',salary:72000,riskLevel:'Low',
+   systems:{hris:{dept:'HR',salary:72000,manager:'Sarah Reynolds'},payroll:{dept:'HR',salary:72000,manager:'Sarah Reynolds'},benefits:{enrolled:true,plan:'HMO Silver'},performance:{lastReview:'2024-02-01',rating:4.1},engagement:{score:76}},
+   compliance:{training:['completed','completed','completed'],acks:['signed','signed'],docs:'complete'},
+   notes:'High performer for tenure. Strong sourcing metrics.'},
+  {id:'E015',name:'Omar Hassan',email:'o.hassan@acme.com',dept:'Operations',title:'Supply Chain Manager',manager:'Rosa Diaz',location:'Miami, FL',status:'Terminated',startDate:'2018-12-03',salary:0,riskLevel:'N/A',
+   systems:{hris:{dept:'Operations',salary:0,manager:'Rosa Diaz'},payroll:{dept:'Operations',salary:5000,manager:'Rosa Diaz'},benefits:{enrolled:false,plan:null},performance:{lastReview:'2023-09-15',rating:2.8},engagement:{score:30}},
+   compliance:{training:['completed','overdue','overdue'],acks:['missing','signed'],docs:'incomplete'},
+   notes:'TERMINATED Feb 28. Payroll still showing active salary — payroll exception open. Systems not fully deprovisioned.'},
+],
+cases:[
+  {id:'C-2024-001',type:'Employee Relations',subtype:'Misconduct',employee:'E005',title:'Policy Violation — Attendance',status:'Investigation',severity:'High',owner:'Sarah Reynolds',sla:'2024-03-15',created:'2024-02-20',updated:'2024-03-01',
+   timeline:[
+    {date:'2024-02-20',actor:'System',type:'system',text:'Case auto-created from manager escalation.'},
+    {date:'2024-02-21',actor:'Sarah Reynolds',type:'action',text:'Initial review completed. Contacted manager Mike Torres for details.'},
+    {date:'2024-02-25',actor:'Sarah Reynolds',type:'action',text:'Employee interview scheduled for Feb 28.'},
+    {date:'2024-02-28',actor:'Sarah Reynolds',type:'action',text:'Employee interview completed. Documentation collected.'},
+    {date:'2024-03-01',actor:'Sarah Reynolds',type:'action',text:'Investigation ongoing — awaiting manager written statement.'}
+   ],
+   notes:'Employee has missed 8 days in past 30 without approved leave.',
+   tasks:[{id:'T001',title:'Collect manager written statement',owner:'Mike Torres',due:'2024-03-05',done:false},{id:'T002',title:'Review attendance records from Workday',owner:'Sarah Reynolds',due:'2024-03-07',done:true}],
+   outcome:''},
+  {id:'C-2024-002',type:'Accommodation',subtype:'Medical',employee:'E007',title:'FMLA Leave Extension Request',status:'Approved',severity:'Medium',owner:'Amanda Foster',sla:'2024-03-20',created:'2024-02-10',updated:'2024-02-14',
+   timeline:[
+    {date:'2024-02-10',actor:'Carlos Martinez',type:'action',text:'Employee submitted FMLA extension request.'},
+    {date:'2024-02-12',actor:'Amanda Foster',type:'action',text:'Medical certification received from physician.'},
+    {date:'2024-02-14',actor:'Amanda Foster',type:'action',text:'FMLA extension approved through March 30.'}
+   ],
+   notes:'Return to work date confirmed: March 30. Benefits continuation active.',
+   tasks:[{id:'T003',title:'Coordinate return-to-work plan with manager',owner:'Amanda Foster',due:'2024-03-20',done:false}],
+   outcome:'Approved — FMLA extension through March 30, 2024.'},
+  {id:'C-2024-003',type:'Employee Relations',subtype:'Grievance',employee:'E003',title:'Pay Discrepancy Grievance',status:'Open',severity:'Critical',owner:'Sarah Reynolds',sla:'2024-03-10',created:'2024-02-28',updated:'2024-03-01',
+   timeline:[
+    {date:'2024-02-28',actor:'Jordan Williams',type:'action',text:'Employee filed formal grievance regarding pay discrepancy.'},
+    {date:'2024-03-01',actor:'Sarah Reynolds',type:'action',text:'Case opened. Payroll and Finance teams notified.'}
+   ],
+   notes:'HRIS shows $95,000. Payroll records show $92,000. Discrepancy of $3,000. 6-month duration unknown.',
+   tasks:[{id:'T004',title:'Audit payroll records for 6 months',owner:'Sarah Reynolds',due:'2024-03-05',done:false},{id:'T005',title:'Schedule Finance reconciliation meeting',owner:'Amanda Foster',due:'2024-03-07',done:false}],
+   outcome:''},
+  {id:'C-2024-004',type:'Compliance',subtype:'Training',employee:'E002',title:'Mandatory Training Overdue',status:'Open',severity:'Medium',owner:'Amanda Foster',sla:'2024-03-12',created:'2024-02-15',updated:'2024-02-20',
+   timeline:[
+    {date:'2024-02-15',actor:'System',type:'system',text:'Automated alert: 2 mandatory training items overdue.'},
+    {date:'2024-02-20',actor:'Amanda Foster',type:'action',text:'Reminder sent to employee and manager.'}
+   ],
+   notes:'Annual Harassment Prevention and Cybersecurity Awareness both overdue.',
+   tasks:[{id:'T006',title:'Send escalation to manager James Wilson',owner:'Amanda Foster',due:'2024-03-05',done:false}],
+   outcome:''},
+  {id:'C-2024-005',type:'Integration',subtype:'Payroll Exception',employee:'E015',title:'Terminated Employee Active in Payroll',status:'Critical',severity:'Critical',owner:'Sarah Reynolds',sla:'2024-03-03',created:'2024-03-01',updated:'2024-03-01',
+   timeline:[
+    {date:'2024-03-01',actor:'System',type:'system',text:'Payroll exception detected: terminated employee still active in payroll system.'},
+    {date:'2024-03-01',actor:'Sarah Reynolds',type:'action',text:'Case created. Payroll team alerted immediately.'}
+   ],
+   notes:'Omar Hassan terminated Feb 28. Payroll system still shows active with $5,000 salary record. URGENT — potential overpayment risk.',
+   tasks:[{id:'T007',title:'Deactivate payroll record for E015',owner:'Payroll Team',due:'2024-03-02',done:false},{id:'T008',title:'Confirm benefits deprovisioning',owner:'Amanda Foster',due:'2024-03-03',done:false}],
+   outcome:''},
+  {id:'C-2024-006',type:'Performance',subtype:'PIP',employee:'E005',title:'Performance Improvement Plan — Derek Thompson',status:'Open',severity:'High',owner:'Sarah Reynolds',sla:'2024-04-01',created:'2024-03-01',updated:'2024-03-01',
+   timeline:[
+    {date:'2024-03-01',actor:'Sarah Reynolds',type:'action',text:'PIP initiated following Q4 performance review. Score 2.5/5.'}
+   ],
+   notes:'90-day PIP starting March 1. Manager Mike Torres is plan owner.',
+   tasks:[{id:'T009',title:'Draft PIP document with manager',owner:'Sarah Reynolds',due:'2024-03-08',done:false},{id:'T010',title:'Schedule weekly check-ins',owner:'Mike Torres',due:'2024-03-10',done:false}],
+   outcome:''},
+  {id:'C-2024-007',type:'Employee Relations',subtype:'Policy Violation',employee:'E010',title:'Expense Policy Violation',status:'Closed',severity:'Low',owner:'Amanda Foster',sla:'2024-02-28',created:'2024-02-05',updated:'2024-02-25',
+   timeline:[
+    {date:'2024-02-05',actor:'System',type:'system',text:'Expense report flagged by Finance for policy non-compliance.'},
+    {date:'2024-02-10',actor:'Amanda Foster',type:'action',text:'Employee counseled on expense policy.'},
+    {date:'2024-02-25',actor:'Amanda Foster',type:'action',text:'Case closed. Verbal warning issued and documented.'}
+   ],
+   notes:'Minor expense policy violation. First offense. Verbal warning issued.',
+   tasks:[],
+   outcome:'Closed — Verbal warning issued. No further action required.'},
+  {id:'C-2024-008',type:'Accommodation',subtype:'Remote Work',employee:'E013',title:'Remote Work Accommodation Request',status:'Under Review',severity:'Low',owner:'Dana Willis',sla:'2024-03-20',created:'2024-03-01',updated:'2024-03-01',
+   timeline:[
+    {date:'2024-03-01',actor:'Kevin Zhao',type:'action',text:'Employee requested permanent remote work accommodation.'}
+   ],
+   notes:'Role is hybrid. Request requires manager and VP approval.',
+   tasks:[{id:'T011',title:'Review role requirements with hiring manager',owner:'Dana Willis',due:'2024-03-10',done:false}],
+   outcome:''},
+],
+integrations:[
+  {id:'INT-01',name:'Workday HRIS',icon:'W',color:'#e05a00',status:'healthy',lastSync:'2024-03-01T14:30:00',errors:2,impacted:3,
+   fields:['Employee ID','Department','Manager','Salary','Job Title','Start Date','Status'],
+   errors_list:[
+    {id:'ERR-001',type:'Field Mismatch',field:'Department',msg:'Department value mismatch for employees E002, E006',employees:['E002','E006'],severity:'medium',resolution:'Verify department code mapping in Workday connector config. Update canonical source to HRIS.'},
+    {id:'ERR-002',type:'Stale Record',field:'Status',msg:'Terminated employee E015 still Active status in downstream systems',employees:['E015'],severity:'critical',resolution:'Trigger offboarding workflow for E015. Update status to Terminated in all downstream connectors.'},
+   ]},
+  {id:'INT-02',name:'ADP Payroll',icon:'A',color:'#cc0000',status:'error',lastSync:'2024-03-01T08:00:00',errors:4,impacted:4,
+   fields:['Employee ID','Department','Salary','Pay Rate','Direct Deposit','Tax Withholding'],
+   errors_list:[
+    {id:'ERR-003',type:'Salary Discrepancy',field:'Salary',msg:'Salary mismatch for E003: HRIS=$95,000 / Payroll=$92,000',employees:['E003'],severity:'critical',resolution:'Verify correct salary with Finance. Update whichever system is incorrect. File payroll correction if overpay/underpay occurred.'},
+    {id:'ERR-004',type:'Salary Discrepancy',field:'Salary',msg:'Salary mismatch for E009: HRIS=$112,000 / Payroll=$115,000',employees:['E009'],severity:'high',resolution:'Cross-reference last merit increase letter. Confirm whether payroll or HRIS reflects approved amount.'},
+    {id:'ERR-005',type:'Active Record',field:'Status',msg:'Terminated employee E015 still active in payroll with salary record',employees:['E015'],severity:'critical',resolution:'Immediate: deactivate payroll record for E015. Contact payroll administrator to void any pending payments.'},
+    {id:'ERR-006',type:'Dept Mismatch',field:'Department',msg:'Department code ADP:Marketing_Ops vs HRIS:Marketing for E002',employees:['E002'],severity:'medium',resolution:'Standardize department codes. ADP code should match HRIS master. Update ADP department mapping table.'},
+   ]},
+  {id:'INT-03',name:'Benefitfocus',icon:'B',color:'#0066cc',status:'warning',lastSync:'2024-03-01T06:00:00',errors:2,impacted:2,
+   fields:['Employee ID','Enrollment Status','Plan Code','Dependent Info','COBRA Status'],
+   errors_list:[
+    {id:'ERR-007',type:'Enrollment Gap',field:'Enrollment Status',msg:'E003 shows unenrolled in benefits but HRIS indicates active employee',employees:['E003'],severity:'high',resolution:'Confirm if E003 waived benefits or enrollment failed. If waiver, document. If failure, trigger re-enrollment.'},
+    {id:'ERR-008',type:'COBRA Required',field:'COBRA Status',msg:'E015 terminated — COBRA notification letter not generated',employees:['E015'],severity:'critical',resolution:'Generate COBRA election notice immediately. Deadline: 44 days from termination date (Feb 28).'},
+   ]},
+  {id:'INT-04',name:'Lattice Performance',icon:'L',color:'#6b21a8',status:'healthy',lastSync:'2024-03-01T12:00:00',errors:1,impacted:1,
+   fields:['Employee ID','Review Cycle','Rating','Goals','Manager'],
+   errors_list:[
+    {id:'ERR-009',type:'Stale Review',field:'Review Date',msg:'E003 last review date Aug 2023 — over 6 months without review',employees:['E003'],severity:'medium',resolution:'Schedule performance review with manager Sarah Kim. Update Lattice review cycle settings.'},
+   ]},
+  {id:'INT-05',name:'Glint Engagement',icon:'G',color:'#00a36c',status:'healthy',lastSync:'2024-02-28T23:00:00',errors:0,impacted:0,
+   fields:['Employee ID','Survey Score','Pulse Date','Category Scores'],
+   errors_list:[]},
+],
+compliance:[
+  {id:'COMP-001',type:'Training',category:'Mandatory',title:'Annual Harassment Prevention Training',employee:'E002',employeeName:'Priya Patel',dept:'Marketing',dueDate:'2024-01-31',status:'Overdue',daysPast:29},
+  {id:'COMP-002',type:'Training',category:'Mandatory',title:'Cybersecurity Awareness Training',employee:'E002',employeeName:'Priya Patel',dept:'Marketing',dueDate:'2024-02-01',status:'Overdue',daysPast:28},
+  {id:'COMP-003',type:'Training',category:'Mandatory',title:'Annual Harassment Prevention Training',employee:'E003',employeeName:'Jordan Williams',dept:'Finance',dueDate:'2024-01-31',status:'Overdue',daysPast:29},
+  {id:'COMP-004',type:'Training',category:'Mandatory',title:'Safety Training Module 2',employee:'E003',employeeName:'Jordan Williams',dept:'Finance',dueDate:'2024-01-15',status:'Overdue',daysPast:45},
+  {id:'COMP-005',type:'Training',category:'Mandatory',title:'Safety Training Module 1',employee:'E005',employeeName:'Derek Thompson',dept:'Sales',dueDate:'2024-01-15',status:'Overdue',daysPast:45},
+  {id:'COMP-006',type:'Training',category:'Mandatory',title:'Export Control Certification',employee:'E005',employeeName:'Derek Thompson',dept:'Sales',dueDate:'2024-02-15',status:'Overdue',daysPast:14},
+  {id:'COMP-007',type:'Training',category:'Mandatory',title:'Safety Training Module 1',employee:'E010',employeeName:'Tanya Jackson',dept:'Customer Success',dueDate:'2024-02-01',status:'Overdue',daysPast:28},
+  {id:'COMP-008',type:'Training',category:'Mandatory',title:'Export Control Certification',employee:'E010',employeeName:'Tanya Jackson',dept:'Customer Success',dueDate:'2024-02-28',status:'Overdue',daysPast:1},
+  {id:'COMP-009',type:'Acknowledgment',category:'Policy',title:'2024 Employee Handbook Acknowledgment',employee:'E002',employeeName:'Priya Patel',dept:'Marketing',dueDate:'2024-01-15',status:'Missing',daysPast:45},
+  {id:'COMP-010',type:'Acknowledgment',category:'Policy',title:'Data Privacy Policy Acknowledgment',employee:'E003',employeeName:'Jordan Williams',dept:'Finance',dueDate:'2024-01-31',status:'Missing',daysPast:29},
+  {id:'COMP-011',type:'Acknowledgment',category:'Policy',title:'Data Privacy Policy Acknowledgment',employee:'E003',employeeName:'Jordan Williams',dept:'Finance',dueDate:'2024-01-31',status:'Missing',daysPast:29},
+  {id:'COMP-012',type:'Documentation',category:'HR File',title:'Signed Offer Letter on File',employee:'E015',employeeName:'Omar Hassan',dept:'Operations',dueDate:'2024-03-01',status:'Missing',daysPast:0},
+],
+notifications:[
+  {id:'N001',title:'CRITICAL: Payroll Exception — Terminated Employee',msg:'Omar Hassan (E015) is still active in ADP Payroll post-termination.',time:'10 min ago',read:false,severity:'critical'},
+  {id:'N002',title:'SLA Warning: C-2024-003 Due in 9 days',msg:'Pay discrepancy grievance for Jordan Williams approaching SLA deadline.',time:'1 hr ago',read:false,severity:'high'},
+  {id:'N003',title:'COBRA Deadline: E015 — 44 days remaining',msg:'COBRA election notice must be sent within 44 days of Feb 28 termination.',time:'2 hrs ago',read:false,severity:'high'},
+  {id:'N004',title:'Manager Action Overdue: Mike Torres',msg:'Written statement for C-2024-001 was due March 5.',time:'3 hrs ago',read:false,severity:'medium'},
+  {id:'N005',title:'Integration Sync Warning: ADP Payroll',msg:'4 errors detected in last ADP sync. 4 employees impacted.',time:'5 hrs ago',read:true,severity:'medium'},
+],
+auditLog:[
+  {id:'AL001',ts:'2024-03-01T14:32:00',actor:'Sarah Reynolds',action:'Case Created',entity:'C-2024-005',detail:'Payroll exception case opened for E015.'},
+  {id:'AL002',ts:'2024-03-01T14:30:00',actor:'System',action:'Integration Sync',entity:'Workday HRIS',detail:'Sync completed. 2 errors detected.'},
+  {id:'AL003',ts:'2024-03-01T14:00:00',actor:'System',action:'Payroll Exception Alert',entity:'ADP Payroll',detail:'E015 payroll record active post-termination.'},
+  {id:'AL004',ts:'2024-03-01T10:15:00',actor:'Amanda Foster',action:'Notification Sent',entity:'E002',detail:'Overdue training reminder sent to Priya Patel and manager.'},
+  {id:'AL005',ts:'2024-03-01T09:00:00',actor:'System',action:'Integration Sync',entity:'ADP Payroll',detail:'Sync completed. 4 errors detected.'},
+  {id:'AL006',ts:'2024-02-28T17:00:00',actor:'Jordan Williams',action:'Grievance Filed',entity:'C-2024-003',detail:'Pay discrepancy formal grievance submitted.'},
+  {id:'AL007',ts:'2024-02-28T16:00:00',actor:'System',action:'Employee Terminated',entity:'E015',detail:'Omar Hassan status changed to Terminated.'},
+  {id:'AL008',ts:'2024-02-25T14:00:00',actor:'Amanda Foster',action:'Case Closed',entity:'C-2024-007',detail:'Expense policy case closed. Verbal warning documented.'},
+  {id:'AL009',ts:'2024-02-20T11:00:00',actor:'System',action:'Compliance Alert',entity:'COMP-001',detail:'Priya Patel Harassment Prevention training overdue.'},
+  {id:'AL010',ts:'2024-02-14T09:30:00',actor:'Amanda Foster',action:'FMLA Approved',entity:'C-2024-002',detail:'FMLA extension approved for Carlos Martinez through March 30.'},
+],
+tasks:[
+  {id:'T001',title:'Collect manager written statement',case:'C-2024-001',owner:'Mike Torres',due:'2024-03-05',done:false,severity:'High'},
+  {id:'T002',title:'Review attendance records from Workday',case:'C-2024-001',owner:'Sarah Reynolds',due:'2024-03-07',done:true,severity:'Medium'},
+  {id:'T003',title:'Coordinate return-to-work plan with manager',case:'C-2024-002',owner:'Amanda Foster',due:'2024-03-20',done:false,severity:'Medium'},
+  {id:'T004',title:'Audit payroll records for 6 months',case:'C-2024-003',owner:'Sarah Reynolds',due:'2024-03-05',done:false,severity:'Critical'},
+  {id:'T005',title:'Schedule Finance reconciliation meeting',case:'C-2024-003',owner:'Amanda Foster',due:'2024-03-07',done:false,severity:'Critical'},
+  {id:'T006',title:'Send escalation to manager James Wilson',case:'C-2024-004',owner:'Amanda Foster',due:'2024-03-05',done:false,severity:'Medium'},
+  {id:'T007',title:'Deactivate payroll record for E015',case:'C-2024-005',owner:'Payroll Team',due:'2024-03-02',done:false,severity:'Critical'},
+  {id:'T008',title:'Confirm benefits deprovisioning',case:'C-2024-005',owner:'Amanda Foster',due:'2024-03-03',done:false,severity:'High'},
+  {id:'T009',title:'Draft PIP document with manager',case:'C-2024-006',owner:'Sarah Reynolds',due:'2024-03-08',done:false,severity:'High'},
+  {id:'T010',title:'Schedule weekly check-ins',case:'C-2024-006',owner:'Mike Torres',due:'2024-03-10',done:false,severity:'Medium'},
+],
+aiHistory:[
+  {role:'assistant',content:'Hello! I\'m your HR Copilot. I can help you summarize priorities, draft manager communications, suggest case next steps, analyze integration errors, and create tasks or case notes. What can I help you with today?'},
+]
+};
+
+// ===================== APP STATE =====================
+let STATE = JSON.parse(JSON.stringify(SEED));
+let currentRoute = '/dashboard';
+let selectedEmployee = null;
+let selectedEmployeeTab = 'overview';
+let selectedCase = null;
+let selectedIntegration = null;
+let selectedError = null;
+let aiUseContext = true;
+
+// ===================== BOOMI API CONFIG =====================
+const BOOMI_API_BASE = 'http://localhost:8077';
+const BOOMI_API_USER = 'boomi_brianmerrick-4SYB9W.N0OO9W';
+const BOOMI_API_SECRET = '37b5b313-5c46-4912-bf82-6f804bd856ea';
+const BOOMI_STATUS_URL = 'http://localhost:8077/ws/rest/v1/HR/hrOpsStatus';
+
+// ===================== ROUTER =====================
+function navigate(route, opts={}) {
+  currentRoute = route;
+  window.location.hash = route;
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.route === route || (route.startsWith(el.dataset.route+'/') && el.dataset.route !== '/'));
+  });
+  renderMain();
+  updateAISuggestions();
+  if (!opts.noScroll) document.getElementById('main').scrollTop = 0;
+}
+
+function renderMain() {
+  const main = document.getElementById('main');
+  if (currentRoute === '/dashboard') renderDashboard(main);
+  else if (currentRoute.startsWith('/employees')) renderEmployees(main);
+  else if (currentRoute.startsWith('/cases')) renderCases(main);
+  else if (currentRoute === '/compliance') renderCompliance(main);
+  else if (currentRoute === '/integrations') renderIntegrations(main);
+  else if (currentRoute === '/reports') renderReports(main);
+  else if (currentRoute === '/settings') renderSettings(main);
+  else renderDashboard(main);
+}
+
+// ===================== UTILITIES =====================
+const esc = s => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const fmtDate = d => d ? new Date(d).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : '—';
+const fmtCur = n => '$'+Number(n||0).toLocaleString();
+const sevBadge = s => {
+  const m = {Critical:'badge-danger',High:'badge-warning',Medium:'badge-primary',Low:'badge-neutral',Open:'badge-warning',Active:'badge-success',Closed:'badge-neutral',Approved:'badge-success',Leave:'badge-purple','Under Review':'badge-primary',Investigation:'badge-warning'};
+  return `<span class="badge ${m[s]||'badge-neutral'}">${esc(s)}</span>`;
+};
+const statusDot = s => `<span class="status-dot status-${s==='healthy'?'ok':s==='warning'?'warn':'error'}"></span>`;
+const empName = id => { const e = STATE.employees.find(e=>e.id===id); return e?e.name:id; };
+function addAudit(actor,action,entity,detail) {
+  STATE.auditLog.unshift({id:'AL'+Date.now(),ts:new Date().toISOString(),actor,action,entity,detail});
+}
+function isOverdue(dateStr) {
+  return dateStr && new Date(dateStr) < new Date('2024-03-01');
+}
+// ===================== DASHBOARD =====================
+function renderDashboard(el) {
+  const openCases = STATE.cases.filter(c=>c.status!=='Closed').length;
+  const critCases = STATE.cases.filter(c=>c.severity==='Critical'&&c.status!=='Closed').length;
+  const overdueComp = STATE.compliance.filter(c=>c.status==='Overdue'||c.status==='Missing').length;
+  const syncErrors = STATE.integrations.reduce((a,i)=>a+i.errors,0);
+  const payrollExc = STATE.integrations.find(i=>i.id==='INT-02')?.errors||0;
+  const highRisk = STATE.employees.filter(e=>e.riskLevel==='High'&&e.status!=='Terminated').length;
+  const overdueMgr = STATE.tasks.filter(t=>!t.done && isOverdue(t.due)).length;
+  const hr=STATE.settings.hourlyRate, bh=STATE.settings.baselineHours;
+  const hSaved=Math.round(bh*0.4), wSave=Math.round(hSaved*hr), ySave=wSave*52;
+
+  const pq = buildPriorityQueue();
+
+  el.innerHTML = `
+<div class="page-header"><div><div class="page-title">Dashboard</div><div class="page-subtitle">Friday, March 1, 2024 — Good morning, Sarah</div></div><button class="btn btn-secondary btn-sm" onclick="navigate('/reports')">View Reports</button></div>
+<div class="kpi-grid">
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Open ER Cases</div><div class="kpi-value">${openCases}</div><div class="kpi-sub">${critCases} critical</div></div>
+  <div class="kpi-card kpi-warning"><div class="kpi-label">Overdue Mgr Actions</div><div class="kpi-value">${overdueMgr}</div><div class="kpi-sub">across ${STATE.tasks.filter(t=>!t.done).length} open tasks</div></div>
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Compliance Alerts</div><div class="kpi-value">${overdueComp}</div><div class="kpi-sub">overdue items</div></div>
+  <div class="kpi-card kpi-warning"><div class="kpi-label">Sync Failures</div><div class="kpi-value">${syncErrors}</div><div class="kpi-sub">across ${STATE.integrations.filter(i=>i.errors>0).length} connectors</div></div>
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Payroll Exceptions</div><div class="kpi-value">${payrollExc}</div><div class="kpi-sub">ADP errors</div></div>
+  <div class="kpi-card kpi-warning"><div class="kpi-label">Retention Risk</div><div class="kpi-value">${highRisk}</div><div class="kpi-sub">high risk employees</div></div>
+</div>
+<div class="ts-widget">
+  <div class="ts-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>Operational Efficiency — Time Saved Estimate</div>
+  <div class="ts-controls">
+    <div class="ts-control">
+      <label>Hourly Rate: <span class="val" id="hr-val">${fmtCur(hr)}/hr</span></label>
+      <input type="range" id="hourly-rate" min="40" max="60" value="${hr}" oninput="updateTS(this.value,null)">
+    </div>
+    <div class="ts-control">
+      <label>Baseline Waste: <span class="val" id="bh-val">${bh} hrs/wk</span></label>
+      <input type="range" id="baseline-hours" min="5" max="10" value="${bh}" oninput="updateTS(null,this.value)">
+    </div>
+  </div>
+  <div class="ts-results">
+    <div class="ts-result"><div class="num" id="ts-hrs">${hSaved}</div><div class="lbl">Hours saved / week</div></div>
+    <div class="ts-result"><div class="num" id="ts-wk">${fmtCur(wSave)}</div><div class="lbl">Weekly savings</div></div>
+    <div class="ts-result"><div class="num" id="ts-yr">${fmtCur(ySave)}</div><div class="lbl">Annual savings</div></div>
+  </div>
+</div>
+<div class="grid-2">
+  <div class="card"><div class="card-header"><span class="card-title">Today's Priority Queue</span><span class="badge badge-danger">${pq.length} items</span></div><div class="card-body" style="padding:0 16px">
+    ${pq.map((p,i)=>`
+    <div class="pq-item" onclick="${p.action}">
+      <span class="sev sev-${p.sev.toLowerCase()}" style="margin-top:5px"></span>
+      <div class="pq-content">
+        <div class="pq-title">${esc(p.title)}</div>
+        <div class="pq-meta">${esc(p.cat)} ${p.due?`<span class="pq-due"> · Due ${p.due}</span>`:''}</div>
+      </div>
+      <span class="badge ${p.sev==='Critical'?'badge-danger':p.sev==='High'?'badge-warning':'badge-primary'}">${p.sev}</span>
+    </div>`).join('')}
+  </div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Open Cases by Status</span></div><div class="card-body">
+    ${['Investigation','Open','Under Review','Approved','Critical'].map(s=>{
+      const cnt=STATE.cases.filter(c=>c.status===s).length;
+      if(!cnt)return'';
+      const pct=Math.round(cnt/STATE.cases.length*100);
+      return `<div class="mb-3"><div class="flex justify-between mb-1"><span class="text-sm">${s}</span><span class="text-sm fw-600">${cnt}</span></div><div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${s==='Critical'?'var(--danger)':s==='Open'?'var(--warning)':'var(--primary)'}"></div></div></div>`;
+    }).join('')}
+    <div class="divider"></div>
+    <div class="flex justify-between text-sm text-muted"><span>Total Cases</span><span class="fw-600">${STATE.cases.length}</span></div>
+    <div class="flex justify-between text-sm text-muted mt-1"><span>Closed</span><span class="fw-600">${STATE.cases.filter(c=>c.status==='Closed').length}</span></div>
+  </div></div>
+</div>`;
+}
+
+function updateTS(rate, hours) {
+  if(rate!==null){STATE.settings.hourlyRate=+rate;document.getElementById('hr-val').textContent=fmtCur(rate)+'/hr';}
+  if(hours!==null){STATE.settings.baselineHours=+hours;document.getElementById('bh-val').textContent=hours+' hrs/wk';}
+  const hr=STATE.settings.hourlyRate, bh=STATE.settings.baselineHours;
+  const hSaved=Math.round(bh*0.4), wSave=Math.round(hSaved*hr), ySave=wSave*52;
+  document.getElementById('ts-hrs').textContent=hSaved;
+  document.getElementById('ts-wk').textContent=fmtCur(wSave);
+  document.getElementById('ts-yr').textContent=fmtCur(ySave);
+  if(STATE.settings.persistence) saveToStorage();
+}
+
+function buildPriorityQueue() {
+  const q=[];
+  STATE.cases.filter(c=>c.status!=='Closed'&&c.severity==='Critical').forEach(c=>{
+    q.push({title:c.title,cat:'Case · '+c.type,sev:'Critical',due:fmtDate(c.sla),action:`navigate('/cases')` });
+  });
+  STATE.tasks.filter(t=>!t.done&&isOverdue(t.due)).forEach(t=>{
+    q.push({title:t.title,cat:'Task · '+t.case,sev:'High',due:fmtDate(t.due),action:`navigate('/cases')`});
+  });
+  STATE.compliance.filter(c=>c.daysPast>20).forEach(c=>{
+    q.push({title:c.title+' — '+c.employeeName,cat:'Compliance · '+c.type,sev:c.daysPast>30?'Critical':'High',due:fmtDate(c.dueDate),action:`navigate('/compliance')`});
+  });
+  STATE.integrations.filter(i=>i.errors>0).forEach(i=>{
+    i.errors_list.filter(e=>e.severity==='critical').forEach(e=>{
+      q.push({title:i.name+': '+e.msg.substring(0,60),cat:'Integration Error',sev:'Critical',due:'',action:`selectIntegration('${i.id}')`});
+    });
+  });
+  return q.slice(0,10);
+}
+
+// ===================== EMPLOYEES =====================
+function renderEmployees(el) {
+  if(selectedEmployee) { renderEmployee360(el); return; }
+  const depts=[...new Set(STATE.employees.map(e=>e.dept))].sort();
+  const managers=[...new Set(STATE.employees.map(e=>e.manager))].sort();
+  const searchVal = el._empSearch||'';
+  const deptFilter = el._empDept||'';
+  const riskFilter = el._empRisk||'';
+  const statusFilter = el._empStatus||'';
+
+  let emps = STATE.employees.filter(e=>{
+    if(searchVal && !e.name.toLowerCase().includes(searchVal.toLowerCase()) && !e.id.toLowerCase().includes(searchVal.toLowerCase()) && !e.email.toLowerCase().includes(searchVal.toLowerCase())) return false;
+    if(deptFilter && e.dept!==deptFilter) return false;
+    if(riskFilter && e.riskLevel!==riskFilter) return false;
+    if(statusFilter && e.status!==statusFilter) return false;
+    return true;
+  });
+
+  el.innerHTML = `
+<div class="page-header"><div><div class="page-title">Employee Directory</div><div class="page-subtitle">${STATE.employees.filter(e=>e.status==='Active').length} active employees</div></div><button class="btn btn-primary btn-sm" onclick="showModal('new-case')">+ New Case</button></div>
+<div class="filter-bar">
+  <input type="text" placeholder="Search name, ID, email…" value="${esc(searchVal)}" id="emp-search" oninput="empFilter(this.value,'search')">
+  <select onchange="empFilter(this.value,'dept')" id="emp-dept-sel"><option value="">All Depts</option>${depts.map(d=>`<option value="${esc(d)}" ${deptFilter===d?'selected':''}>${esc(d)}</option>`).join('')}</select>
+  <select onchange="empFilter(this.value,'risk')" id="emp-risk-sel"><option value="">All Risk Levels</option>${['Low','Medium','High'].map(r=>`<option value="${r}" ${riskFilter===r?'selected':''}>${r}</option>`).join('')}</select>
+  <select onchange="empFilter(this.value,'status')" id="emp-status-sel"><option value="">All Statuses</option>${['Active','Leave','Terminated'].map(s=>`<option value="${s}" ${statusFilter===s?'selected':''}>${s}</option>`).join('')}</select>
+  <span class="text-xs text-muted">${emps.length} results</span>
+</div>
+<div class="card"><div class="table-wrap"><table>
+<thead><tr><th>Employee</th><th>Department</th><th>Title</th><th>Manager</th><th>Status</th><th>Risk</th><th>Compliance</th><th>Actions</th></tr></thead>
+<tbody>${emps.map(e=>{
+  const compIssues = STATE.compliance.filter(c=>c.employee===e.id&&(c.status==='Overdue'||c.status==='Missing')).length;
+  const activeCases = STATE.cases.filter(c=>c.employee===e.id&&c.status!=='Closed').length;
+  return `<tr>
+    <td><div class="flex items-center gap-2"><div class="avatar" style="background:${deptColor(e.dept)};width:28px;height:28px;font-size:11px">${e.name.split(' ').map(n=>n[0]).join('')}</div><div><div class="fw-600 link" onclick="openEmployee('${e.id}')">${esc(e.name)}</div><div class="text-xs text-muted">${esc(e.id)} · ${esc(e.email)}</div></div></div></td>
+    <td>${esc(e.dept)}</td>
+    <td class="text-sm">${esc(e.title)}</td>
+    <td class="text-sm">${esc(e.manager)}</td>
+    <td>${sevBadge(e.status)}</td>
+    <td><span class="badge ${e.riskLevel==='High'?'badge-danger':e.riskLevel==='Medium'?'badge-warning':e.riskLevel==='Low'?'badge-success':'badge-neutral'}">${esc(e.riskLevel)}</span></td>
+    <td>${compIssues?`<span class="badge badge-danger">${compIssues} issue${compIssues>1?'s':''}</span>`:`<span class="badge badge-success">OK</span>`}</td>
+    <td><button class="btn btn-secondary btn-sm" onclick="openEmployee('${e.id}')">View 360</button></td>
+  </tr>`;}).join('')}
+</tbody></table></div></div>`;
+  // preserve filter state
+  document.getElementById('main')._empSearch = searchVal;
+  document.getElementById('main')._empDept = deptFilter;
+  document.getElementById('main')._empRisk = riskFilter;
+  document.getElementById('main')._empStatus = statusFilter;
+}
+
+function deptColor(dept) {
+  const m={Engineering:'#2563eb',Marketing:'#d97706',Finance:'#16a34a',HR:'#7c3aed',Sales:'#dc2626',Operations:'#0891b2',Legal:'#374151','Customer Success':'#c026d3'};
+  return m[dept]||'#6b7280';
+}
+
+function empFilter(val,type) {
+  const main=document.getElementById('main');
+  if(type==='search')main._empSearch=val;
+  else if(type==='dept')main._empDept=val;
+  else if(type==='risk')main._empRisk=val;
+  else if(type==='status')main._empStatus=val;
+  renderEmployees(main);
+}
+
+function openEmployee(id) {
+  selectedEmployee=STATE.employees.find(e=>e.id===id);
+  selectedEmployeeTab='overview';
+  navigate('/employees/'+id,{noScroll:true});
+}
+
+function renderEmployee360(el) {
+  const e = selectedEmployee;
+  if(!e){selectedEmployee=null;renderEmployees(el);return;}
+  const cases = STATE.cases.filter(c=>c.employee===e.id);
+  const compItems = STATE.compliance.filter(c=>c.employee===e.id);
+  const activeCases = cases.filter(c=>c.status!=='Closed').length;
+  const hrisDept=e.systems.hris.dept, payDept=e.systems.payroll?.dept||e.systems.hris.dept;
+  const deptMatch = hrisDept===payDept;
+  const salaryMatch = e.systems.hris.salary===e.systems.payroll?.salary;
+
+  el.innerHTML = `
+<div class="page-header">
+  <div class="flex items-center gap-2">
+    <button class="btn btn-secondary btn-sm" onclick="selectedEmployee=null;navigate('/employees')">← Back</button>
+    <div><div class="page-title">${esc(e.name)}</div><div class="page-subtitle">${esc(e.title)} · ${esc(e.dept)}</div></div>
+  </div>
+  <div class="flex gap-2">
+    <button class="btn btn-secondary btn-sm" onclick="showModal('assign-task','${e.id}')">Assign Task</button>
+    <button class="btn btn-primary btn-sm" onclick="showModal('new-case','${e.id}')">New Case</button>
+  </div>
+</div>
+<div class="emp-360-header">
+  <div class="avatar avatar-lg" style="background:${deptColor(e.dept)}">${e.name.split(' ').map(n=>n[0]).join('')}</div>
+  <div style="flex:1">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
+      <span class="text-lg fw-700">${esc(e.name)}</span>
+      ${sevBadge(e.status)}
+      <span class="badge ${e.riskLevel==='High'?'badge-danger':e.riskLevel==='Medium'?'badge-warning':'badge-success'}">${e.riskLevel} Risk</span>
+      ${activeCases?`<span class="badge badge-warning">${activeCases} Active Case${activeCases>1?'s':''}</span>`:''}
+    </div>
+    <div class="emp-meta-grid">
+      <div class="emp-meta-item"><div class="label">Employee ID</div><div class="value">${esc(e.id)}</div></div>
+      <div class="emp-meta-item"><div class="label">Email</div><div class="value">${esc(e.email)}</div></div>
+      <div class="emp-meta-item"><div class="label">Department</div><div class="value">${esc(e.dept)} ${!deptMatch?`<span class="conf-indicator conf-mismatch">⚠ Mismatch</span>`:''}</div></div>
+      <div class="emp-meta-item"><div class="label">Manager</div><div class="value">${esc(e.manager)}</div></div>
+      <div class="emp-meta-item"><div class="label">Location</div><div class="value">${esc(e.location)}</div></div>
+      <div class="emp-meta-item"><div class="label">Start Date</div><div class="value">${fmtDate(e.startDate)}</div></div>
+    </div>
+  </div>
+</div>
+<div class="tabs">
+  ${['overview','employment','benefits','performance','cases','compliance','system-links'].map(t=>`<div class="tab ${selectedEmployeeTab===t?'active':''}" onclick="setEmpTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1).replace('-',' ')}</div>`).join('')}
+</div>
+<div id="emp-tab-content">${renderEmpTab(e,selectedEmployeeTab,cases,compItems)}</div>`;
+}
+
+function setEmpTab(tab) {
+  selectedEmployeeTab=tab;
+  const e=selectedEmployee;
+  const cases=STATE.cases.filter(c=>c.employee===e.id);
+  const compItems=STATE.compliance.filter(c=>c.employee===e.id);
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t.textContent.toLowerCase().replace(' ','-')===tab||t.textContent.toLowerCase()===tab));
+  document.getElementById('emp-tab-content').innerHTML=renderEmpTab(e,tab,cases,compItems);
+}
+
+function renderEmpTab(e,tab,cases,compItems) {
+  if(tab==='overview') return `
+<div class="grid-2">
+  <div class="card"><div class="card-header"><span class="card-title">Quick Stats</span></div><div class="card-body">
+    <div class="flex justify-between mb-2 text-sm"><span class="text-muted">Salary</span><span class="fw-600">${fmtCur(e.salary)}</span></div>
+    <div class="flex justify-between mb-2 text-sm"><span class="text-muted">Engagement Score</span><span class="fw-600 ${e.systems.engagement.score<50?'text-danger':e.systems.engagement.score<70?'text-warning':'text-success'}">${e.systems.engagement.score}/100</span></div>
+    <div class="flex justify-between mb-2 text-sm"><span class="text-muted">Last Perf Review</span><span class="fw-600">${fmtDate(e.systems.performance.lastReview)}</span></div>
+    <div class="flex justify-between mb-2 text-sm"><span class="text-muted">Perf Rating</span><span class="fw-600">${e.systems.performance.rating}/5.0</span></div>
+    <div class="flex justify-between text-sm"><span class="text-muted">Benefits Plan</span><span class="fw-600">${e.systems.benefits.plan||'None'}</span></div>
+  </div></div>
+  <div class="card"><div class="card-header"><span class="card-title">HR Notes</span></div><div class="card-body"><p class="text-sm" style="line-height:1.6">${esc(e.notes)}</p></div></div>
+</div>`;
+  if(tab==='employment') {
+    const salMismatch = e.systems.hris.salary!==e.systems.payroll?.salary;
+    const deptMismatch = e.systems.hris.dept!==e.systems.payroll?.dept;
+    return `<div class="card"><div class="card-header"><span class="card-title">Employment & Pay Details</span><span class="text-xs text-muted">Data from HRIS and Payroll</span></div><div class="card-body">
+    <div class="mb-3"><div class="text-xs fw-600 text-muted mb-1 uppercase" style="letter-spacing:.06em">SALARY</div>
+      <div class="flex items-center gap-3">
+        <div><div class="text-xs text-muted">HRIS (Workday)</div><div class="fw-700">${fmtCur(e.systems.hris.salary)}</div></div>
+        <div><div class="text-xs text-muted">Payroll (ADP)</div><div class="fw-700 ${salMismatch?'text-danger':''}">${fmtCur(e.systems.payroll?.salary||e.systems.hris.salary)}</div></div>
+        ${salMismatch?`<span class="conf-indicator conf-mismatch">⚠ Discrepancy ${fmtCur(Math.abs(e.systems.hris.salary-(e.systems.payroll?.salary||0)))}</span><button class="btn btn-sm btn-secondary" onclick="showModal('reconcile','${e.id}','salary')">Reconcile</button>`:`<span class="conf-indicator conf-match">✓ Match</span>`}
+      </div>
+    </div>
+    <div class="mb-3"><div class="text-xs fw-600 text-muted mb-1 uppercase" style="letter-spacing:.06em">DEPARTMENT</div>
+      <div class="flex items-center gap-3">
+        <div><div class="text-xs text-muted">HRIS</div><div class="fw-700">${esc(e.systems.hris.dept)}</div></div>
+        <div><div class="text-xs text-muted">Payroll</div><div class="fw-700 ${deptMismatch?'text-warning':''}">${esc(e.systems.payroll?.dept||e.systems.hris.dept)}</div></div>
+        ${deptMismatch?`<span class="conf-indicator conf-mismatch">⚠ Mismatch</span>`:`<span class="conf-indicator conf-match">✓ Match</span>`}
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="form-row">
+      <div><div class="text-xs text-muted mb-1">Manager</div><div class="fw-600">${esc(e.manager)}</div></div>
+      <div><div class="text-xs text-muted mb-1">Start Date</div><div class="fw-600">${fmtDate(e.startDate)}</div></div>
+      <div><div class="text-xs text-muted mb-1">Employment Status</div>${sevBadge(e.status)}</div>
+      <div><div class="text-xs text-muted mb-1">Location</div><div class="fw-600">${esc(e.location)}</div></div>
+    </div>
+  </div></div>`;
+  }
+  if(tab==='benefits') return `<div class="card"><div class="card-header"><span class="card-title">Benefits Summary</span></div><div class="card-body">
+    <div class="flex justify-between mb-3 text-sm"><span class="text-muted">Benefits Enrollment</span>${e.systems.benefits.enrolled?`<span class="conf-indicator conf-match">✓ Enrolled</span>`:`<span class="conf-indicator conf-mismatch">✗ Not Enrolled</span>`}</div>
+    <div class="flex justify-between mb-3 text-sm"><span class="text-muted">Plan</span><span class="fw-600">${e.systems.benefits.plan||'None'}</span></div>
+    <div class="flex justify-between mb-3 text-sm"><span class="text-muted">Source</span><span class="fw-600">Benefitfocus</span></div>
+    ${!e.systems.benefits.enrolled&&e.status==='Active'?`<div class="badge badge-danger mt-2">Action Required: Employee not enrolled in benefits</div>`:''}
+    ${e.status==='Terminated'?`<div class="badge badge-warning mt-2">Verify COBRA notification was sent</div>`:''}
+  </div></div>`;
+  if(tab==='performance') return `<div class="card"><div class="card-header"><span class="card-title">Performance Summary</span><span class="text-xs text-muted">Source: Lattice</span></div><div class="card-body">
+    <div class="flex justify-between mb-3"><span class="text-muted text-sm">Last Review Date</span><span class="fw-600">${fmtDate(e.systems.performance.lastReview)}</span></div>
+    <div class="flex justify-between mb-3"><span class="text-muted text-sm">Rating</span><span class="fw-700 text-lg ${e.systems.performance.rating<3?'text-danger':e.systems.performance.rating<4?'text-warning':'text-success'}">${e.systems.performance.rating}/5.0</span></div>
+    <div class="flex justify-between mb-3"><span class="text-muted text-sm">Engagement Score</span><span class="fw-600 ${e.systems.engagement.score<50?'text-danger':e.systems.engagement.score<70?'text-warning':'text-success'}">${e.systems.engagement.score}/100 (Glint)</span></div>
+    ${e.systems.performance.rating<3?`<div class="badge badge-danger">Low Performer — PIP may be warranted</div>`:''}
+    ${e.systems.engagement.score<50?`<div class="badge badge-danger mt-1">Flight Risk — Engagement score below 50</div>`:''}
+  </div></div>`;
+  if(tab==='cases') return cases.length?`<div class="card"><div class="table-wrap"><table><thead><tr><th>Case ID</th><th>Type</th><th>Title</th><th>Status</th><th>Severity</th><th>Created</th></tr></thead><tbody>
+    ${cases.map(c=>`<tr><td><span class="link" onclick="openCase('${c.id}')">${esc(c.id)}</span></td><td class="text-sm">${esc(c.type)}</td><td class="text-sm">${esc(c.title)}</td><td>${sevBadge(c.status)}</td><td>${sevBadge(c.severity)}</td><td class="text-sm text-muted">${fmtDate(c.created)}</td></tr>`).join('')}
+  </tbody></table></div></div>`:`<div class="empty"><div class="empty-icon">📋</div><p>No cases for this employee.</p></div>`;
+  if(tab==='compliance') return compItems.length?`<div class="card"><div class="table-wrap"><table><thead><tr><th>Type</th><th>Item</th><th>Due Date</th><th>Status</th><th>Days Past</th></tr></thead><tbody>
+    ${compItems.map(c=>`<tr><td><span class="badge badge-neutral">${esc(c.type)}</span></td><td class="text-sm">${esc(c.title)}</td><td class="text-sm">${fmtDate(c.dueDate)}</td><td>${sevBadge(c.status)}</td><td class="${c.daysPast>0?'text-danger fw-600':''}">${c.daysPast>0?'+'+c.daysPast+' days':'On time'}</td></tr>`).join('')}
+    </tbody></table></div></div>`:`<div class="empty"><div class="empty-icon">✅</div><p>No compliance issues.</p></div>`;
+  if(tab==='system-links') return `<div class="card"><div class="card-header"><span class="card-title">System Records</span></div><div class="card-body">
+    ${[{name:'Workday HRIS',status:'Active',fields:[['Dept',e.systems.hris.dept],['Salary',fmtCur(e.systems.hris.salary)],['Manager',e.systems.hris.manager]]},{name:'ADP Payroll',status:e.status==='Terminated'&&(e.systems.payroll?.salary||0)>0?'ERROR':'Active',fields:[['Dept',e.systems.payroll?.dept||e.systems.hris.dept],['Salary',fmtCur(e.systems.payroll?.salary||e.systems.hris.salary)]]},{name:'Benefitfocus',status:e.systems.benefits.enrolled?'Active':'Inactive',fields:[['Plan',e.systems.benefits.plan||'None'],['Enrolled',e.systems.benefits.enrolled?'Yes':'No']]},{name:'Lattice',status:'Active',fields:[['Rating',e.systems.performance.rating+'/5'],['Last Review',fmtDate(e.systems.performance.lastReview)]]},{name:'Glint',status:'Active',fields:[['Eng Score',e.systems.engagement.score+'/100']]}].map(s=>`
+    <div class="flex items-center justify-between border rounded p-3 mb-2">
+      <div><div class="fw-600 text-sm">${esc(s.name)}</div><div class="text-xs text-muted mt-1">${s.fields.map(f=>`${f[0]}: ${f[1]}`).join(' · ')}</div></div>
+      <span class="badge ${s.status==='Active'?'badge-success':s.status==='Inactive'?'badge-neutral':'badge-danger'}">${s.status}</span>
+    </div>`).join('')}
+  </div></div>`;
+  return '<div class="empty">Select a tab.</div>';
+}
+// ===================== CASES =====================
+function renderCases(el) {
+  if(selectedCase) { renderCaseDetail(el); return; }
+  const statusFilter = el._caseStatus||'';
+  const sevFilter = el._caseSev||'';
+  let cases = STATE.cases.filter(c=>{
+    if(statusFilter && c.status!==statusFilter) return false;
+    if(sevFilter && c.severity!==sevFilter) return false;
+    return true;
+  });
+
+  el.innerHTML = `
+<div class="page-header"><div><div class="page-title">Case Management</div><div class="page-subtitle">${STATE.cases.filter(c=>c.status!=='Closed').length} open cases</div></div>
+  <button class="btn btn-primary btn-sm" onclick="showModal('new-case')">+ New Case</button></div>
+<div class="filter-bar">
+  <select onchange="caseFilter(this.value,'status')"><option value="">All Statuses</option>${['Open','Investigation','Under Review','Approved','Critical','Closed'].map(s=>`<option value="${s}" ${statusFilter===s?'selected':''}>${s}</option>`).join('')}</select>
+  <select onchange="caseFilter(this.value,'sev')"><option value="">All Severities</option>${['Critical','High','Medium','Low'].map(s=>`<option value="${s}" ${sevFilter===s?'selected':''}>${s}</option>`).join('')}</select>
+  <span class="text-xs text-muted">${cases.length} cases</span>
+</div>
+<div class="card"><div class="table-wrap"><table>
+<thead><tr><th>Case ID</th><th>Title</th><th>Type</th><th>Employee</th><th>Status</th><th>Severity</th><th>Owner</th><th>SLA</th><th>Updated</th></tr></thead>
+<tbody>${cases.map(c=>`<tr>
+  <td><span class="link fw-600" onclick="openCase('${c.id}')">${esc(c.id)}</span></td>
+  <td class="text-sm"><span class="link" onclick="openCase('${c.id}')">${esc(c.title)}</span></td>
+  <td><span class="badge badge-neutral">${esc(c.type)}</span></td>
+  <td><span class="link text-sm" onclick="openEmployee('${c.employee}')">${esc(empName(c.employee))}</span></td>
+  <td>${sevBadge(c.status)}</td>
+  <td>${sevBadge(c.severity)}</td>
+  <td class="text-sm">${esc(c.owner)}</td>
+  <td class="text-sm ${isOverdue(c.sla)?'text-danger fw-600':''}">${fmtDate(c.sla)}</td>
+  <td class="text-sm text-muted">${fmtDate(c.updated)}</td>
+</tr>`).join('')}
+</tbody></table></div></div>`;
+}
+
+function caseFilter(val,type) {
+  const main=document.getElementById('main');
+  if(type==='status')main._caseStatus=val;
+  else if(type==='sev')main._caseSev=val;
+  renderCases(main);
+}
+
+function openCase(id) {
+  selectedCase=STATE.cases.find(c=>c.id===id);
+  navigate('/cases/'+id,{noScroll:true});
+}
+
+function renderCaseDetail(el) {
+  const c=selectedCase;
+  if(!c){selectedCase=null;renderCases(el);return;}
+  const emp=STATE.employees.find(e=>e.id===c.employee);
+  el.innerHTML=`
+<div class="page-header">
+  <div class="flex items-center gap-2">
+    <button class="btn btn-secondary btn-sm" onclick="selectedCase=null;navigate('/cases')">← Back</button>
+    <div><div class="page-title">${esc(c.title)}</div><div class="page-subtitle">${esc(c.id)} · ${esc(c.type)} · ${esc(c.subtype)}</div></div>
+  </div>
+  <div class="flex gap-2">
+    ${sevBadge(c.status)} ${sevBadge(c.severity)}
+    <button class="btn btn-secondary btn-sm" onclick="showModal('add-note','${c.id}')">+ Add Note</button>
+    <button class="btn btn-secondary btn-sm" onclick="showModal('add-task','${c.id}')">+ Task</button>
+    ${c.status!=='Closed'?`<button class="btn btn-success btn-sm" onclick="closeCase('${c.id}')">Close Case</button>`:''}
+  </div>
+</div>
+<div class="grid-2" style="gap:16px">
+  <div>
+    <div class="card mb-3"><div class="card-header"><span class="card-title">Case Details</span></div><div class="card-body">
+      <div class="form-row mb-2">
+        <div><div class="text-xs text-muted">Employee</div><div class="link fw-600" onclick="openEmployee('${emp?.id||''}')">${esc(emp?.name||'Unknown')}</div></div>
+        <div><div class="text-xs text-muted">Owner</div><div class="fw-600">${esc(c.owner)}</div></div>
+        <div><div class="text-xs text-muted">SLA</div><div class="fw-600 ${isOverdue(c.sla)?'text-danger':''}">${fmtDate(c.sla)}</div></div>
+        <div><div class="text-xs text-muted">Created</div><div class="fw-600">${fmtDate(c.created)}</div></div>
+      </div>
+      <div class="divider"></div>
+      <div class="text-xs text-muted fw-600 mb-1">NOTES</div>
+      <p class="text-sm" style="line-height:1.6">${esc(c.notes)||'No notes.'}</p>
+      ${c.outcome?`<div class="divider"></div><div class="text-xs text-muted fw-600 mb-1">OUTCOME</div><p class="text-sm">${esc(c.outcome)}</p>`:''}
+    </div></div>
+    <div class="card"><div class="card-header"><span class="card-title">Task Checklist</span><button class="btn btn-secondary btn-sm" onclick="showModal('add-task','${c.id}')">+ Add</button></div><div class="card-body" style="padding:0 16px">
+      ${c.tasks.length?c.tasks.map(t=>`<div class="flex items-center gap-2 py-2 border-b" style="border-color:var(--border)">
+        <input type="checkbox" ${t.done?'checked':''} onchange="toggleTask('${c.id}','${t.id}',this.checked)" style="cursor:pointer">
+        <div style="flex:1"><div class="text-sm ${t.done?'text-muted':'fw-500'}" style="${t.done?'text-decoration:line-through':''}">${esc(t.title)}</div>
+        <div class="text-xs text-muted">${esc(t.owner)} · Due ${fmtDate(t.due)} ${isOverdue(t.due)&&!t.done?'<span class="text-danger fw-600">OVERDUE</span>':''}</div></div>
+        ${sevBadge(t.severity||'Medium')}
+      </div>`).join(''):'<div class="empty text-sm py-4">No tasks yet.</div>'}
+    </div></div>
+  </div>
+  <div class="card"><div class="card-header"><span class="card-title">Timeline</span></div><div class="card-body">
+    <div class="case-timeline">
+      ${c.timeline.map(t=>`<div class="timeline-item">
+        <span class="timeline-dot ${t.type}"></span>
+        <div><div class="text-xs text-muted fw-600">${fmtDate(t.date)} · ${esc(t.actor)}</div><div class="text-sm mt-1">${esc(t.text)}</div></div>
+      </div>`).join('')}
+    </div>
+  </div></div>
+</div>`;
+}
+
+function toggleTask(caseId,taskId,done) {
+  const c=STATE.cases.find(c=>c.id===caseId);
+  if(!c)return;
+  const t=c.tasks.find(t=>t.id===taskId);
+  if(t){t.done=done;addAudit('Sarah Reynolds','Task '+(done?'Completed':'Reopened'),caseId,t.title);}
+  if(STATE.settings.persistence)saveToStorage();
+}
+
+function closeCase(id) {
+  const c=STATE.cases.find(c=>c.id===id);
+  if(!c)return;
+  const outcome=prompt('Enter case outcome/resolution:');
+  if(outcome===null)return;
+  c.status='Closed';c.outcome=outcome;c.updated=new Date().toISOString().split('T')[0];
+  c.timeline.push({date:new Date().toISOString().split('T')[0],actor:'Sarah Reynolds',type:'action',text:'Case closed. Outcome: '+outcome});
+  addAudit('Sarah Reynolds','Case Closed',id,'Outcome: '+outcome);
+  updateBadges();
+  if(STATE.settings.persistence)saveToStorage();
+  renderCaseDetail(document.getElementById('main'));
+}
+
+// ===================== COMPLIANCE =====================
+function renderCompliance(el) {
+  const items=STATE.compliance;
+  const overdue=items.filter(c=>c.status==='Overdue');
+  const missing=items.filter(c=>c.status==='Missing');
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Compliance</div><div class="page-subtitle">${overdue.length} overdue items · ${missing.length} missing</div></div>
+  <button class="btn btn-secondary btn-sm" onclick="exportCSV(STATE.compliance,['employeeName','dept','type','title','dueDate','status','daysPast'],'compliance-export')">Export CSV</button></div>
+<div class="kpi-grid">
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Overdue Training</div><div class="kpi-value">${items.filter(c=>c.type==='Training'&&c.status==='Overdue').length}</div></div>
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Missing Acknowledgments</div><div class="kpi-value">${items.filter(c=>c.type==='Acknowledgment'&&c.status==='Missing').length}</div></div>
+  <div class="kpi-card kpi-warning"><div class="kpi-label">Missing Documentation</div><div class="kpi-value">${items.filter(c=>c.type==='Documentation'&&c.status==='Missing').length}</div></div>
+  <div class="kpi-card kpi-primary"><div class="kpi-label">Employees Affected</div><div class="kpi-value">${[...new Set(items.map(c=>c.employee))].length}</div></div>
+</div>
+<div class="card mb-4"><div class="card-header"><span class="card-title">Compliance Alerts</span></div><div class="table-wrap"><table>
+<thead><tr><th>Employee</th><th>Department</th><th>Type</th><th>Item</th><th>Due Date</th><th>Status</th><th>Days Past Due</th><th>Action</th></tr></thead>
+<tbody>${items.map(c=>`<tr>
+  <td><span class="link text-sm" onclick="openEmployee('${c.employee}')">${esc(c.employeeName)}</span></td>
+  <td class="text-sm">${esc(c.dept)}</td>
+  <td><span class="badge badge-neutral">${esc(c.type)}</span></td>
+  <td class="text-sm">${esc(c.title)}</td>
+  <td class="text-sm ${isOverdue(c.dueDate)?'text-danger':''}">${fmtDate(c.dueDate)}</td>
+  <td>${sevBadge(c.status)}</td>
+  <td class="${c.daysPast>0?'text-danger fw-600':''}">${c.daysPast>0?'+'+c.daysPast+' days':'Today'}</td>
+  <td><button class="btn btn-secondary btn-sm" onclick="showModal('new-case','${c.employee}')">Create Case</button></td>
+</tr>`).join('')}
+</tbody></table></div></div>
+<div class="card"><div class="card-header"><span class="card-title">Audit Log</span><button class="btn btn-secondary btn-sm" onclick="exportCSV(STATE.auditLog,['ts','actor','action','entity','detail'],'audit-log')">Export CSV</button></div><div class="table-wrap"><table>
+<thead><tr><th>Timestamp</th><th>Actor</th><th>Action</th><th>Entity</th><th>Detail</th></tr></thead>
+<tbody>${STATE.auditLog.slice(0,20).map(a=>`<tr>
+  <td class="text-xs text-muted">${new Date(a.ts).toLocaleString()}</td>
+  <td class="text-sm fw-500">${esc(a.actor)}</td>
+  <td><span class="badge badge-neutral text-xs">${esc(a.action)}</span></td>
+  <td class="text-sm">${esc(a.entity)}</td>
+  <td class="text-xs text-muted">${esc(a.detail)}</td>
+</tr>`).join('')}
+</tbody></table></div></div>`;
+}
+
+// ===================== INTEGRATIONS =====================
+function renderIntegrations(el) {
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Integrations</div><div class="page-subtitle">Monitor sync health across connected platforms</div></div></div>
+<div class="int-grid mb-4">
+  ${STATE.integrations.map(i=>`<div class="int-card ${selectedIntegration===i.id?'selected':''}" onclick="selectIntegration('${i.id}')">
+    <div class="flex items-center gap-3 mb-3">
+      <div class="avatar" style="background:${i.color};width:36px;height:36px">${i.icon}</div>
+      <div><div class="fw-700 text-sm">${esc(i.name)}</div><div class="text-xs text-muted">${new Date(i.lastSync).toLocaleString()}</div></div>
+    </div>
+    <div class="int-status mb-2">${statusDot(i.status)}<span>${i.status.charAt(0).toUpperCase()+i.status.slice(1)}</span></div>
+    <div class="flex justify-between text-xs text-muted">
+      <span>${i.errors} error${i.errors!==1?'s':''}</span>
+      <span>${i.impacted} employee${i.impacted!==1?'s':''} impacted</span>
+    </div>
+  </div>`).join('')}
+</div>
+<div id="int-detail">${selectedIntegration?renderIntDetail(selectedIntegration):''}</div>`;
+}
+
+function selectIntegration(id) {
+  selectedIntegration=id;selectedError=null;
+  if(currentRoute!=='/integrations')navigate('/integrations');
+  else{
+    document.querySelectorAll('.int-card').forEach(c=>c.classList.toggle('selected',c.querySelector('.fw-700')?.textContent===STATE.integrations.find(i=>i.id===id)?.name));
+    document.getElementById('int-detail').innerHTML=renderIntDetail(id);
+  }
+}
+
+function renderIntDetail(id) {
+  const intg=STATE.integrations.find(i=>i.id===id);
+  if(!intg||!intg.errors_list.length)return`<div class="card"><div class="card-body empty"><div class="empty-icon">✅</div><p>No errors detected for ${esc(intg?.name||'this integration')}.</p></div></div>`;
+  return`<div class="card"><div class="card-header"><span class="card-title">${esc(intg.name)} — ${intg.errors_list.length} Errors</span></div>
+  <div class="table-wrap"><table><thead><tr><th>Error ID</th><th>Type</th><th>Field</th><th>Description</th><th>Severity</th><th>Employees</th><th>Action</th></tr></thead>
+  <tbody>${intg.errors_list.map(e=>`<tr onclick="selectError('${id}','${e.id}')" style="cursor:pointer ${selectedError===e.id?';background:var(--primary-light)':''}">
+    <td class="text-xs fw-600">${esc(e.id)}</td>
+    <td><span class="badge badge-neutral text-xs">${esc(e.type)}</span></td>
+    <td class="text-sm">${esc(e.field)}</td>
+    <td class="text-sm">${esc(e.msg)}</td>
+    <td>${sevBadge(e.severity.charAt(0).toUpperCase()+e.severity.slice(1))}</td>
+    <td class="text-sm">${e.employees.map(eid=>`<span class="link" onclick="event.stopPropagation();openEmployee('${eid}')">${empName(eid)}</span>`).join(', ')}</td>
+    <td><button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();selectError('${id}','${e.id}')">Details</button></td>
+  </tr>`).join('')}
+  </tbody></table></div>
+  ${selectedError?renderErrorDetail(id,selectedError):''}
+  </div>`;
+}
+
+function selectError(intId,errId) {
+  selectedError=errId;
+  document.getElementById('int-detail').innerHTML=renderIntDetail(intId);
+}
+
+function renderErrorDetail(intId,errId) {
+  const intg=STATE.integrations.find(i=>i.id===intId);
+  const err=intg?.errors_list.find(e=>e.id===errId);
+  if(!err)return'';
+  return`<div class="error-detail-panel">
+    <div class="flex justify-between items-center mb-3"><span class="fw-700">${esc(err.id)} — ${esc(err.type)}</span>${sevBadge(err.severity.charAt(0).toUpperCase()+err.severity.slice(1))}</div>
+    <div class="mb-3"><div class="text-xs fw-600 text-muted mb-1">RAW ERROR MESSAGE</div><code style="font-size:12px;background:#f1f5f9;padding:8px 12px;border-radius:4px;display:block;word-break:break-all">${esc(err.msg)}</code></div>
+    <div class="mb-3"><div class="text-xs fw-600 text-muted mb-1">AFFECTED FIELD</div><span class="tag">${esc(err.field)}</span></div>
+    <div class="mb-3"><div class="text-xs fw-600 text-muted mb-1">IMPACTED EMPLOYEES</div>${err.employees.map(eid=>`<span class="link text-sm" onclick="openEmployee('${eid}')">${empName(eid)}</span>`).join(', ')}</div>
+    <div class="mb-3"><div class="text-xs fw-600 text-muted mb-1">SUGGESTED RESOLUTION</div><p class="text-sm" style="line-height:1.6;padding:8px 12px;background:var(--success-light);border-radius:4px;color:var(--success)">${esc(err.resolution)}</p></div>
+    ${err.employees.length===1&&err.field==='Salary'?renderReconPanel(intg,err):''}
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-primary btn-sm" onclick="createReconTask('${intId}','${errId}')">Create Reconciliation Task</button>
+      <button class="btn btn-secondary btn-sm" onclick="openEmployee('${err.employees[0]}')">View Employee</button>
+    </div>
+  </div>`;
+}
+
+function renderReconPanel(intg,err) {
+  const emp=STATE.employees.find(e=>err.employees.includes(e.id));
+  if(!emp)return'';
+  const hrisVal=fmtCur(emp.systems.hris.salary), payVal=fmtCur(emp.systems.payroll?.salary||0);
+  return`<div class="mb-3"><div class="text-xs fw-600 text-muted mb-2">MANUAL RECONCILIATION</div>
+  <div class="recon-row">
+    <div><div class="recon-label">HRIS (Workday)</div><div class="recon-val val-keep">${hrisVal}</div></div>
+    <div><div class="recon-label">Payroll (ADP)</div><div class="recon-val val-conflict">${payVal}</div></div>
+    <div><select id="recon-choice" class="form-control" style="width:auto;font-size:12px">
+      <option value="hris">Keep HRIS (${hrisVal})</option>
+      <option value="payroll">Keep Payroll (${payVal})</option>
+      <option value="custom">Enter custom value</option>
+    </select></div>
+  </div>
+  <div id="recon-custom" style="display:none" class="mt-2"><input type="number" class="form-control" id="recon-custom-val" placeholder="Enter correct salary"></div>
+  <button class="btn btn-primary btn-sm mt-2" onclick="applyRecon('${emp.id}')">Apply Resolution</button></div>`;
+}
+
+function applyRecon(empId) {
+  const choice=document.getElementById('recon-choice')?.value;
+  if(!choice)return;
+  const emp=STATE.employees.find(e=>e.id===empId);
+  if(!emp)return;
+  let val;
+  if(choice==='hris')val=emp.systems.hris.salary;
+  else if(choice==='payroll')val=emp.systems.payroll?.salary||emp.systems.hris.salary;
+  else{val=+document.getElementById('recon-custom-val')?.value;if(!val){alert('Enter a valid salary.');return;}}
+  emp.salary=val;emp.systems.hris.salary=val;if(emp.systems.payroll)emp.systems.payroll.salary=val;
+  addAudit('Sarah Reynolds','Salary Reconciled',empId,`Salary set to ${fmtCur(val)} via manual reconciliation.`);
+  const intg=STATE.integrations.find(i=>i.errors_list.some(e=>e.employees.includes(empId)));
+  if(intg){intg.errors_list=intg.errors_list.filter(e=>!e.employees.includes(empId)||e.field!=='Salary');intg.errors=intg.errors_list.length;intg.impacted=Math.max(0,intg.impacted-1);}
+  if(STATE.settings.persistence)saveToStorage();
+  showToast('Reconciliation applied and audit log updated.','success');
+  renderIntegrations(document.getElementById('main'));
+}
+
+function createReconTask(intId,errId) {
+  const intg=STATE.integrations.find(i=>i.id===intId);
+  const err=intg?.errors_list.find(e=>e.id===errId);
+  if(!err)return;
+  const task={id:'T'+Date.now(),title:'Reconcile: '+err.type+' — '+err.field,case:'Integration',owner:'Sarah Reynolds',due:'2024-03-07',done:false,severity:'High'};
+  STATE.tasks.push(task);
+  addAudit('Sarah Reynolds','Reconciliation Task Created',errId,task.title);
+  if(STATE.settings.persistence)saveToStorage();
+  showToast('Task created and added to your queue.','success');
+}
+
+// ===================== REPORTS =====================
+function renderReports(el) {
+  const reportDef = el._activeReport||'headcount';
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Reports</div><div class="page-subtitle">Analytics and operational reporting</div></div></div>
+<div class="grid-2 mb-4">
+  <div class="card"><div class="card-header"><span class="card-title">Prebuilt Reports</span></div><div class="card-body" style="padding:8px">
+    ${[{id:'headcount',label:'Headcount Changes',icon:'👥'},{id:'er-trends',label:'ER Case Trends',icon:'📋'},{id:'compliance-rates',label:'Compliance Completion',icon:'✅'},{id:'payroll-exc',label:'Payroll Exceptions',icon:'💰'},{id:'int-errors',label:'Integration Error Trends',icon:'🔗'},{id:'time-saved',label:'Time Saved Estimates',icon:'⏱'}].map(r=>`
+    <div class="pq-item" onclick="runReport('${r.id}')" style="cursor:pointer;padding:10px;border-radius:var(--radius-sm);margin:2px 0">
+      <span style="font-size:18px">${r.icon}</span>
+      <div class="pq-content"><div class="fw-600 text-sm">${r.label}</div></div>
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </div>`).join('')}
+  </div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Report Builder</span></div><div class="card-body">
+    <div class="form-group"><label class="form-label">Data Source</label>
+      <select class="form-control" id="rb-source" onchange="updateRBCols()">
+        <option value="employees">Employees</option>
+        <option value="cases">Cases</option>
+        <option value="compliance">Compliance</option>
+        <option value="tasks">Tasks</option>
+      </select></div>
+    <div class="form-group"><label class="form-label">Filter: Department</label>
+      <select class="form-control" id="rb-dept"><option value="">All</option>${[...new Set(STATE.employees.map(e=>e.dept))].sort().map(d=>`<option value="${d}">${d}</option>`).join('')}</select></div>
+    <div class="form-group"><label class="form-label">Columns (hold Ctrl to multi-select)</label>
+      <select class="form-control" id="rb-cols" multiple size="4" style="height:auto"></select></div>
+    <div class="flex gap-2 mt-3">
+      <button class="btn btn-primary btn-sm" onclick="runBuilder()">Run Report</button>
+      <button class="btn btn-secondary btn-sm" onclick="exportBuilderCSV()">Export CSV</button>
+    </div>
+  </div></div>
+</div>
+<div id="report-output"></div>`;
+  updateRBCols();
+  if(reportDef) runReport(reportDef,false);
+}
+
+function updateRBCols() {
+  const src=document.getElementById('rb-source')?.value;
+  const cols={employees:['name','id','dept','title','manager','location','status','salary','riskLevel'],cases:['id','title','type','subtype','status','severity','owner','sla','created'],compliance:['employeeName','dept','type','title','dueDate','status','daysPast'],tasks:['id','title','case','owner','due','done','severity']};
+  const sel=document.getElementById('rb-cols');
+  if(!sel)return;
+  sel.innerHTML=(cols[src]||[]).map(c=>`<option value="${c}" selected>${c}</option>`).join('');
+}
+
+function runReport(id, setActive=true) {
+  const out=document.getElementById('report-output');
+  if(!out)return;
+  if(setActive){document.getElementById('main')._activeReport=id;}
+  let html='';
+  if(id==='headcount'){
+    const byDept={};STATE.employees.forEach(e=>{byDept[e.dept]=(byDept[e.dept]||[]);byDept[e.dept].push(e);});
+    html=`<div class="card"><div class="card-header"><span class="card-title">Headcount by Department</span><button class="btn btn-secondary btn-sm" onclick="exportCSV(STATE.employees,['name','id','dept','title','status','riskLevel'],'headcount')">Export CSV</button></div><div class="table-wrap"><table><thead><tr><th>Department</th><th>Active</th><th>Leave</th><th>Terminated</th><th>High Risk</th><th>Avg Engagement</th></tr></thead><tbody>
+    ${Object.entries(byDept).sort().map(([d,emps])=>`<tr><td class="fw-600">${esc(d)}</td><td>${emps.filter(e=>e.status==='Active').length}</td><td>${emps.filter(e=>e.status==='Leave').length}</td><td>${emps.filter(e=>e.status==='Terminated').length}</td><td class="${emps.filter(e=>e.riskLevel==='High').length?'text-danger fw-600':''}">${emps.filter(e=>e.riskLevel==='High').length}</td><td>${Math.round(emps.reduce((a,e)=>a+(e.systems.engagement?.score||0),0)/emps.length)}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+  } else if(id==='er-trends'){
+    const byType={};STATE.cases.forEach(c=>{byType[c.type]=(byType[c.type]||0)+1;});
+    html=`<div class="card"><div class="card-header"><span class="card-title">ER Case Trends</span><button class="btn btn-secondary btn-sm" onclick="exportCSV(STATE.cases,['id','type','subtype','status','severity','employee','sla'],'er-trends')">Export CSV</button></div><div class="table-wrap"><table><thead><tr><th>Type</th><th>Count</th><th>Open</th><th>Critical</th><th>Closed</th></tr></thead><tbody>
+    ${Object.entries(byType).map(([t,cnt])=>`<tr><td class="fw-600">${esc(t)}</td><td>${cnt}</td><td>${STATE.cases.filter(c=>c.type===t&&c.status!=='Closed').length}</td><td>${STATE.cases.filter(c=>c.type===t&&c.severity==='Critical').length}</td><td>${STATE.cases.filter(c=>c.type===t&&c.status==='Closed').length}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+  } else if(id==='compliance-rates'){
+    html=`<div class="card"><div class="card-header"><span class="card-title">Compliance Completion by Department</span><button class="btn btn-secondary btn-sm" onclick="exportCSV(STATE.compliance,['employeeName','dept','type','title','status'],'compliance')">Export CSV</button></div><div class="table-wrap"><table><thead><tr><th>Department</th><th>Total Items</th><th>Overdue</th><th>Missing</th><th>Completion Rate</th></tr></thead><tbody>
+    ${[...new Set(STATE.compliance.map(c=>c.dept))].sort().map(d=>{
+      const items=STATE.compliance.filter(c=>c.dept===d);
+      const issues=items.filter(c=>c.status!=='Completed'&&c.status!=='signed').length;
+      const rate=Math.round((items.length-issues)/items.length*100);
+      return`<tr><td class="fw-600">${esc(d)}</td><td>${items.length}</td><td>${items.filter(c=>c.status==='Overdue').length}</td><td>${items.filter(c=>c.status==='Missing').length}</td><td><div style="display:flex;align-items:center;gap:8px"><div class="progress-bar" style="width:80px"><div class="progress-fill" style="width:${rate}%;background:${rate<60?'var(--danger)':rate<80?'var(--warning)':'var(--success)'}"></div></div><span class="${rate<60?'text-danger':rate<80?'text-warning':'text-success'} fw-600">${rate}%</span></div></td></tr>`;
+    }).join('')}
+    </tbody></table></div></div>`;
+  } else if(id==='payroll-exc'){
+    const intg=STATE.integrations.find(i=>i.id==='INT-02');
+    html=`<div class="card"><div class="card-header"><span class="card-title">Payroll Exceptions</span></div><div class="table-wrap"><table><thead><tr><th>Error ID</th><th>Type</th><th>Description</th><th>Severity</th><th>Employees</th></tr></thead><tbody>
+    ${(intg?.errors_list||[]).map(e=>`<tr><td class="text-xs fw-600">${esc(e.id)}</td><td><span class="badge badge-neutral">${esc(e.type)}</span></td><td class="text-sm">${esc(e.msg)}</td><td>${sevBadge(e.severity.charAt(0).toUpperCase()+e.severity.slice(1))}</td><td class="text-sm">${e.employees.map(empName).join(', ')}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+  } else if(id==='int-errors'){
+    html=`<div class="card"><div class="card-header"><span class="card-title">Integration Error Summary</span></div><div class="table-wrap"><table><thead><tr><th>System</th><th>Status</th><th>Total Errors</th><th>Critical</th><th>Employees Impacted</th></tr></thead><tbody>
+    ${STATE.integrations.map(i=>`<tr><td class="fw-600">${esc(i.name)}</td><td>${statusDot(i.status)} ${i.status}</td><td class="${i.errors?'text-danger fw-600':''}">${i.errors}</td><td class="${i.errors_list.filter(e=>e.severity==='critical').length?'text-danger fw-600':''}">${i.errors_list.filter(e=>e.severity==='critical').length}</td><td>${i.impacted}</td></tr>`).join('')}
+    </tbody></table></div></div>`;
+  } else if(id==='time-saved'){
+    const hr=STATE.settings.hourlyRate,bh=STATE.settings.baselineHours;
+    const hSaved=Math.round(bh*0.4),wSave=Math.round(hSaved*hr),ySave=wSave*52;
+    html=`<div class="card"><div class="card-header"><span class="card-title">Operational Efficiency — Time Saved Report</span></div><div class="card-body">
+    <div class="grid-3 mb-4">
+      <div class="kpi-card kpi-primary"><div class="kpi-label">Hours saved / week</div><div class="kpi-value">${hSaved}</div><div class="kpi-sub">per HR professional</div></div>
+      <div class="kpi-card kpi-success"><div class="kpi-label">Weekly savings</div><div class="kpi-value">${fmtCur(wSave)}</div><div class="kpi-sub">at ${fmtCur(hr)}/hr</div></div>
+      <div class="kpi-card kpi-success"><div class="kpi-label">Annual savings</div><div class="kpi-value">${fmtCur(ySave)}</div><div class="kpi-sub">per HR FTE</div></div>
+    </div>
+    <p class="text-sm text-muted">Based on industry benchmark of 5–10 hrs/week manual reconciliation at ${fmtCur(hr)}/hr fully loaded cost. Adjust baseline in Settings or Dashboard.</p>
+    </div></div>`;
+  }
+  if(out)out.innerHTML=html;
+}
+
+function runBuilder() {
+  const src=document.getElementById('rb-source')?.value;
+  const dept=document.getElementById('rb-dept')?.value;
+  const colSel=document.getElementById('rb-cols');
+  const cols=[...colSel.selectedOptions].map(o=>o.value);
+  if(!cols.length){showToast('Select at least one column.','warning');return;}
+  let data=STATE[src]||[];
+  if(dept&&src==='employees')data=data.filter(e=>e.dept===dept);
+  const out=document.getElementById('report-output');
+  out.innerHTML=`<div class="card"><div class="card-header"><span class="card-title">Custom Report — ${esc(src)}</span><button class="btn btn-secondary btn-sm" onclick="exportCSV(window._builderData,window._builderCols,'custom-report')">Export CSV</button></div>
+  <div class="table-wrap"><table><thead><tr>${cols.map(c=>`<th>${esc(c)}</th>`).join('')}</tr></thead>
+  <tbody>${data.map(row=>`<tr>${cols.map(c=>`<td class="text-sm">${esc(row[c]!==undefined?row[c]:'-')}</td>`).join('')}</tr>`).join('')}
+  </tbody></table></div></div>`;
+  window._builderData=data;window._builderCols=cols;
+}
+
+function exportBuilderCSV(){if(window._builderData)exportCSV(window._builderData,window._builderCols,'custom-report');}
+// ===================== SETTINGS =====================
+function renderSettings(el) {
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Settings</div><div class="page-subtitle">Configure HR Operations Console preferences</div></div></div>
+<div class="grid-2">
+  <div class="card"><div class="card-header"><span class="card-title">Operational Defaults</span></div><div class="card-body">
+    <div class="form-group"><label class="form-label">Default Hourly Rate (${fmtCur(STATE.settings.hourlyRate)}/hr)</label>
+      <input type="range" class="w-full" min="40" max="60" value="${STATE.settings.hourlyRate}" id="s-hr" oninput="STATE.settings.hourlyRate=+this.value;this.previousElementSibling.textContent='Default Hourly Rate ('+fmtCur(this.value)+'/hr)';saveIfEnabled()"></div>
+    <div class="form-group"><label class="form-label">Default Baseline Hours (${STATE.settings.baselineHours} hrs/week)</label>
+      <input type="range" class="w-full" min="5" max="10" value="${STATE.settings.baselineHours}" id="s-bh" oninput="STATE.settings.baselineHours=+this.value;this.previousElementSibling.textContent='Default Baseline Hours ('+this.value+' hrs/week)';saveIfEnabled()"></div>
+  </div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Data & Persistence</span></div><div class="card-body">
+    <div class="flex items-center justify-between mb-4">
+      <div><div class="fw-600 text-sm">Enable localStorage Persistence</div><div class="text-xs text-muted mt-1">Save application state across sessions</div></div>
+      <label class="toggle"><input type="checkbox" id="s-persist" ${STATE.settings.persistence?'checked':''} onchange="togglePersistence(this.checked)"><span class="toggle-slider"></span></label>
+    </div>
+    <div class="divider"></div>
+    <div class="flex items-center justify-between mt-4">
+      <div><div class="fw-600 text-sm">Reset to Seed Data</div><div class="text-xs text-muted mt-1">Restore all data to initial demo state</div></div>
+      <button class="btn btn-danger btn-sm" onclick="resetToSeed()">Reset</button>
+    </div>
+  </div></div>
+</div>
+<div class="card mt-4"><div class="card-header"><span class="card-title">About HR Operations Console</span></div><div class="card-body">
+  <p class="text-sm text-muted" style="line-height:1.7">This is a fully self-contained HR operations demonstration built to showcase how unified HR tooling can reduce manual reconciliation across disconnected systems. All data is mock/simulated. No real employee data or external services are used.</p>
+  <div class="flex gap-2 mt-3">
+    <span class="tag">Version 1.0</span><span class="tag">Single-file SPA</span><span class="tag">Vanilla JS</span><span class="tag">No dependencies</span>
+  </div>
+</div></div>`;
+}
+
+function togglePersistence(enabled) {
+  STATE.settings.persistence=enabled;
+  if(enabled)saveToStorage();
+  else localStorage.removeItem('hrops_state');
+}
+
+function saveIfEnabled(){if(STATE.settings.persistence)saveToStorage();}
+function saveToStorage(){try{localStorage.setItem('hrops_state',JSON.stringify(STATE));}catch(e){}}
+function loadFromStorage(){try{const s=localStorage.getItem('hrops_state');if(s)STATE=JSON.parse(s);}catch(e){}}
+
+function resetToSeed() {
+  if(!confirm('Reset all data to seed state? All changes will be lost.'))return;
+  STATE=JSON.parse(JSON.stringify(SEED));
+  localStorage.removeItem('hrops_state');
+  selectedEmployee=null;selectedCase=null;selectedIntegration=null;selectedError=null;
+  updateBadges();
+  renderMain();
+  showToast('Data reset to initial seed state.','success');
+}
+
+// ===================== MODALS =====================
+function showModal(type, ...args) {
+  const overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.onclick=e=>{if(e.target===overlay)closeModal();};
+  let html='';
+  if(type==='new-case') {
+    const empId=args[0]||'';
+    html=`<div class="modal">
+      <div class="modal-header"><span class="modal-title">New Case</span><button class="icon-btn" onclick="closeModal()">✕</button></div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">Case Template</label>
+          <select class="form-control" id="m-template" onchange="applyTemplate(this.value)">
+            <option value="">Blank</option><option value="grievance">Grievance</option><option value="misconduct">Misconduct</option><option value="accommodation">Accommodation</option><option value="policy">Policy Violation</option><option value="pip">Performance Improvement Plan</option>
+          </select></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Type</label><select class="form-control" id="m-type"><option>Employee Relations</option><option>Accommodation</option><option>Compliance</option><option>Performance</option><option>Integration</option></select></div>
+          <div class="form-group"><label class="form-label">Severity</label><select class="form-control" id="m-sev"><option>Low</option><option>Medium</option><option selected>High</option><option>Critical</option></select></div>
+        </div>
+        <div class="form-group"><label class="form-label">Title</label><input class="form-control" id="m-title" placeholder="Case title"></div>
+        <div class="form-group"><label class="form-label">Employee</label>
+          <select class="form-control" id="m-emp">${STATE.employees.map(e=>`<option value="${e.id}" ${e.id===empId?'selected':''}>${e.name} (${e.id})</option>`).join('')}</select></div>
+        <div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="m-notes" rows="3" placeholder="Initial notes…"></textarea></div>
+        <div class="form-group"><label class="form-label">SLA Date</label><input type="date" class="form-control" id="m-sla" value="2024-03-20"></div>
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitNewCase()">Create Case</button></div>
+    </div>`;
+  } else if(type==='add-note') {
+    const caseId=args[0];
+    html=`<div class="modal">
+      <div class="modal-header"><span class="modal-title">Add Case Note</span><button class="icon-btn" onclick="closeModal()">✕</button></div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">Note</label><textarea class="form-control" id="m-note-text" rows="5" placeholder="Enter note…"></textarea></div>
+        <input type="hidden" id="m-case-id" value="${caseId}">
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitNote()">Save Note</button></div>
+    </div>`;
+  } else if(type==='add-task') {
+    const caseId=args[0];
+    html=`<div class="modal">
+      <div class="modal-header"><span class="modal-title">Add Task</span><button class="icon-btn" onclick="closeModal()">✕</button></div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">Task Title</label><input class="form-control" id="m-task-title" placeholder="Task description"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Owner</label><input class="form-control" id="m-task-owner" value="Sarah Reynolds"></div>
+          <div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-control" id="m-task-due" value="2024-03-15"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Severity</label><select class="form-control" id="m-task-sev"><option>Low</option><option>Medium</option><option selected>High</option><option>Critical</option></select></div>
+        <input type="hidden" id="m-task-case" value="${caseId}">
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitTask()">Add Task</button></div>
+    </div>`;
+  } else if(type==='assign-task') {
+    const empId=args[0];
+    const emp=STATE.employees.find(e=>e.id===empId);
+    html=`<div class="modal">
+      <div class="modal-header"><span class="modal-title">Assign Manager Task — ${esc(emp?.name||empId)}</span><button class="icon-btn" onclick="closeModal()">✕</button></div>
+      <div class="modal-body">
+        <div class="form-group"><label class="form-label">Assign to Manager</label><input class="form-control" id="m-mgr" value="${esc(emp?.manager||'')}"></div>
+        <div class="form-group"><label class="form-label">Task</label><input class="form-control" id="m-mgr-task" placeholder="E.g. Complete performance review for…"></div>
+        <div class="form-group"><label class="form-label">Due Date</label><input type="date" class="form-control" id="m-mgr-due" value="2024-03-15"></div>
+        <input type="hidden" id="m-mgr-emp" value="${empId}">
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitManagerTask()">Assign</button></div>
+    </div>`;
+  } else if(type==='reconcile') {
+    const empId=args[0], field=args[1];
+    const emp=STATE.employees.find(e=>e.id===empId);
+    html=`<div class="modal">
+      <div class="modal-header"><span class="modal-title">Reconcile — ${esc(field)} for ${esc(emp?.name)}</span><button class="icon-btn" onclick="closeModal()">✕</button></div>
+      <div class="modal-body">
+        <div class="form-row mb-3">
+          <div class="card p-3"><div class="text-xs text-muted">HRIS (Workday)</div><div class="fw-700 text-lg">${fmtCur(emp?.systems.hris.salary)}</div></div>
+          <div class="card p-3"><div class="text-xs text-muted">Payroll (ADP)</div><div class="fw-700 text-lg text-danger">${fmtCur(emp?.systems.payroll?.salary)}</div></div>
+        </div>
+        <div class="form-group"><label class="form-label">Resolution</label>
+          <select class="form-control" id="m-recon-choice"><option value="hris">Keep HRIS value (${fmtCur(emp?.systems.hris.salary)})</option><option value="payroll">Keep Payroll value (${fmtCur(emp?.systems.payroll?.salary)})</option><option value="custom">Enter custom value</option></select></div>
+        <div class="form-group" id="m-custom-group" style="display:none"><label class="form-label">Custom Value</label><input type="number" class="form-control" id="m-recon-custom"></div>
+        <input type="hidden" id="m-recon-emp" value="${empId}">
+      </div>
+      <div class="modal-footer"><button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="submitRecon()">Apply & Log</button></div>
+    </div>`;
+  }
+  overlay.innerHTML=html;
+  document.getElementById('modals').appendChild(overlay);
+  overlay.querySelector('select')?.addEventListener('change',e=>{if(e.target.id==='m-recon-choice')document.getElementById('m-custom-group').style.display=e.target.value==='custom'?'block':'none';});
+  overlay.querySelector('input,textarea,select')?.focus();
+  document.addEventListener('keydown',escClose);
+}
+
+function escClose(e){if(e.key==='Escape')closeModal();}
+function closeModal(){document.getElementById('modals').innerHTML='';document.removeEventListener('keydown',escClose);}
+
+function applyTemplate(tpl) {
+  const t={grievance:{type:'Employee Relations',subtype:'Grievance',title:'Formal Grievance — ',notes:'Employee has filed a formal grievance. Initial investigation to begin within 5 business days.'},misconduct:{type:'Employee Relations',subtype:'Misconduct',title:'Misconduct Investigation — ',notes:'Alleged misconduct reported. Pending initial fact-finding interview.'},accommodation:{type:'Accommodation',subtype:'Medical',title:'Accommodation Request — ',notes:'Employee has requested a workplace accommodation. Medical documentation pending review.'},policy:{type:'Employee Relations',subtype:'Policy Violation',title:'Policy Violation — ',notes:'Policy violation reported. Employee counseling scheduled.'},pip:{type:'Performance',subtype:'PIP',title:'Performance Improvement Plan — ',notes:'90-day PIP initiated following performance review.'}};
+  const tmpl=t[tpl];if(!tmpl)return;
+  const empName=document.getElementById('m-emp')?.options[document.getElementById('m-emp')?.selectedIndex]?.text?.split(' (')[0]||'';
+  if(document.getElementById('m-type'))document.getElementById('m-type').value=tmpl.type;
+  if(document.getElementById('m-title'))document.getElementById('m-title').value=tmpl.title+empName;
+  if(document.getElementById('m-notes'))document.getElementById('m-notes').value=tmpl.notes;
+}
+
+function submitNewCase() {
+  const title=document.getElementById('m-title')?.value?.trim();
+  const empId=document.getElementById('m-emp')?.value;
+  const type=document.getElementById('m-type')?.value;
+  const sev=document.getElementById('m-sev')?.value;
+  const notes=document.getElementById('m-notes')?.value;
+  const sla=document.getElementById('m-sla')?.value;
+  if(!title){showToast('Enter a case title.','warning');return;}
+  const id='C-2024-'+String(STATE.cases.length+1).padStart(3,'0');
+  const nc={id,type,subtype:type,employee:empId,title,status:'Open',severity:sev,owner:'Sarah Reynolds',sla,created:'2024-03-01',updated:'2024-03-01',timeline:[{date:'2024-03-01',actor:'Sarah Reynolds',type:'action',text:'Case created.'}],notes,tasks:[],outcome:''};
+  STATE.cases.unshift(nc);
+  addAudit('Sarah Reynolds','Case Created',id,title);
+  updateBadges();
+  if(STATE.settings.persistence)saveToStorage();
+  closeModal();showToast('Case '+id+' created.','success');
+  openCase(id);
+}
+
+function submitNote() {
+  const caseId=document.getElementById('m-case-id')?.value;
+  const text=document.getElementById('m-note-text')?.value?.trim();
+  if(!text){showToast('Enter a note.','warning');return;}
+  const c=STATE.cases.find(c=>c.id===caseId);
+  if(c){c.timeline.push({date:'2024-03-01',actor:'Sarah Reynolds',type:'action',text});c.notes=(c.notes?c.notes+'\n':'')+text;c.updated='2024-03-01';}
+  addAudit('Sarah Reynolds','Note Added',caseId,text.substring(0,60));
+  if(STATE.settings.persistence)saveToStorage();
+  closeModal();showToast('Note added.','success');
+  renderCaseDetail(document.getElementById('main'));
+}
+
+function submitTask() {
+  const caseId=document.getElementById('m-task-case')?.value;
+  const title=document.getElementById('m-task-title')?.value?.trim();
+  const owner=document.getElementById('m-task-owner')?.value?.trim()||'Sarah Reynolds';
+  const due=document.getElementById('m-task-due')?.value;
+  const sev=document.getElementById('m-task-sev')?.value||'Medium';
+  if(!title){showToast('Enter a task title.','warning');return;}
+  const task={id:'T'+Date.now(),title,case:caseId,owner,due,done:false,severity:sev};
+  const c=STATE.cases.find(c=>c.id===caseId);
+  if(c)c.tasks.push(task);
+  STATE.tasks.push(task);
+  addAudit('Sarah Reynolds','Task Created',caseId,title);
+  if(STATE.settings.persistence)saveToStorage();
+  closeModal();showToast('Task added.','success');
+  if(selectedCase)renderCaseDetail(document.getElementById('main'));
+}
+
+function submitManagerTask() {
+  const mgr=document.getElementById('m-mgr')?.value?.trim();
+  const taskTitle=document.getElementById('m-mgr-task')?.value?.trim();
+  const due=document.getElementById('m-mgr-due')?.value;
+  const empId=document.getElementById('m-mgr-emp')?.value;
+  if(!taskTitle){showToast('Enter a task.','warning');return;}
+  const task={id:'T'+Date.now(),title:taskTitle,case:'Manager Action',owner:mgr,due,done:false,severity:'Medium'};
+  STATE.tasks.push(task);
+  addAudit('Sarah Reynolds','Manager Task Assigned',empId,`Assigned to ${mgr}: ${taskTitle}`);
+  if(STATE.settings.persistence)saveToStorage();
+  closeModal();showToast('Task assigned to '+mgr+'.','success');
+}
+
+function submitRecon() {
+  const empId=document.getElementById('m-recon-emp')?.value;
+  const choice=document.getElementById('m-recon-choice')?.value;
+  const emp=STATE.employees.find(e=>e.id===empId);
+  if(!emp)return;
+  let val;
+  if(choice==='hris')val=emp.systems.hris.salary;
+  else if(choice==='payroll')val=emp.systems.payroll?.salary||emp.systems.hris.salary;
+  else{val=+document.getElementById('m-recon-custom')?.value;if(!val){showToast('Enter a valid value.','warning');return;}}
+  emp.salary=val;emp.systems.hris.salary=val;if(emp.systems.payroll)emp.systems.payroll.salary=val;
+  addAudit('Sarah Reynolds','Reconciliation Applied',empId,`Salary set to ${fmtCur(val)} via modal.`);
+  if(STATE.settings.persistence)saveToStorage();
+  closeModal();showToast('Reconciliation applied and logged.','success');
+  if(selectedEmployee?.id===empId)renderEmployee360(document.getElementById('main'));
+}
+
+// ===================== NOTIFICATIONS =====================
+function renderNotifications() {
+  const dd=document.getElementById('notif-dropdown');
+  dd.innerHTML=`<div class="notif-header">Notifications<button style="background:none;border:none;font-size:11px;color:var(--primary);cursor:pointer" onclick="markAllRead()">Mark all read</button></div>
+  ${STATE.notifications.map(n=>`<div class="notif-item ${!n.read?'':'opacity-70'}" onclick="markRead('${n.id}')">
+    <div class="flex items-center gap-2 mb-1"><span class="sev sev-${n.severity==='critical'?'critical':n.severity==='high'?'high':'medium'}"></span><div class="notif-title">${esc(n.title)}</div></div>
+    <div class="text-xs text-muted">${esc(n.msg)}</div>
+    <div class="notif-time">${n.time} ${!n.read?'<span class="badge badge-primary" style="font-size:9px;padding:1px 4px">NEW</span>':''}</div>
+  </div>`).join('')}`;
+}
+
+function markRead(id){const n=STATE.notifications.find(n=>n.id===id);if(n)n.read=true;updateBadges();renderNotifications();}
+function markAllRead(){STATE.notifications.forEach(n=>n.read=true);updateBadges();renderNotifications();}
+function updateBadges(){
+  const unread=STATE.notifications.filter(n=>!n.read).length;
+  document.getElementById('notif-count').textContent=unread;
+  document.getElementById('notif-count').style.display=unread?'flex':'none';
+  const openCases=STATE.cases.filter(c=>c.status!=='Closed').length;
+  document.getElementById('cases-badge').textContent=openCases;
+  const compAlerts=STATE.compliance.filter(c=>c.status==='Overdue'||c.status==='Missing').length;
+  document.getElementById('compliance-badge').textContent=compAlerts;
+}
+
+// ===================== AI COPILOT =====================
+function updateAISuggestions() {
+  const el=document.getElementById('ai-suggestions');
+  const prompts=getContextPrompts();
+  el.innerHTML=`<div class="ai-sugg-label">Suggested</div>${prompts.map(p=>`<button class="ai-sugg-btn" onclick="sendAI(${JSON.stringify(p)})">${esc(p)}</button>`).join('')}`;
+}
+
+function getContextPrompts() {
+  if(currentRoute==='/dashboard') return['Summarize today\'s priority queue','Which issues need immediate attention?','How much time am I wasting on manual reconciliation?'];
+  if(currentRoute.startsWith('/employees/') && selectedEmployee) return[`Summarize ${selectedEmployee.name}'s HR profile`,'Draft a manager email about compliance','What are the data mismatches for this employee?','Suggest next steps for retention risk'];
+  if(currentRoute.startsWith('/employees')) return['List high-risk employees','Which employees have compliance issues?','Who has salary discrepancies?'];
+  if(currentRoute.startsWith('/cases/') && selectedCase) return[`What are next steps for ${selectedCase.id}?`,'Draft a case summary','Who has overdue tasks on this case?'];
+  if(currentRoute.startsWith('/cases')) return['Summarize open critical cases','Which cases are approaching SLA?','Draft a case status update'];
+  if(currentRoute==='/compliance') return['Which departments have the most compliance issues?','Draft a manager escalation for overdue training','Summarize compliance exposure'];
+  if(currentRoute==='/integrations') return['Explain the ADP payroll errors','Suggest reconciliation steps for salary discrepancies','What integration issues are most critical?'];
+  if(currentRoute==='/reports') return['Explain headcount trends','What does the ER trend data show?','How much annual savings can we achieve?'];
+  return['Summarize current HR priorities','What requires immediate action?','Show me the highest risk items'];
+}
+
+function sendAI(text) {
+  document.getElementById('ai-input').value=text;
+  submitAI();
+}
+
+async function callBoomiStatusAPI(userInput) {
+  const creds = btoa(BOOMI_API_USER + ':' + BOOMI_API_SECRET);
+  try {
+    const resp = await fetch(BOOMI_STATUS_URL, {
+      method: 'POST',
+      headers: { 'Authorization': 'Basic ' + creds, 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify({ question: userInput })
+    });
+    if (!resp.ok) return { ok: false, status: resp.status };
+    const data = await resp.json();
+    return { ok: true, data };
+  } catch (e) {
+    return { ok: false, error: e.message };
+  }
+}
+
+async function submitAI() {
+  const input=document.getElementById('ai-input');
+  const text=input.value.trim();
+  if(!text)return;
+  input.value='';
+  const sendBtn=document.getElementById('ai-send');
+  sendBtn.disabled=true;
+  STATE.aiHistory.push({role:'user',content:text});
+  STATE.aiHistory.push({role:'assistant',content:'',typing:true});
+  renderAIMessages();
+  const useCtx=document.getElementById('ai-context-toggle')?.checked;
+  const [apiResult]=await Promise.all([
+    callBoomiStatusAPI(text),
+    new Promise(r=>setTimeout(r,500))
+  ]);
+  STATE.aiHistory=STATE.aiHistory.filter(m=>!m.typing);
+  let response;
+  if(apiResult&&apiResult.ok&&apiResult.data!==undefined){
+    const d=apiResult.data;
+    response=typeof d==='string'?d:(typeof d?.data==='string'?d.data:(d?.data?.answer!==undefined?d.data.answer:(d.answer!==undefined?d.answer:JSON.stringify(d,null,2))));
+  } else {
+    response=generateAIResponse(text,useCtx,apiResult);
+  }
+  STATE.aiHistory.push({role:'assistant',content:response,apiResult});
+  renderAIMessages();
+  scrollAI();
+  sendBtn.disabled=false;
+  if(STATE.settings.persistence)saveToStorage();
+}
+
+function generateAIResponse(text, useCtx, apiResult) {
+  const t=text.toLowerCase();
+  // Route-specific context
+  const ctx=useCtx?buildContext():'';
+  // Priority/summarize
+  if(t.includes('priorit')||t.includes('immediate')||t.includes('urgent')) {
+    const crit=STATE.cases.filter(c=>c.severity==='Critical'&&c.status!=='Closed');
+    const overdTasks=STATE.tasks.filter(t=>!t.done&&isOverdue(t.due));
+    return`**Immediate Priorities:**\n\n${crit.length?`🔴 **Critical Cases (${crit.length}):**\n${crit.map(c=>`• ${c.id}: ${c.title}`).join('\n')}\n\n`:''}${overdTasks.length?`⚠️ **Overdue Tasks (${overdTasks.length}):**\n${overdTasks.slice(0,5).map(t=>`• ${t.title} (due ${fmtDate(t.due)})`).join('\n')}\n\n`:''}**Top action:** ${crit[0]?crit[0].title+' — requires immediate resolution.':'Review overdue compliance items.'}`;
+  }
+  // Summarize
+  if(t.includes('summar')) {
+    if(selectedEmployee&&useCtx){const e=selectedEmployee;return`**Profile Summary — ${e.name}:**\n\n• **Role:** ${e.title}, ${e.dept}\n• **Risk Level:** ${e.riskLevel}\n• **Engagement:** ${e.systems.engagement.score}/100${e.systems.engagement.score<50?' ⚠️ Flight risk':''}\n• **Performance:** ${e.systems.performance.rating}/5.0\n• **Compliance Issues:** ${STATE.compliance.filter(c=>c.employee===e.id&&c.status!=='Completed').length}\n• **Open Cases:** ${STATE.cases.filter(c=>c.employee===e.id&&c.status!=='Closed').length}\n\n${e.riskLevel==='High'?'**Recommendation:** Schedule retention conversation and review compensation alignment.':'No immediate retention concerns.'}`;
+    }
+    if(selectedCase&&useCtx){const c=selectedCase;return`**Case Summary — ${c.id}:**\n\n• **Title:** ${c.title}\n• **Status:** ${c.status} | **Severity:** ${c.severity}\n• **Employee:** ${empName(c.employee)}\n• **Owner:** ${c.owner}\n• **SLA:** ${fmtDate(c.sla)}${isOverdue(c.sla)?' ⚠️ OVERDUE':''}\n• **Open Tasks:** ${c.tasks.filter(t=>!t.done).length}\n\n**Notes:** ${c.notes||'None'}`;}
+    const openCases=STATE.cases.filter(c=>c.status!=='Closed').length;
+    return`**Dashboard Summary:**\n\n• ${openCases} open cases (${STATE.cases.filter(c=>c.severity==='Critical'&&c.status!=='Closed').length} critical)\n• ${STATE.compliance.filter(c=>c.status==='Overdue'||c.status==='Missing').length} compliance alerts\n• ${STATE.integrations.reduce((a,i)=>a+i.errors,0)} integration sync errors\n• ${STATE.employees.filter(e=>e.riskLevel==='High'&&e.status!=='Terminated').length} high retention risk employees\n\nEstimated ${Math.round(STATE.settings.baselineHours*0.4)} hours/week being saved through consolidated visibility.`;
+  }
+  // Draft email
+  if(t.includes('draft')||t.includes('email')||t.includes('message')||t.includes('letter')) {
+    const emp=selectedEmployee;
+    if(emp&&useCtx) {
+      const draft=`Subject: Action Required — ${emp.name} Compliance/HR Follow-up\n\nHi ${emp.manager},\n\nI'm reaching out regarding ${emp.name} (${emp.id}). Please review the following items that require your attention:\n\n${STATE.compliance.filter(c=>c.employee===emp.id&&(c.status==='Overdue'||c.status==='Missing')).map(c=>`• ${c.title} — ${c.status} (${c.daysPast} days past due)`).join('\n')||'No compliance issues.'}\n\nPlease ensure completion by end of week. Let me know if you have questions.\n\nBest regards,\nSarah Reynolds\nHR Business Partner`;
+      addAudit('AI Copilot','Draft Generated','Employee Email',`Manager email drafted for ${emp.name}`);
+      return`**Draft Manager Email:**\n\n\`\`\`\n${draft}\n\`\`\`\n\n*Artifact logged to audit trail.*`;
+    }
+    return`To draft a manager email, navigate to an employee\'s 360 view first and enable "Use context". I can then draft a personalized message based on their specific compliance and HR data.`;
+  }
+  // Next steps
+  if(t.includes('next step')||t.includes('what should')||t.includes('recommend')) {
+    if(selectedCase&&useCtx){const c=selectedCase;const pending=c.tasks.filter(t=>!t.done);return`**Next Steps for ${c.id}:**\n\n${pending.map((t,i)=>`${i+1}. ${t.title} (Owner: ${t.owner}, Due: ${fmtDate(t.due)})`).join('\n')||'All tasks complete — ready to close.'}\n\n**Recommended Action:** ${pending.length?`Follow up with ${pending[0].owner} on "${pending[0].title}"`:c.status==='Open'?'Consider closing this case if resolution is reached.':'Case is in good standing.'}`;
+    }
+    return`**Recommended Actions:**\n\n1. Resolve C-2024-005 (terminated employee in payroll) — CRITICAL\n2. Audit salary discrepancy for Jordan Williams — SLA March 10\n3. Send COBRA notice for Omar Hassan — 44 days remaining\n4. Escalate manager tasks overdue on C-2024-001\n5. Complete compliance follow-up for Priya Patel and Derek Thompson`;
+  }
+  // Reconcile/integration
+  if(t.includes('reconcil')||t.includes('mismatch')||t.includes('discrepanc')) {
+    const mismatches=STATE.employees.filter(e=>e.systems.hris.salary!==e.systems.payroll?.salary);
+    return`**Salary Discrepancies Detected (${mismatches.length}):**\n\n${mismatches.map(e=>`• **${e.name}**: HRIS ${fmtCur(e.systems.hris.salary)} vs Payroll ${fmtCur(e.systems.payroll?.salary||0)} (Δ${fmtCur(Math.abs(e.systems.hris.salary-(e.systems.payroll?.salary||0)))})`).join('\n')}\n\n**Resolution steps:**\n1. Cross-reference latest merit increase letters\n2. Identify which system is the canonical source\n3. Submit payroll correction if overpayment occurred\n4. Use the Reconcile button in the Employee 360 Employment tab`;
+  }
+  // Trends/explain
+  if(t.includes('trend')||t.includes('explain')||t.includes('insight')||t.includes('analyz')) {
+    return`**HR Operational Trends (Q1 2024):**\n\n📊 **Cases:** ${STATE.cases.length} total, ${STATE.cases.filter(c=>c.severity==='Critical').length} critical. ER cases trending from accommodation and misconduct types.\n\n🔗 **Integrations:** ADP Payroll has the highest error rate (4 errors). Salary and status sync are the most common failure types.\n\n👥 **Retention Risk:** ${STATE.employees.filter(e=>e.riskLevel==='High').length} employees flagged as high risk — Sales and Customer Success departments are most affected.\n\n✅ **Compliance:** ${STATE.compliance.filter(c=>c.status==='Overdue').length} overdue training items across ${[...new Set(STATE.compliance.map(c=>c.dept))].length} departments. Marketing and Sales have the highest exposure.`;
+  }
+  // Compliance
+  if(t.includes('complianc')) {
+    const issues=STATE.compliance.filter(c=>c.status==='Overdue'||c.status==='Missing');
+    return`**Compliance Summary:**\n\n${issues.length} open items:\n${[...new Set(issues.map(c=>c.employeeName))].map(n=>{const emp=issues.filter(i=>i.employeeName===n);return`• **${n}**: ${emp.length} item${emp.length>1?'s':''} (${emp.map(i=>i.type).join(', ')})`;}).join('\n')}\n\n**Highest exposure:** ${issues.sort((a,b)=>b.daysPast-a.daysPast)[0]?.title} — ${issues[0]?.daysPast} days overdue.`;
+  }
+  // Time saved
+  if(t.includes('time')||t.includes('sav')||t.includes('efficien')||t.includes('hour')) {
+    const hr=STATE.settings.hourlyRate,bh=STATE.settings.baselineHours;
+    const hSaved=Math.round(bh*0.4),wSave=Math.round(hSaved*hr),ySave=wSave*52;
+    return`**Operational Efficiency Estimate:**\n\n• Baseline manual work: **${bh} hrs/week** per HR professional\n• Estimated savings from consolidated view: **${hSaved} hrs/week** (40% reduction)\n• Weekly dollar value: **${fmtCur(wSave)}** at ${fmtCur(hr)}/hr\n• **Annual savings per HR FTE: ${fmtCur(ySave)}**\n\nFor a 5-person HR team, that's approximately **${fmtCur(ySave*5)}** in recovered productivity annually. Adjust the hourly rate and baseline in Settings or the Dashboard widget.`;
+  }
+  // System/API status
+  if(t.includes('status')||t.includes('online')||t.includes('available')||t.includes('health')||t.includes('api')) {
+    if(apiResult&&apiResult.ok&&apiResult.data) {
+      const d=apiResult.data;
+      const comps=Object.entries(d.components||{}).map(([k,v])=>`• **${k}**: ${v}`).join('\n');
+      return`**${d.service} — Live Status**\n\nService: **${d.status.toUpperCase()}** (v${d.version})\n${d.message}\n\n**Component Availability:**\n${comps}\n\n**AI Agent:** ${d.agent?.name} — ${d.agent?.status}\nCapabilities: ${d.agent?.capabilities?.join(', ')}`;
+    }
+    return`**System Status:**\n\nService: **ONLINE** (local data mode)\nAll 9 HR Ops Console APIs are deployed to the Boomi cloud. Live API connectivity requires APIM configuration on the Advanced atom.`;
+  }
+  // Generic fallback
+  const fallbacks=[`I can help you with:\n\n• **Summarize** — dashboard, employee profiles, or cases\n• **Draft** — manager emails or case notes\n• **Next steps** — for cases or compliance issues\n• **Reconcile** — salary and field mismatches\n• **Explain trends** — in cases, compliance, or integration errors\n• **Time savings** — operational efficiency calculations\n• **Status** — check Boomi API connectivity\n\nTry asking: "Summarize the priority queue" or "What are next steps for the payroll exception?"`,`Based on your current data, you have ${STATE.cases.filter(c=>c.status!=='Closed').length} open cases and ${STATE.compliance.filter(c=>c.status==='Overdue').length} compliance alerts. What would you like to focus on?`];
+  return fallbacks[Math.floor(Math.random()*fallbacks.length)];
+}
+
+function buildContext() {
+  if(selectedEmployee) return`[Context: Employee ${selectedEmployee.name}, ${selectedEmployee.dept}, Risk: ${selectedEmployee.riskLevel}]`;
+  if(selectedCase) return`[Context: Case ${selectedCase.id} — ${selectedCase.title}, Status: ${selectedCase.status}]`;
+  if(currentRoute==='/integrations'&&selectedIntegration) return`[Context: Integration ${STATE.integrations.find(i=>i.id===selectedIntegration)?.name}]`;
+  return`[Context: Route ${currentRoute}]`;
+}
+
+function renderAIMessages() {
+  const el=document.getElementById('ai-messages');
+  el.innerHTML=STATE.aiHistory.map(m=>{
+    if(m.typing) return`<div class="ai-msg assistant"><div class="ai-typing"><span></span><span></span><span></span></div></div>`;
+    let badge='';
+    if(m.role==='assistant'&&m.apiResult!==undefined) {
+      badge=m.apiResult.ok
+        ?`<div class="ai-api-badge ok">✓ Boomi AI Connected</div>`
+        :`<div class="ai-api-badge err">◌ Boomi AI Offline</div>`;
+    }
+    return`<div class="ai-msg ${m.role}">${formatAIMsg(m.content)}${badge}</div>`;
+  }).join('');
+  scrollAI();
+}
+
+function formatAIMsg(text) {
+  return esc(text)
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/```([\s\S]*?)```/g,'<pre style="background:#f1f5f9;padding:8px;border-radius:4px;font-size:11px;overflow-x:auto;margin-top:4px;white-space:pre-wrap">$1</pre>')
+    .replace(/\n/g,'<br>');
+}
+
+function scrollAI(){const el=document.getElementById('ai-messages');if(el)el.scrollTop=el.scrollHeight;}
+
+// ===================== SEARCH =====================
+function initSearch() {
+  const inp=document.getElementById('global-search');
+  const res=document.getElementById('search-results');
+  inp.addEventListener('input',function(){
+    const v=this.value.trim().toLowerCase();
+    if(v.length<2){res.classList.remove('show');return;}
+    const matches=STATE.employees.filter(e=>e.name.toLowerCase().includes(v)||e.id.toLowerCase().includes(v)||e.email.toLowerCase().includes(v)).slice(0,6);
+    if(!matches.length){res.classList.remove('show');return;}
+    res.innerHTML=matches.map(e=>`<div class="search-item" onclick="openEmployee('${e.id}');document.getElementById('global-search').value='';document.getElementById('search-results').classList.remove('show')">
+      <div class="flex items-center gap-2"><div class="avatar" style="background:${deptColor(e.dept)};width:24px;height:24px;font-size:10px">${e.name.split(' ').map(n=>n[0]).join('')}</div>
+      <div><div class="emp-name">${esc(e.name)}</div><div class="emp-meta">${esc(e.id)} · ${esc(e.dept)} · ${esc(e.email)}</div></div></div>
+    </div>`).join('');
+    res.classList.add('show');
+  });
+  document.addEventListener('click',e=>{if(!inp.contains(e.target)&&!res.contains(e.target))res.classList.remove('show');});
+}
+
+// ===================== UTILITIES =====================
+function exportCSV(data,cols,filename) {
+  const rows=[cols.join(','),...data.map(r=>cols.map(c=>{const v=r[c]!==undefined?r[c]:'';return'"'+String(v).replace(/"/g,'""')+'"';}).join(','))];
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=(filename||'export')+'.csv';a.click();URL.revokeObjectURL(url);
+}
+
+function showToast(msg,type='info') {
+  const t=document.createElement('div');
+  t.style.cssText=`position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:${type==='success'?'var(--success)':type==='warning'?'var(--warning)':'var(--primary)'};color:#fff;padding:10px 20px;border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:2000;font-size:13px;font-weight:500;max-width:400px;text-align:center`;
+  t.textContent=msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(),3500);
+}
+
+// ===================== INIT =====================
+function init() {
+  if(STATE.settings.persistence) loadFromStorage();
+  // Nav click handlers
+  document.querySelectorAll('.nav-item[data-route]').forEach(el=>{
+    el.addEventListener('click',()=>{
+      selectedEmployee=null;selectedCase=null;selectedIntegration=null;selectedError=null;
+      navigate(el.dataset.route);
+    });
+  });
+  // Notifications
+  const notifBtn=document.getElementById('notif-btn');
+  const notifDD=document.getElementById('notif-dropdown');
+  notifBtn.addEventListener('click',e=>{e.stopPropagation();renderNotifications();notifDD.classList.toggle('show');});
+  document.addEventListener('click',()=>notifDD.classList.remove('show'));
+  // Create button
+  document.getElementById('create-btn').addEventListener('click',()=>showModal('new-case'));
+  // AI panel
+  document.getElementById('ai-clear').addEventListener('click',()=>{STATE.aiHistory=[{role:'assistant',content:'Chat cleared. How can I help you?'}];renderAIMessages();});
+  const aiInput=document.getElementById('ai-input');
+  aiInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();submitAI();}});
+  document.getElementById('ai-send').addEventListener('click',submitAI);
+  document.getElementById('ai-context-toggle').addEventListener('change',e=>{aiUseContext=e.target.checked;});
+  // AI panel toggle on mobile
+  document.getElementById('ai-toggle-btn').addEventListener('click',()=>{document.getElementById('ai-panel').classList.toggle('open');});
+  // Menu toggle on mobile
+  const menuBtn=document.getElementById('menu-toggle');
+  if(window.innerWidth<=820){menuBtn.style.display='flex';}
+  menuBtn.addEventListener('click',()=>document.getElementById('sidebar').classList.toggle('open'));
+  window.addEventListener('resize',()=>{menuBtn.style.display=window.innerWidth<=820?'flex':'none';});
+  // Hash routing
+  const hash=window.location.hash.replace('#','');
+  if(hash && hash.startsWith('/')) {
+    currentRoute=hash;
+    // restore nav active state
+    document.querySelectorAll('.nav-item[data-route]').forEach(el=>{
+      el.classList.toggle('active',hash.startsWith(el.dataset.route)&&(hash===el.dataset.route||hash.startsWith(el.dataset.route+'/')));
+    });
+  } else {
+    currentRoute='/dashboard';
+    document.querySelector('.nav-item[data-route="/dashboard"]').classList.add('active');
+  }
+  // Init search
+  initSearch();
+  // Render initial view
+  renderMain();
+  // Render AI messages
+  renderAIMessages();
+  updateAISuggestions();
+  updateBadges();
+}
+
+document.addEventListener('DOMContentLoaded', init);
+</script>
+</body>
+</html>

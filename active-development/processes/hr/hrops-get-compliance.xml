@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/" componentId="" name="HROpsConsole - Get Compliance" type="process" folderId="Rjo4MzYyNzAx">
+  <bns:encryptedValues/>
+  <bns:description>Returns all compliance alerts including overdue training, missing acknowledgments, and documentation gaps</bns:description>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="c9370ff5-2358-4daa-a932-652d4c2486d8">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Compliance Alerts - All Items" x="321.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"summary":{"overdueTraining":8,"missingAcknowledgments":3,"missingDocumentation":1,"totalAlerts":12,"employeesAffected":5},"items":[{"id":"COMP-001","type":"Training","category":"Mandatory","title":"Annual Harassment Prevention Training","employeeId":"E002","employeeName":"Priya Patel","dept":"Marketing","dueDate":"2024-01-31","status":"Overdue","daysPast":29},{"id":"COMP-002","type":"Training","category":"Mandatory","title":"Cybersecurity Awareness Training","employeeId":"E002","employeeName":"Priya Patel","dept":"Marketing","dueDate":"2024-02-01","status":"Overdue","daysPast":28},{"id":"COMP-003","type":"Training","category":"Mandatory","title":"Annual Harassment Prevention Training","employeeId":"E003","employeeName":"Jordan Williams","dept":"Finance","dueDate":"2024-01-31","status":"Overdue","daysPast":29},{"id":"COMP-004","type":"Training","category":"Mandatory","title":"Safety Training Module 2","employeeId":"E003","employeeName":"Jordan Williams","dept":"Finance","dueDate":"2024-01-15","status":"Overdue","daysPast":45},{"id":"COMP-005","type":"Training","category":"Mandatory","title":"Safety Training Module 1","employeeId":"E005","employeeName":"Derek Thompson","dept":"Sales","dueDate":"2024-01-15","status":"Overdue","daysPast":45},{"id":"COMP-006","type":"Training","category":"Mandatory","title":"Export Control Certification","employeeId":"E005","employeeName":"Derek Thompson","dept":"Sales","dueDate":"2024-02-15","status":"Overdue","daysPast":14},{"id":"COMP-007","type":"Training","category":"Mandatory","title":"Safety Training Module 1","employeeId":"E010","employeeName":"Tanya Jackson","dept":"Customer Success","dueDate":"2024-02-01","status":"Overdue","daysPast":28},{"id":"COMP-008","type":"Training","category":"Mandatory","title":"Export Control Certification","employeeId":"E010","employeeName":"Tanya Jackson","dept":"Customer Success","dueDate":"2024-02-28","status":"Overdue","daysPast":1},{"id":"COMP-009","type":"Acknowledgment","category":"Policy","title":"2024 Employee Handbook Acknowledgment","employeeId":"E002","employeeName":"Priya Patel","dept":"Marketing","dueDate":"2024-01-15","status":"Missing","daysPast":45},{"id":"COMP-010","type":"Acknowledgment","category":"Policy","title":"Data Privacy Policy Acknowledgment","employeeId":"E003","employeeName":"Jordan Williams","dept":"Finance","dueDate":"2024-01-31","status":"Missing","daysPast":29},{"id":"COMP-011","type":"Acknowledgment","category":"Policy","title":"Acceptable Use Policy Acknowledgment","employeeId":"E003","employeeName":"Jordan Williams","dept":"Finance","dueDate":"2024-01-31","status":"Missing","daysPast":29},{"id":"COMP-012","type":"Documentation","category":"HR File","title":"Signed Offer Letter on File","employeeId":"E015","employeeName":"Omar Hassan","dept":"Operations","dueDate":"2024-03-01","status":"Missing","daysPast":0}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="547.0" y="104.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" userlabel="Return Compliance JSON" x="572.0" y="94.0">
+          <configuration>
+            <returndocuments label="Return Compliance JSON"/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

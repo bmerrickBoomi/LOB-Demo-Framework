@@ -1,0 +1,13 @@
+{
+  "request_id": "executionrecord-ce782eca-d1b8-4fc3-913a-814062942a05",
+  "timestamp": "2026-02-20T13:49:30.350542",
+  "execution_record": {
+    "execution_id": "execution-859c94d3-65f3-4e3c-b1fc-4e8308eb8e65-2026.02.20",
+    "status": "COMPLETE",
+    "start_time": "2026-02-20T18:49:15Z",
+    "end_time": "2026-02-20T18:49:15Z",
+    "raw_xml": "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><bns:AsyncOperationResult xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:bns=\"http://api.platform.boomi.com/\" responseStatusCode=\"200\"><bns:result xsi:type=\"bns:ExecutionRecord\"><bns:executionId>execution-859c94d3-65f3-4e3c-b1fc-4e8308eb8e65-2026.02.20</bns:executionId><bns:account>boomi_brianmerrick-4SYB9W</bns:account><bns:executionTime>2026-02-20T18:49:15Z</bns:executionTime><bns:status>COMPLETE</bns:status><bns:executionType>exec_manual</bns:executionType><bns:processName>Hello_World</bns:processName><bns:processId>797a2b7a-2639-4c81-bf48-743ef885bb61</bns:processId><bns:atomName>Windows</bns:atomName><bns:atomId>17012ed9-fb32-4b44-a86a-fcf0fcc50997</bns:atomId><bns:inboundDocumentCount>1</bns:inboundDocumentCount><bns:inboundErrorDocumentCount>0</bns:inboundErrorDocumentCount><bns:outboundDocumentCount>0</bns:outboundDocumentCount><bns:executionDuration>130</bns:executionDuration><bns:inboundDocumentSize>0</bns:inboundDocumentSize><bns:outboundDocumentSize>0</bns:outboundDocumentSize><bns:recordedDate>2026-02-20T18:49:15Z</bns:recordedDate></bns:result></bns:AsyncOperationResult>"
+  },
+  "logs": "2026-02-20T18:49:15Z\tINFO\tinitializing...\t\tExecuting Process Hello_World\r\n2026-02-20T18:49:15Z\tINFO\tStart\tNoData\tExecuting Start Shape\r\n2026-02-20T18:49:15Z\tINFO\tStart\tNoData\t1 document(s) found for processing.\r\n2026-02-20T18:49:15Z\tINFO\tStart\tNoData\tShape executed successfully in 16 ms.\r\n2026-02-20T18:49:15Z\tINFO\tSet Hello World payload\t\tExecuting Message Shape with 1 document(s).\r\n2026-02-20T18:49:15Z\tINFO\tSet Hello World payload\t\tShape executed successfully in 10 ms.\r\n2026-02-20T18:49:15Z\tINFO\tLog output\t\tExecuting Notify Shape with 1 document(s).\r\n2026-02-20T18:49:15Z\tINFO\tLog output\t\t: Hello World output: Hello, World!\r\n2026-02-20T18:49:15Z\tINFO\tLog output\t\tShape executed successfully in 8 ms.\r\n2026-02-20T18:49:15Z\tINFO\tStop\tcontinuing process\tExecuting Stop Shape with 1 document(s).\r\n2026-02-20T18:49:15Z\tINFO\tStop\tcontinuing process\tShape executed successfully in 1 ms.\r\n2026-02-20T18:49:15Z\tINFO\tcleanup...\t\tProcess execution completed normally.\r\n",
+  "polling_completed": true
+}

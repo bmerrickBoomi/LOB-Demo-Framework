@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Skill(boomi-core:implementing-boomi)",
+      "Skill(boomi-core:implementing-boomi-connectors)",
+      "Read(~/.claude/plugins/**)",
+      "Bash(python */skills/implementing-boomi/tools/*)",
+      "Bash(python3 */skills/implementing-boomi/tools/*)",
+      "Bash(source:*)",
+      "Bash(echo:*)",
+      "Bash(find:*)",
+      "Bash(tree:*)",
+      "Bash(grep:*)",
+      "Bash(awk:*)",
+      "Bash(cat:*)",
+      "Bash(ls:*)",
+      "Bash(pwd:*)",
+      "Bash(mkdir:*)",
+      "Bash(test:*)",
+      "Bash(head:*)",
+      "Bash(tail:*)",
+      "Bash(wc:*)",
+      "Bash(sort:*)",
+      "Bash(uniq:*)",
+      "Bash(diff:*)",
+      "Bash(which:*)",
+      "Bash(env)",
+      "Bash(git status:*)",
+      "Bash(git log:*)",
+      "Bash(git diff:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git branch:*)",
+      "Bash(git fetch:*)"
+    ],
+    "deny": [],
+    "ask": [
+      "Bash(git push:*)",
+      "Bash(git merge:*)",
+      "Bash(git reset:*)"
+    ]
+  }
+}

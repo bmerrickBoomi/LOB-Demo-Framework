@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(rsync:*)",
+      "Bash(python3:*)",
+      "Bash(pip install:*)",
+      "Bash(python3.9:*)",
+      "Bash(python3.10:*)",
+      "Bash(python3.11:*)",
+      "Bash(curl:*)",
+      "Bash(set:*)",
+      "Bash(/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/business-demo/hr-operations-console.html:*)",
+      "Bash(__NEW_LINE_f29706d662f42add__ echo:*)",
+      "Bash(__NEW_LINE_4f80641dae5ef9cc__ echo:*)",
+      "Bash(__NEW_LINE_c87dbab061ed4835__ echo:*)",
+      "Bash(__NEW_LINE_16d8c2950e1e3ac9__ echo:*)",
+      "WebSearch",
+      "WebFetch(domain:help.boomi.com)",
+      "WebFetch(domain:boomi.com)",
+      "WebFetch(domain:nadee-86ds.medium.com)",
+      "Bash(pip3 show:*)",
+      "Bash(pip3 install:*)",
+      "Bash(pip3:*)",
+      "Bash(identify:*)",
+      "Bash(convert:*)"
+    ]
+  }
+}
