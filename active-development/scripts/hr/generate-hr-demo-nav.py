@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Value Based Demo Framework — Demo Navigation Visual
+Business Focused Demo Framework — Demo Navigation Visual
 Sized for Google Slides widescreen (13.33" x 7.5" / 16:9).
 Boomi official brand colors: Navy #082B55 · Teal #003C57 · Coral #FF7864
 """
@@ -13,29 +13,30 @@ from matplotlib.patches import FancyBboxPatch, Circle
 # ─── Figure — exact Google Slides widescreen ratio, edge-to-edge fill ─────────
 W, H = 13.33, 7.5
 fig, ax = plt.subplots(figsize=(W, H))
-fig.patch.set_facecolor('#04101F')
-ax.set_facecolor('#04101F')
+fig.patch.set_facecolor('#f0f5fb')
+ax.set_facecolor('#f0f5fb')
 fig.subplots_adjust(left=0, right=1, top=1, bottom=0)   # axes fill entire figure
 ax.set_xlim(0, W)
 ax.set_ylim(0, H)
 ax.axis('off')
 # No set_aspect('equal') — coordinate space is already 16:9 to match the figure
 
-# ─── Palette — Boomi Official Brand Colors ────────────────────────────────────
-SURFACE   = '#082B55'   # Boomi Navy
-SURFACE2  = '#062040'   # darker navy
+# ─── Palette — light theme, Boomi brand accents ───────────────────────────────
+SURFACE   = '#dce8f8'   # light navy tint
+SURFACE2  = '#c8dcf2'   # slightly darker navy tint
 TEAL      = '#003C57'   # Boomi Teal
 TEAL_L    = '#005A80'
-TEAL_LL   = '#7EC8E3'
-TEAL_BG   = '#011B26'
+TEAL_LL   = '#004f70'   # dark teal for text on light bg
+TEAL_BG   = '#e4f4fa'
 CORAL     = '#FF7864'   # Boomi Coral
-CORAL_L   = '#FF9E90'
-CORAL_LL  = '#FFCDC7'
-CORAL_BG  = '#280B07'
+CORAL_L   = '#d94f3a'   # darker coral for text on light bg
+CORAL_LL  = '#b83d2b'   # darkest coral for subtitles
+CORAL_BG  = '#fff2f0'
 WHITE     = '#ffffff'
-TEXT2     = '#A8BDD4'
-TEXT3     = '#3D5A72'
-BORDER    = '#0D3A5C'
+TEXT_DARK = '#082B55'   # Boomi Navy — used where white text was on dark bg
+TEXT2     = '#1a3555'   # dark secondary text
+TEXT3     = '#1a3555'   # dark muted text
+BORDER    = '#90b4d0'
 
 # ─── Helpers ──────────────────────────────────────────────────────────────────
 def box(x, y, w, h, fc, ec, lw=1.8, pad=0.12, zorder=2):
@@ -46,16 +47,16 @@ def seg(x1, y1, x2, y2, c=BORDER, lw=1.5, zorder=4):
     ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
                 arrowprops=dict(arrowstyle='-', color=c, lw=lw), zorder=zorder)
 
-def arr(x1, y1, x2, y2, c=WHITE, lw=2.0, hw=0.11, zorder=4):
+def arr(x1, y1, x2, y2, c=TEXT_DARK, lw=2.0, hw=0.11, zorder=4):
     ax.annotate('', xy=(x2, y2), xytext=(x1, y1),
                 arrowprops=dict(arrowstyle=f'->,head_width={hw},head_length=0.10',
                                 color=c, lw=lw), zorder=zorder)
 
 # ─── Title ────────────────────────────────────────────────────────────────────
-ax.text(W/2, 7.12, 'Value Based Demo Framework', color=WHITE, fontsize=22,
+ax.text(W/2, 7.12, 'Business Focused Demo Framework', color=TEXT_DARK, fontsize=22,
         fontweight='bold', ha='center', va='center', zorder=6,
         family='sans-serif')
-ax.text(W/2, 6.78, 'Demo Navigation Guide', color=TEAL_LL, fontsize=11,
+ax.text(W/2, 6.78, 'Demo Navigation Guide', color=TEAL_L, fontsize=11,
         ha='center', va='center', zorder=6)
 
 # thin coral rule under subtitle
@@ -79,13 +80,13 @@ box(EX, EY, EW, EH, fc=SURFACE2, ec=CORAL, lw=2.5, pad=0.15, zorder=4)
 ax.add_patch(plt.Rectangle((EX + 0.15, EY + EH - 0.055), EW - 0.30, 0.038,
                              fc=CORAL, ec='none', zorder=5))
 
-ax.text(ECX, ECY + 0.18, 'Unified Entry Page', color=WHITE, fontsize=13,
+ax.text(ECX, ECY + 0.18, 'Unified Entry Page', color=TEXT_DARK, fontsize=13,
         fontweight='bold', ha='center', va='center', zorder=6)
 ax.text(ECX, ECY - 0.16, 'Single URL  —  All audience paths begin here',
         color=CORAL_L, fontsize=8.5, ha='center', va='center', zorder=6)
 
 # ─── Entry → split ────────────────────────────────────────────────────────────
-arr(ECX, EY - 0.01, ECX, 5.12, c=TEXT3, lw=1.6, hw=0.08)
+arr(ECX, EY - 0.01, ECX, 5.12, c=TEXT2, lw=1.6, hw=0.08)
 
 SPY = 5.10
 LEFT_X, RIGHT_X = 3.35, W - 3.35   # = 3.35, 9.98
@@ -150,11 +151,11 @@ FIRST_Y = BY - 0.10
 for i, (title, sub) in enumerate(BIZ_ITEMS):
     ry  = FIRST_Y - 0.08 - i * RH
     rx  = LEFT_X - RW/2
-    box(rx, ry - RHH + 0.02, RW, RHH, fc='#180703', ec=CORAL, lw=0.9, pad=0.07, zorder=4)
+    box(rx, ry - RHH + 0.02, RW, RHH, fc=CORAL_BG, ec=CORAL, lw=0.9, pad=0.07, zorder=4)
     ax.add_patch(Circle((rx + 0.15, ry - RHH/2 + 0.02), 0.052, fc=CORAL, ec='none', zorder=6))
-    ax.text(rx + 0.33, ry - 0.07,  title, color=CORAL_LL, fontsize=8.0,
+    ax.text(rx + 0.33, ry - 0.07,  title, color=CORAL_L, fontsize=8.0,
             fontweight='bold', ha='left', va='center', zorder=6)
-    ax.text(rx + 0.33, ry - 0.24,  sub,   color=TEXT3,    fontsize=7.0,
+    ax.text(rx + 0.33, ry - 0.24,  sub,   color=TEXT3,   fontsize=7.0,
             ha='left', va='center', zorder=6)
     if i < len(BIZ_ITEMS) - 1:
         seg(LEFT_X, ry - RHH + 0.02, LEFT_X, ry - RH - RHH + 0.04, c=BORDER, lw=0.7)
@@ -162,18 +163,18 @@ for i, (title, sub) in enumerate(BIZ_ITEMS):
 for i, (title, sub) in enumerate(IT_ITEMS):
     ry  = FIRST_Y - 0.08 - i * RH
     rx  = RIGHT_X - RW/2
-    box(rx, ry - RHH + 0.02, RW, RHH, fc='#010F18', ec=TEAL, lw=0.9, pad=0.07, zorder=4)
+    box(rx, ry - RHH + 0.02, RW, RHH, fc=TEAL_BG, ec=TEAL, lw=0.9, pad=0.07, zorder=4)
     ax.add_patch(Circle((rx + 0.15, ry - RHH/2 + 0.02), 0.052, fc=TEAL, ec='none', zorder=6))
-    ax.text(rx + 0.33, ry - 0.07,  title, color=TEAL_LL, fontsize=8.0,
+    ax.text(rx + 0.33, ry - 0.07,  title, color=TEAL_L, fontsize=8.0,
             fontweight='bold', ha='left', va='center', zorder=6)
-    ax.text(rx + 0.33, ry - 0.24,  sub,   color=TEXT3,   fontsize=7.0,
+    ax.text(rx + 0.33, ry - 0.24,  sub,   color=TEXT3,  fontsize=7.0,
             ha='left', va='center', zorder=6)
     if i < len(IT_ITEMS) - 1:
         seg(RIGHT_X, ry - RHH + 0.02, RIGHT_X, ry - RH - RHH + 0.04, c=BORDER, lw=0.7)
 
 # ─── Footer ───────────────────────────────────────────────────────────────────
 ax.plot([0.5, W - 0.5], [0.38, 0.38], color=BORDER, lw=0.7, zorder=3)
-ax.text(W/2, 0.20, 'Boomi Value Based Demo Framework  —  Adaptable to any industry or use case',
+ax.text(W/2, 0.20, 'Boomi Business Focused Demo Framework  —  Adaptable to any industry or use case',
         color=TEXT3, fontsize=7.5, ha='center', va='center', zorder=4)
 
 # ─── Save — exact pixel dimensions for Google Slides 16:9 ────────────────────
@@ -182,6 +183,6 @@ output_path = (
     '/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/'
     'boomicompanion_template_workspace/business-demo/hr/vbdf-demo-nav.png'
 )
-plt.savefig(output_path, dpi=144, facecolor='#04101F', edgecolor='none', format='png')
+plt.savefig(output_path, dpi=144, facecolor='#f0f5fb', edgecolor='none', format='png')
 plt.close(fig)
 print(f'Saved: {output_path}')
