@@ -376,22 +376,22 @@ ax.text(11, 6.08, "How This Makes Your Job Easier",
         ha='center', va='center', fontsize=14, fontweight='bold', color=TEXT_DARK, zorder=3)
 
 BCARDS = [
-    (0.5,  BLUE_LT,   BLUE,   '40%',   BLUE,   36,
-     'Less time on manual lookups',
-     ['No more tab switching', 'Instant cross-system answers',
-      'Automated data lookup', 'Focus on people, not systems']),
-    (5.5,  PURPLE_LT, PURPLE, 'ONE\nPLACE', PURPLE, 20,
-     'Unified view of your HR world',
-     ['Dashboard with live priorities', 'Employee 360-degree profiles',
-      'Cases, tasks & compliance', 'Integration health at a glance']),
-    (10.8, GREEN_LT,  GREEN,  'AI\nHR', GREEN,  20,
-     'Understands HR, not just data',
-     ['Answers in plain English', 'Knows your cases & employees',
-      'Suggests next steps', 'Flags risks proactively']),
-    (16.0, ORANGE_LT, ORANGE, 'SECURE', ORANGE, 20,
-     'Your data stays protected',
-     ['Secure login required', 'IT-managed access controls',
-      'No data leaves Boomi', 'Full audit trail']),
+    (0.5,  BLUE_LT,   BLUE,   '50%',   BLUE,   36,
+     'Less time on admin — more time on people',
+     ['Stop switching between 5+ systems', 'Instant cross-system answers',
+      'Automated data lookup', 'Focus on strategy, not spreadsheets']),
+    (5.5,  PURPLE_LT, PURPLE, '3.6', PURPLE, 36,
+     'Hours back in your week, every week',
+     ['Auto-prioritized case queue', 'Full employee history in one click',
+      'Compliance deadlines always current', 'No manual triage needed']),
+    (10.8, GREEN_LT,  GREEN,  '85%', GREEN,  36,
+     'Of HR AI users say it makes their job easier',
+     ['5 systems queried simultaneously', 'Risks surfaced before they escalate',
+      'Instant employee data lookup', 'Zero manual system logins']),
+    (16.0, ORANGE_LT, ORANGE, '65%', ORANGE, 36,
+     'Cite automation as their top compliance fix',
+     ['Automated policy deadline alerts', 'Real-time audit trail',
+      'Certification gaps flagged early', 'Full visibility, zero surprises']),
 ]
 
 BCARD_W = 4.7
@@ -446,7 +446,7 @@ ax.text(11, 0.42,
 #  SAVE
 # ══════════════════════════════════════════════════════════════════════════════
 out_path = ("/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/"
-            "boomicompanion_template_workspace/business-demo/hr-ops-hr-visual.png")
+            "boomicompanion_template_workspace/business-demo/hr/hr-ops-hr-visual.png")
 
 plt.savefig(out_path, dpi=150, facecolor=BG)
 plt.close()
