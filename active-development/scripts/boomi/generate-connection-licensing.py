@@ -346,7 +346,7 @@ ax.text(tip_x+0.20, strip_y+0.44,
 # ─── Save ─────────────────────────────────────────────────────────────────────
 output_path = (
     '/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/'
-    'boomicompanion_template_workspace/business-demo/hr/boomi-connection-licensing.png'
+    'boomicompanion_template_workspace/business-demo/boomi/boomi-connection-licensing.png'
 )
 plt.savefig(output_path, dpi=144, facecolor='#04101F', edgecolor='none', format='png')
 plt.close(fig)

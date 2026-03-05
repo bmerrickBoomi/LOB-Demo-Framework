@@ -23,7 +23,8 @@
       "Bash(pip3:*)",
       "Bash(identify:*)",
       "Bash(convert:*)",
-      "Bash(do:*)"
+      "Bash(do:*)",
+      "Bash(sed:*)"
     ]
   }
 }

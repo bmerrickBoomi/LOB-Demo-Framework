@@ -181,7 +181,7 @@ ax.text(W/2, 0.20, 'Boomi Business Focused Demo Framework  —  Adaptable to any
 # 13.33" x 7.5" @ 144 dpi = 1920 x 1080
 output_path = (
     '/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/'
-    'boomicompanion_template_workspace/business-demo/hr/vbdf-demo-nav.png'
+    'boomicompanion_template_workspace/business-demo/boomi/vbdf-demo-nav.png'
 )
 plt.savefig(output_path, dpi=144, facecolor='#f0f5fb', edgecolor='none', format='png')
 plt.close(fig)
