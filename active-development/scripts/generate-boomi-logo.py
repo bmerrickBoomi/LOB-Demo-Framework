@@ -91,7 +91,7 @@ ax.plot([tx + 0.2, 13.8], [ty - 0.42, ty - 0.42], color=PURPLE, lw=2.0, zorder=4
 
 # Subtitle — extra word spacing for elegance
 ax.text(tx + 0.2, ty - 1.05,
-        'VALUE  BASED  DEMO  FRAMEWORK',
+        'BUSINESS  FOCUSED  DEMO  FRAMEWORK',
         color=PURPLE_L, fontsize=12.5, fontweight='bold',
         ha='left', va='center', zorder=5, family='sans-serif')
 
