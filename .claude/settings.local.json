@@ -24,7 +24,10 @@
       "Bash(identify:*)",
       "Bash(convert:*)",
       "Bash(do:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "WebFetch(domain:www.brandcolorcode.com)",
+      "WebFetch(domain:brandfetch.com)",
+      "WebFetch(domain:brandpalettes.com)"
     ]
   }
 }
