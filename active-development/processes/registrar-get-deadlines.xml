@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+           componentId=""
+           folderId="Rjo4MzgxNTQy"
+           name="Registrar - Get Deadlines"
+           type="process"
+           version="">
+  <bns:encryptedValues/>
+  <bns:description/>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="d0a1218c-d11a-49a2-a960-c1e0869c0e5f">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Mock academic deadlines data" x="288.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"term":"Spring 2025","total":7,"overdue":4,"upcoming":3,"deadlines":[{"id":"DL-001","title":"Spring 2025 Add/Drop Deadline","date":"2025-01-24","category":"Enrollment","status":"Overdue","daysPast":41,"impact":"Students cannot add/drop without late fee and registrar override."},{"id":"DL-002","title":"FERPA Annual Training - Faculty","date":"2025-02-01","category":"Compliance","status":"Overdue","daysPast":33,"impact":"12 faculty members have not completed required FERPA training."},{"id":"DL-003","title":"Withdrawal Deadline (W Grade)","date":"2025-03-14","category":"Enrollment","status":"Upcoming","daysUntil":6,"impact":"Students withdrawing after this date receive WF grade affecting GPA."},{"id":"DL-004","title":"Graduation Application Deadline","date":"2025-02-15","category":"Graduation","status":"Overdue","daysPast":19,"impact":"3 seniors have not submitted graduation applications."},{"id":"DL-005","title":"Spring Grade Submission Deadline","date":"2025-05-15","category":"Grading","status":"Upcoming","daysUntil":67,"impact":"Faculty must submit all grades within 72 hours of final exam."},{"id":"DL-006","title":"Summer 2025 Registration Opens","date":"2025-03-10","category":"Registration","status":"Upcoming","daysUntil":2,"impact":"Current students with priority registration may register starting March 10."},{"id":"DL-007","title":"Financial Aid Enrollment Certification","date":"2025-01-20","category":"Financial Aid","status":"Overdue","daysPast":45,"impact":"7 students enrolled but not certified - aid disbursement at risk."}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="464.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" x="480.0" y="94.0">
+          <configuration>
+            <returndocuments/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

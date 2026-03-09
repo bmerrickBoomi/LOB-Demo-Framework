@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+           componentId=""
+           folderId="Rjo4MzgxNTQy"
+           name="Registrar - Get Courses"
+           type="process"
+           version="">
+  <bns:encryptedValues/>
+  <bns:description/>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="eb987fed-7f22-40b4-939a-1cff34fcca4f">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Mock course catalog data" x="288.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"term":"Spring 2025","total":10,"courses":[{"id":"CS-401","name":"Advanced Algorithms","dept":"Computer Science","credits":3,"enrolled":30,"capacity":30,"waitlist":5,"instructor":"Dr. Michael Torres","schedule":"MWF 10:00-10:50","room":"Tech Hall 201","prereqs":["CS-301"],"status":"Full"},{"id":"BIOL-302","name":"Cell Biology","dept":"Biology","credits":4,"enrolled":28,"capacity":35,"waitlist":0,"instructor":"Dr. Rebecca Park","schedule":"TTh 9:00-10:30 + Lab","room":"Science Bldg 105","prereqs":["BIOL-201","CHEM-101"],"status":"Open"},{"id":"MATH-301","name":"Calculus III","dept":"Mathematics","credits":3,"enrolled":22,"capacity":30,"waitlist":0,"instructor":"Prof. Elena Vasquez","schedule":"MWF 11:00-11:50","room":"Math Hall 302","prereqs":["MATH-201"],"status":"Open"},{"id":"BUS-415","name":"Strategic Management","dept":"Business","credits":3,"enrolled":35,"capacity":35,"waitlist":3,"instructor":"Prof. Linda Walsh","schedule":"TTh 2:00-3:30","room":"Business Hall 410","prereqs":["BUS-300"],"status":"Full"},{"id":"ENG-310","name":"Structural Analysis","dept":"Engineering","credits":3,"enrolled":18,"capacity":25,"waitlist":0,"instructor":"Prof. James Okafor","schedule":"MWF 1:00-1:50","room":"Engineering 110","prereqs":["ENG-201","MATH-201"],"status":"Open"},{"id":"PSY-401","name":"Advanced Cognitive Psychology","dept":"Psychology","credits":3,"enrolled":29,"capacity":30,"waitlist":2,"instructor":"Dr. Amy Chen","schedule":"MW 3:00-4:30","room":"Social Science 205","prereqs":["PSY-301"],"status":"Open"},{"id":"NURS-302","name":"Clinical Practice I","dept":"Nursing","credits":4,"enrolled":20,"capacity":20,"waitlist":4,"instructor":"Prof. Marie Dubois","schedule":"TTh 7:00-11:00 AM","room":"Health Sciences 101","prereqs":["NURS-201","BIOL-201"],"status":"Full"},{"id":"HIST-201","name":"World History II","dept":"History","credits":3,"enrolled":15,"capacity":40,"waitlist":0,"instructor":"Prof. Carl Steele","schedule":"MWF 9:00-9:50","room":"Liberal Arts 305","prereqs":[],"status":"Open"},{"id":"CS-350","name":"Operating Systems","dept":"Computer Science","credits":3,"enrolled":25,"capacity":30,"waitlist":1,"instructor":"Prof. Ana Ruiz","schedule":"TTh 11:00-12:30","room":"Tech Hall 105","prereqs":["CS-201"],"status":"Open"},{"id":"PHYS-450","name":"Quantum Mechanics","dept":"Physics","credits":4,"enrolled":12,"capacity":20,"waitlist":0,"instructor":"Dr. Sandra Lee","schedule":"MWF 2:00-3:00 + Lab","room":"Science Bldg 220","prereqs":["PHYS-301","MATH-301"],"status":"Open"}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="464.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" x="480.0" y="94.0">
+          <configuration>
+            <returndocuments/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

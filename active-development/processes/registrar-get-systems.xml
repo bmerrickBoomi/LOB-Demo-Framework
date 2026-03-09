@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+           componentId=""
+           folderId="Rjo4MzgxNTQy"
+           name="Registrar - Get Systems"
+           type="process"
+           version="">
+  <bns:encryptedValues/>
+  <bns:description/>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="3edc99d2-1d8e-484a-8a8f-ceb2a7d6c000">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Mock integration system status data" x="288.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"asOf":"2025-03-08T08:00:00Z","totalErrors":6,"systems":[{"id":"SYS-01","name":"Banner SIS","status":"healthy","lastSync":"2025-03-08T06:00:00Z","errorCount":1,"description":"Core student information system. Source of record for enrollment, grades, and academic history.","errors":[{"id":"ERR-001","type":"Sync Lag","field":"Enrollment Status","severity":"medium","message":"3 enrollment status changes from Jan 24 not yet propagated to Canvas LMS","resolution":"Trigger manual sync for affected student IDs: STU-004, STU-008, STU-011."}]},{"id":"SYS-02","name":"Oracle Student Cloud","status":"warning","lastSync":"2025-03-07T22:00:00Z","errorCount":3,"description":"Cloud-based records and degree audit. Receives enrollment and academic standing data from Banner.","errors":[{"id":"ERR-002","type":"Record Mismatch","field":"Credit Count","severity":"high","message":"STU-002 shows 105 credits in Oracle vs 98 in Banner SIS","resolution":"Verify Banner as source of truth. Rerun sync for student record STU-002."},{"id":"ERR-003","type":"Holds Not Synced","field":"Student Holds","severity":"high","message":"Financial holds for STU-004 and STU-008 not reflected in Oracle Cloud","resolution":"Trigger hold sync workflow. Check Boomi integration route for hold status field mapping."},{"id":"ERR-004","type":"Stale Graduation Status","field":"Graduation Flag","severity":"medium","message":"STU-010 graduation application not reflected in Oracle degree audit","resolution":"Manually update graduation flag in Oracle. Verify Boomi graduation workflow trigger."}]},{"id":"SYS-03","name":"Financial Aid System","status":"error","lastSync":"2025-03-06T14:00:00Z","errorCount":2,"description":"Manages aid eligibility, disbursement certification, and enrollment verification for federal reporting.","errors":[{"id":"ERR-005","type":"Certification Missing","field":"Enrollment Certification","severity":"critical","message":"7 students enrolled full-time but not certified - aid disbursement suspended","resolution":"Run enrollment certification batch. Notify Financial Aid office. Deadline was Jan 20."},{"id":"ERR-006","type":"Enrollment Mismatch","field":"Credit Hours","severity":"high","message":"STU-009 shows part-time (9 credits) in FA system but is enrolled full-time (12 credits)","resolution":"Update FA system enrollment status for STU-009. Rerun certification for this student."}]},{"id":"SYS-04","name":"Canvas LMS","status":"healthy","lastSync":"2025-03-08T04:00:00Z","errorCount":0,"description":"Learning management system. Receives course rosters from Banner via nightly enrollment sync.","errors":[]},{"id":"SYS-05","name":"Housing and Meal Plans","status":"healthy","lastSync":"2025-03-08T02:00:00Z","errorCount":0,"description":"Residential and dining system. Cross-references enrollment status for housing eligibility.","errors":[]}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="464.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" x="480.0" y="94.0">
+          <configuration>
+            <returndocuments/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

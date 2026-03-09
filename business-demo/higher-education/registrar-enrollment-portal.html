@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registrar Enrollment Portal</title>
+<style>
+:root {
+  --primary: #003C57; --primary-dark: #002A3D; --primary-light: #e0f0f7;
+  --success: #16a34a; --success-light: #dcfce7;
+  --warning: #d97706; --warning-light: #fef3c7;
+  --danger: #dc2626; --danger-light: #fee2e2;
+  --teal: #0d9488; --teal-light: #ccfbf1;
+  --bg: #f1f5f9; --surface: #ffffff; --surface2: #f8fafc;
+  --border: #e2e8f0; --border2: #cbd5e1;
+  --text: #0f172a; --text2: #475569; --text3: #94a3b8;
+  --sidebar-w: 220px; --header-h: 56px; --ai-w: 320px;
+  --radius: 8px; --radius-sm: 4px;
+  --shadow: 0 1px 3px rgba(0,0,0,.1), 0 1px 2px rgba(0,0,0,.06);
+  --shadow-md: 0 4px 6px rgba(0,0,0,.07), 0 2px 4px rgba(0,0,0,.06);
+  --shadow-lg: 0 10px 15px rgba(0,0,0,.1), 0 4px 6px rgba(0,0,0,.05);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',system-ui,-apple-system,sans-serif;font-size:14px;color:var(--text);background:var(--bg)}
+a{color:inherit;text-decoration:none}
+button{cursor:pointer;font-family:inherit;font-size:inherit}
+input,textarea,select{font-family:inherit;font-size:inherit}
+#app{display:grid;grid-template-columns:var(--sidebar-w) 1fr var(--ai-w);grid-template-rows:var(--header-h) 1fr;height:100vh;overflow:hidden}
+#header{grid-column:1/-1;grid-row:1;background:var(--primary);border-bottom:1px solid var(--primary-dark);display:flex;align-items:center;padding:0 16px;gap:12px;z-index:100;box-shadow:var(--shadow)}
+#sidebar{grid-column:1;grid-row:2;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;display:flex;flex-direction:column}
+#main{grid-column:2;grid-row:2;overflow-y:auto;padding:24px}
+#ai-panel{grid-column:3;grid-row:2;background:var(--surface);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+/* Header */
+.header-logo{font-size:16px;font-weight:700;color:#fff;white-space:nowrap;margin-right:8px}
+.header-logo span{color:rgba(255,255,255,.6);font-weight:400;font-size:12px;margin-left:4px}
+.header-term{background:rgba(255,255,255,.15);color:#fff;border-radius:var(--radius-sm);padding:4px 10px;font-size:12px;font-weight:600;white-space:nowrap}
+.search-wrap{flex:1;max-width:360px;position:relative}
+.search-wrap input{width:100%;padding:7px 12px 7px 36px;border:1px solid rgba(255,255,255,.3);border-radius:var(--radius);background:rgba(255,255,255,.15);color:#fff;outline:none;transition:.2s}
+.search-wrap input::placeholder{color:rgba(255,255,255,.6)}
+.search-wrap input:focus{border-color:rgba(255,255,255,.6);background:rgba(255,255,255,.2)}
+.search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:rgba(255,255,255,.7);pointer-events:none}
+.search-results{position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:200;max-height:280px;overflow-y:auto;display:none}
+.search-results.show{display:block}
+.search-item{padding:10px 14px;cursor:pointer;border-bottom:1px solid var(--border);transition:.15s}
+.search-item:hover{background:var(--surface2)}
+.search-item:last-child{border-bottom:none}
+.search-item .s-name{font-weight:600;font-size:13px;color:var(--text)}
+.search-item .s-meta{font-size:11px;color:var(--text3);margin-top:1px}
+.header-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--radius);border:none;font-weight:500;transition:.2s;line-height:1}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-dark)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{background:var(--border)}
+.btn-sm{padding:5px 10px;font-size:12px}
+.btn-danger{background:var(--danger);color:#fff}.btn-danger:hover{opacity:.9}
+.btn-success{background:var(--success);color:#fff}.btn-success:hover{opacity:.9}
+.btn-white{background:#fff;color:var(--primary);border:1px solid rgba(255,255,255,.3)}.btn-white:hover{background:var(--primary-light)}
+.icon-btn{background:rgba(255,255,255,.1);border:none;padding:6px;border-radius:var(--radius-sm);color:#fff;position:relative;display:flex;align-items:center;justify-content:center}.icon-btn:hover{background:rgba(255,255,255,.2)}
+.icon-btn-dark{background:none;border:none;padding:6px;border-radius:var(--radius-sm);color:var(--text2);position:relative;display:flex;align-items:center;justify-content:center}.icon-btn-dark:hover{background:var(--surface2)}
+.notif-badge{position:absolute;top:2px;right:2px;background:var(--danger);color:#fff;border-radius:50%;width:14px;height:14px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.notif-dropdown{position:absolute;top:calc(100% + 8px);right:0;width:320px;background:#fff;border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-lg);z-index:200;display:none}
+.notif-dropdown.show{display:block}
+.notif-header{padding:12px 16px;border-bottom:1px solid var(--border);font-weight:600;font-size:13px;display:flex;justify-content:space-between;align-items:center}
+.notif-item{padding:10px 16px;border-bottom:1px solid var(--border);cursor:pointer;transition:.15s}
+.notif-item:hover{background:var(--surface2)}
+.notif-item:last-child{border-bottom:none}
+.notif-title{font-weight:500;font-size:12px;margin-bottom:2px}
+.notif-time{font-size:11px;color:var(--text3)}
+/* Sidebar */
+.nav-section{padding:8px 0}
+.nav-label{padding:6px 16px 4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3)}
+.nav-item{display:flex;align-items:center;gap:10px;padding:8px 16px;color:var(--text2);cursor:pointer;transition:.15s;font-size:13px;font-weight:500}
+.nav-item:hover{background:var(--surface2);color:var(--text)}
+.nav-item.active{background:var(--primary-light);color:var(--primary);font-weight:600}
+.nav-item svg{flex-shrink:0;opacity:.7}
+.nav-item.active svg{opacity:1}
+.nav-badge{margin-left:auto;background:var(--danger);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700}
+.nav-footer{margin-top:auto;padding:12px;border-top:1px solid var(--border)}
+.user-chip{display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:var(--radius);background:var(--surface2)}
+.avatar{width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;flex-shrink:0}
+.avatar-lg{width:48px;height:48px;font-size:18px}
+.user-info{flex:1;min-width:0}
+.user-name{font-weight:600;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.user-role{font-size:10px;color:var(--text3)}
+/* Cards & KPIs */
+.page-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.page-title{font-size:20px;font-weight:700}
+.page-subtitle{font-size:12px;color:var(--text3);margin-top:2px}
+.kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+.kpi-label{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:8px}
+.kpi-value{font-size:28px;font-weight:800;line-height:1}
+.kpi-sub{font-size:11px;color:var(--text3);margin-top:4px}
+.kpi-danger .kpi-value{color:var(--danger)}
+.kpi-warning .kpi-value{color:var(--warning)}
+.kpi-success .kpi-value{color:var(--success)}
+.kpi-primary .kpi-value{color:var(--primary)}
+.kpi-teal .kpi-value{color:var(--teal)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-header{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.card-title{font-size:14px;font-weight:600}
+.card-body{padding:16px}
+/* Badges */
+.badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600;white-space:nowrap}
+.badge-danger{background:var(--danger-light);color:var(--danger)}
+.badge-warning{background:var(--warning-light);color:var(--warning)}
+.badge-success{background:var(--success-light);color:var(--success)}
+.badge-primary{background:var(--primary-light);color:var(--primary)}
+.badge-neutral{background:var(--surface2);color:var(--text2);border:1px solid var(--border)}
+.badge-teal{background:var(--teal-light);color:var(--teal)}
+.sev{display:inline-block;width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sev-critical{background:var(--danger)}.sev-high{background:var(--warning)}.sev-medium{background:#3b82f6}.sev-low{background:var(--text3)}
+/* Tables */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{padding:10px 12px;text-align:left;font-weight:600;color:var(--text2);border-bottom:2px solid var(--border);background:var(--surface2);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:var(--surface2)}
+tr:last-child td{border-bottom:none}
+.link{color:var(--primary);cursor:pointer;font-weight:500}.link:hover{text-decoration:underline}
+/* Filters */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.filter-bar select,.filter-bar input{padding:6px 10px;border:1px solid var(--border);border-radius:var(--radius-sm);background:#fff;color:var(--text);outline:none;font-size:12px}
+.filter-bar select:focus,.filter-bar input:focus{border-color:var(--primary)}
+/* Student 360 */
+.student-header{display:flex;align-items:flex-start;gap:16px;padding:20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px}
+.student-meta-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-top:12px}
+.meta-item .label{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);margin-bottom:2px}
+.meta-item .value{font-size:13px;font-weight:500}
+.tabs{display:flex;gap:0;border-bottom:2px solid var(--border);margin-bottom:16px;overflow-x:auto}
+.tab{padding:9px 16px;cursor:pointer;color:var(--text2);font-weight:500;font-size:13px;border-bottom:2px solid transparent;margin-bottom:-2px;white-space:nowrap;transition:.15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:600}
+/* Timeline */
+.timeline{display:flex;flex-direction:column;gap:0}
+.timeline-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border)}
+.timeline-item:last-child{border-bottom:none}
+.timeline-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);flex-shrink:0;margin-top:4px}
+.timeline-dot.system{background:var(--text3)}.timeline-dot.alert{background:var(--danger)}
+/* Progress */
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;background:var(--primary);transition:.3s}
+/* Integration */
+.int-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+.int-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:.2s;box-shadow:var(--shadow)}
+.int-card:hover{box-shadow:var(--shadow-md);border-color:var(--border2)}
+.int-card.selected{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-light)}
+.int-status{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600}
+.status-dot{width:8px;height:8px;border-radius:50%}
+.status-ok{background:var(--success)}.status-warn{background:var(--warning)}.status-error{background:var(--danger)}
+/* Priority Queue */
+.pq-item{display:flex;align-items:flex-start;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);cursor:pointer}
+.pq-item:last-child{border-bottom:none}
+.pq-item:hover{background:var(--surface2);margin:0 -16px;padding:12px 16px}
+.pq-content{flex:1;min-width:0}
+.pq-title{font-weight:500;font-size:13px;margin-bottom:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pq-meta{font-size:11px;color:var(--text3)}
+.pq-due{font-size:11px;color:var(--danger);font-weight:600}
+/* Modals */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px}
+.modal{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-lg);max-width:560px;width:100%;max-height:90vh;overflow-y:auto;animation:modalIn .18s ease}
+@keyframes modalIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:scale(1)}}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:16px;font-weight:700}
+.modal-body{padding:20px}
+.modal-footer{padding:14px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:8px}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:5px}
+.form-control{width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:var(--radius-sm);outline:none;transition:.2s;background:#fff}
+.form-control:focus{border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+select.form-control{cursor:pointer}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+/* AI Panel */
+.ai-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.ai-title{font-size:13px;font-weight:700;display:flex;align-items:center;gap:6px}
+.ai-dot{width:7px;height:7px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+@keyframes ai-bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+.ai-typing{display:flex;gap:4px;align-items:center;padding:2px 0}
+.ai-typing span{width:6px;height:6px;border-radius:50%;background:var(--text3);display:inline-block;animation:ai-bounce 1.2s infinite ease-in-out}
+.ai-typing span:nth-child(1){animation-delay:-0.24s}.ai-typing span:nth-child(2){animation-delay:-0.12s}.ai-typing span:nth-child(3){animation-delay:0s}
+.ai-messages{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:10px}
+.ai-msg{max-width:90%;padding:9px 12px;border-radius:var(--radius);font-size:12px;line-height:1.5}
+.ai-msg.user{background:var(--primary);color:#fff;align-self:flex-end;border-bottom-right-radius:2px}
+.ai-msg.assistant{background:var(--surface2);color:var(--text);align-self:flex-start;border-bottom-left-radius:2px;border:1px solid var(--border)}
+.ai-msg.system{background:var(--warning-light);color:var(--warning);align-self:center;font-size:11px;text-align:center;font-style:italic;border-radius:10px}
+.ai-api-badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;padding:2px 7px;border-radius:10px;margin-top:6px;font-weight:600;letter-spacing:.02em}
+.ai-api-badge.ok{background:var(--success-light);color:var(--success)}.ai-api-badge.err{background:#f1f5f9;color:var(--text3);border:1px solid var(--border)}
+.ai-suggestions{padding:8px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px;flex-shrink:0}
+.ai-sugg-label{font-size:10px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.ai-sugg-btn{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius-sm);padding:6px 10px;text-align:left;font-size:11px;color:var(--text2);cursor:pointer;transition:.15s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ai-sugg-btn:hover{background:var(--primary-light);border-color:var(--primary);color:var(--primary)}
+.ai-composer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0}
+.ai-composer textarea{width:100%;resize:none;border:1px solid var(--border);border-radius:var(--radius-sm);padding:8px 10px;font-size:12px;line-height:1.4;outline:none;min-height:64px;max-height:120px;background:var(--surface2)}
+.ai-composer textarea:focus{border-color:var(--primary);background:#fff}
+.ai-composer-actions{display:flex;align-items:center;justify-content:flex-end;margin-top:6px}
+/* Misc */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.flex{display:flex}.items-center{align-items:center}.justify-between{justify-content:space-between}.gap-2{gap:8px}.gap-3{gap:12px}
+.mt-2{margin-top:8px}.mt-3{margin-top:12px}.mt-4{margin-top:16px}
+.mb-2{margin-bottom:8px}.mb-3{margin-bottom:12px}.mb-4{margin-bottom:16px}
+.p-3{padding:12px}.p-4{padding:16px}
+.text-sm{font-size:12px}.text-xs{font-size:11px}
+.fw-600{font-weight:600}.fw-700{font-weight:700}
+.text-muted{color:var(--text3)}.text-danger{color:var(--danger)}.text-success{color:var(--success)}.text-warning{color:var(--warning)}.text-primary{color:var(--primary)}
+.rounded{border-radius:var(--radius)}.border{border:1px solid var(--border)}
+.w-full{width:100%}
+.divider{height:1px;background:var(--border);margin:12px 0}
+.hold-tag{display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:11px;background:var(--danger-light);border:1px solid var(--danger);color:var(--danger);margin:1px;font-weight:600}
+.course-cap{display:flex;align-items:center;gap:6px;font-size:12px}
+.cap-bar{flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden}
+.cap-fill{height:100%;border-radius:3px;transition:.3s}
+.deadline-item{display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)}
+.deadline-item:last-child{border-bottom:none}
+.error-panel{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:12px}
+@media(max-width:1100px){:root{--ai-w:260px;--sidebar-w:190px}}
+</style>
+</head>
+<body>
+<div id="app">
+<!-- Header -->
+<header id="header">
+  <div class="header-logo">Registrar <span>Enrollment Portal</span></div>
+  <div class="header-term">Spring 2025</div>
+  <div class="search-wrap">
+    <span class="search-icon"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg></span>
+    <input type="text" id="global-search" placeholder="Search students, IDs, courses…" autocomplete="off">
+    <div class="search-results" id="search-results"></div>
+  </div>
+  <div class="header-actions">
+    <button class="btn btn-white btn-sm" onclick="showModal('add-enrollment')">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      Add / Drop
+    </button>
+    <div style="position:relative">
+      <button class="icon-btn" id="notif-btn" title="Notifications">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        <span class="notif-badge" id="notif-count">5</span>
+      </button>
+      <div class="notif-dropdown" id="notif-dropdown"></div>
+    </div>
+    <button class="icon-btn" id="ai-toggle-btn" title="Toggle AI Advisor">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12 6.48 2 12 2z"/><path d="M8 9h8M8 12h5M8 15h4"/></svg>
+    </button>
+  </div>
+</header>
+<!-- Sidebar -->
+<nav id="sidebar">
+  <div class="nav-section">
+    <div class="nav-label">Navigation</div>
+    <div class="nav-item" data-route="/dashboard">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</div>
+    <div class="nav-item" data-route="/students">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Students</div>
+    <div class="nav-item" data-route="/enrollment">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/></svg>Enrollment<span class="nav-badge" id="enroll-badge">8</span></div>
+    <div class="nav-item" data-route="/courses">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>Courses</div>
+    <div class="nav-item" data-route="/deadlines">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>Deadlines<span class="nav-badge" id="deadline-badge">3</span></div>
+    <div class="nav-item" data-route="/systems">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>Systems</div>
+    <div class="nav-item" data-route="/reports">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>Reports</div>
+  </div>
+  <div class="nav-footer">
+    <div class="user-chip">
+      <div class="avatar">SK</div>
+      <div class="user-info"><div class="user-name">Sarah Kim</div><div class="user-role">University Registrar</div></div>
+    </div>
+  </div>
+</nav>
+<!-- Main -->
+<main id="main"></main>
+<!-- AI Panel -->
+<aside id="ai-panel">
+  <div class="ai-header">
+    <div class="ai-title"><span class="ai-dot"></span>AI Enrollment Advisor</div>
+    <button class="icon-btn-dark btn-sm" id="ai-clear" title="Clear chat" style="font-size:11px;padding:3px 6px;background:var(--surface2);border:1px solid var(--border);border-radius:4px;color:var(--text2)">Clear</button>
+  </div>
+  <div class="ai-messages" id="ai-messages"></div>
+  <div class="ai-suggestions" id="ai-suggestions"></div>
+  <div class="ai-composer">
+    <textarea id="ai-input" placeholder="Ask about students, enrollment, courses…"></textarea>
+    <div class="ai-composer-actions">
+      <button class="btn btn-primary btn-sm" id="ai-send">Send</button>
+    </div>
+  </div>
+</aside>
+</div>
+<div id="modals"></div>
+
+<script>
+// ===================== SEED DATA =====================
+const SEED = {
+currentTerm: 'Spring 2025',
+students: [
+  {id:'STU-001',name:'Emily Chen',email:'e.chen@university.edu',program:'Computer Science',level:'Junior',gpa:3.8,status:'Good Standing',advisor:'Dr. Michael Torres',credits:{completed:78,inProgress:15,required:120},holds:[],enrolledCourses:['CS-401','MATH-301','CS-350'],
+   history:[{term:'Fall 2024',courses:['CS-305','CS-310','MATH-215'],credits:15,gpa:3.9},{term:'Spring 2024',courses:['CS-201','CS-220','MATH-114'],credits:15,gpa:3.7}],
+   notes:'Dean\'s List Fall 2024. Research assistant for Dr. Torres.'},
+  {id:'STU-002',name:'Marcus Rivera',email:'m.rivera@university.edu',program:'Business Administration',level:'Senior',gpa:2.4,status:'Academic Probation',advisor:'Prof. Linda Walsh',credits:{completed:98,inProgress:12,required:128},holds:['Academic Hold'],enrolledCourses:['BUS-415','ECON-301'],
+   history:[{term:'Fall 2024',courses:['BUS-350','BUS-360'],credits:9,gpa:2.1},{term:'Spring 2024',courses:['BUS-280','ECON-201','BUS-290'],credits:12,gpa:2.6}],
+   notes:'GPA below 2.5 threshold. Academic advisor meeting required before Spring enrollment can be confirmed.'},
+  {id:'STU-003',name:'Aisha Johnson',email:'a.johnson@university.edu',program:'Biology',level:'Sophomore',gpa:3.5,status:'Good Standing',advisor:'Dr. Rebecca Park',credits:{completed:32,inProgress:16,required:128},holds:[],enrolledCourses:['BIOL-302','CHEM-210','BIOL-315'],
+   history:[{term:'Fall 2024',courses:['BIOL-201','CHEM-101','BIO-LAB'],credits:16,gpa:3.5}],
+   notes:'Strong lab performance. Interested in pre-med track.'},
+  {id:'STU-004',name:'Tyler Brooks',email:'t.brooks@university.edu',program:'Civil Engineering',level:'Junior',gpa:3.1,status:'Good Standing',advisor:'Prof. James Okafor',credits:{completed:75,inProgress:15,required:132},holds:['Financial Hold'],enrolledCourses:['ENG-310','MATH-320','ENG-305'],
+   history:[{term:'Fall 2024',courses:['ENG-250','ENG-260','MATH-220'],credits:15,gpa:3.2}],
+   notes:'Financial hold due to outstanding balance of $1,240. Cannot process add requests until resolved.'},
+  {id:'STU-005',name:'Sofia Garcia',email:'s.garcia@university.edu',program:'Psychology',level:'Senior',gpa:3.6,status:'Good Standing',advisor:'Dr. Amy Chen',credits:{completed:105,inProgress:9,required:120},holds:[],enrolledCourses:['PSY-401','PSY-450'],
+   history:[{term:'Fall 2024',courses:['PSY-350','PSY-360','PSY-370'],credits:12,gpa:3.7}],
+   notes:'Waitlisted for PSY-480 and COUNS-310. Expected to graduate May 2025. Graduation application submitted.'},
+  {id:'STU-006',name:'James Kim',email:'j.kim@university.edu',program:'Mathematics',level:'Junior',gpa:3.9,status:'Good Standing',advisor:'Prof. Elena Vasquez',credits:{completed:82,inProgress:12,required:120},holds:[],enrolledCourses:['MATH-401','MATH-420','CS-301'],
+   history:[{term:'Fall 2024',courses:['MATH-310','MATH-315','CS-201'],credits:15,gpa:4.0}],
+   notes:'Top of cohort. Considering double major in Computer Science.'},
+  {id:'STU-007',name:'Priya Nair',email:'p.nair@university.edu',program:'Computer Science',level:'Senior',gpa:3.4,status:'Good Standing',advisor:'Dr. Michael Torres',credits:{completed:108,inProgress:12,required:120},holds:['Graduation Clearance Pending'],enrolledCourses:['CS-490','CS-460'],
+   history:[{term:'Fall 2024',courses:['CS-410','CS-430'],credits:9,gpa:3.4}],
+   notes:'Graduation clearance pending — thesis submission required by March 15. Expected grad: May 2025.'},
+  {id:'STU-008',name:'Devon Mitchell',email:'d.mitchell@university.edu',program:'History',level:'Sophomore',gpa:2.2,status:'Academic Probation',advisor:'Prof. Carl Steele',credits:{completed:28,inProgress:9,required:120},holds:['Academic Hold','Financial Hold'],enrolledCourses:['HIST-201'],
+   history:[{term:'Fall 2024',courses:['HIST-101','ENGL-101'],credits:9,gpa:1.9}],
+   notes:'GPA below 2.0 last term. Academic support plan in place. Two holds currently active.'},
+  {id:'STU-009',name:'Rachel Torres',email:'r.torres@university.edu',program:'Nursing',level:'Junior',gpa:3.3,status:'Good Standing',advisor:'Prof. Marie Dubois',credits:{completed:72,inProgress:12,required:136},holds:['Immunization Hold'],enrolledCourses:['NURS-302','BIOL-320'],
+   history:[{term:'Fall 2024',courses:['NURS-250','BIOL-210','NURS-260'],credits:15,gpa:3.4}],
+   notes:'Missing updated MMR immunization record. Clinical placement cannot be confirmed until hold is cleared.'},
+  {id:'STU-010',name:'Alex Oduya',email:'a.oduya@university.edu',program:'Physics',level:'Senior',gpa:3.7,status:'Good Standing',advisor:'Dr. Sandra Lee',credits:{completed:110,inProgress:15,required:126},holds:[],enrolledCourses:['PHYS-450','PHYS-490','MATH-410'],
+   history:[{term:'Fall 2024',courses:['PHYS-420','PHYS-430','MATH-380'],credits:15,gpa:3.8}],
+   notes:'NSF fellowship recipient. Thesis on quantum entanglement. Expected May 2025.'},
+  {id:'STU-011',name:'Megan Walsh',email:'m.walsh@university.edu',program:'Education',level:'Junior',gpa:3.2,status:'Good Standing',advisor:'Prof. Karen Ng',credits:{completed:68,inProgress:12,required:124},holds:['Background Check Pending'],enrolledCourses:['EDUC-310','EDUC-320','PSY-201'],
+   history:[{term:'Fall 2024',courses:['EDUC-250','EDUC-260','PSY-101'],credits:15,gpa:3.2}],
+   notes:'Student teaching placement pending background check clearance. Expected start: March 1.'},
+  {id:'STU-012',name:'Noah Patel',email:'n.patel@university.edu',program:'Business Administration',level:'Sophomore',gpa:3.0,status:'Good Standing',advisor:'Prof. Linda Walsh',credits:{completed:35,inProgress:15,required:128},holds:[],enrolledCourses:['BUS-201','ECON-101','ACCT-201','MGMT-200'],
+   history:[{term:'Fall 2024',courses:['BUS-101','ECON-100','MATH-100'],credits:12,gpa:3.0}],
+   notes:'Exploring concentration options. Active in business club.'},
+],
+courses: [
+  {id:'CS-401',name:'Advanced Algorithms',dept:'Computer Science',credits:3,enrolled:30,capacity:30,waitlist:5,instructor:'Dr. Michael Torres',schedule:'MWF 10:00-10:50',room:'Tech Hall 201',prereqs:['CS-301']},
+  {id:'BIOL-302',name:'Cell Biology',dept:'Biology',credits:4,enrolled:28,capacity:35,waitlist:0,instructor:'Dr. Rebecca Park',schedule:'TTh 9:00-10:30 + Lab',room:'Science Bldg 105',prereqs:['BIOL-201','CHEM-101']},
+  {id:'MATH-301',name:'Calculus III',dept:'Mathematics',credits:3,enrolled:22,capacity:30,waitlist:0,instructor:'Prof. Elena Vasquez',schedule:'MWF 11:00-11:50',room:'Math Hall 302',prereqs:['MATH-201']},
+  {id:'BUS-415',name:'Strategic Management',dept:'Business',credits:3,enrolled:35,capacity:35,waitlist:3,instructor:'Prof. Linda Walsh',schedule:'TTh 2:00-3:30',room:'Business Hall 410',prereqs:['BUS-300']},
+  {id:'ENG-310',name:'Structural Analysis',dept:'Engineering',credits:3,enrolled:18,capacity:25,waitlist:0,instructor:'Prof. James Okafor',schedule:'MWF 1:00-1:50',room:'Engineering 110',prereqs:['ENG-201','MATH-201']},
+  {id:'PSY-401',name:'Advanced Cognitive Psychology',dept:'Psychology',credits:3,enrolled:29,capacity:30,waitlist:2,instructor:'Dr. Amy Chen',schedule:'MW 3:00-4:30',room:'Social Science 205',prereqs:['PSY-301']},
+  {id:'NURS-302',name:'Clinical Practice I',dept:'Nursing',credits:4,enrolled:20,capacity:20,waitlist:4,instructor:'Prof. Marie Dubois',schedule:'TTh 7:00-11:00 AM',room:'Health Sciences 101',prereqs:['NURS-201','BIOL-201']},
+  {id:'HIST-201',name:'World History II',dept:'History',credits:3,enrolled:15,capacity:40,waitlist:0,instructor:'Prof. Carl Steele',schedule:'MWF 9:00-9:50',room:'Liberal Arts 305',prereqs:[]},
+  {id:'CS-350',name:'Operating Systems',dept:'Computer Science',credits:3,enrolled:25,capacity:30,waitlist:1,instructor:'Prof. Ana Ruiz',schedule:'TTh 11:00-12:30',room:'Tech Hall 105',prereqs:['CS-201']},
+  {id:'PHYS-450',name:'Quantum Mechanics',dept:'Physics',credits:4,enrolled:12,capacity:20,waitlist:0,instructor:'Dr. Sandra Lee',schedule:'MWF 2:00-3:00 + Lab',room:'Science Bldg 220',prereqs:['PHYS-301','MATH-301']},
+],
+enrollmentRequests: [
+  {id:'ENR-001',student:'STU-005',studentName:'Sofia Garcia',course:'PSY-480',courseName:'Counseling Practicum',type:'Waitlist',status:'Waitlisted',position:1,submitted:'2025-01-10',notes:'Needs for graduation requirements.'},
+  {id:'ENR-002',student:'STU-004',studentName:'Tyler Brooks',course:'ENG-350',courseName:'Geotechnical Engineering',type:'Add',status:'Blocked',position:null,submitted:'2025-01-12',notes:'Blocked by Financial Hold. Contact Student Accounts.'},
+  {id:'ENR-003',student:'STU-008',studentName:'Devon Mitchell',course:'HIST-105',courseName:'World History I',type:'Add',status:'Blocked',position:null,submitted:'2025-01-11',notes:'Blocked by Academic Hold. Advisor meeting required.'},
+  {id:'ENR-004',student:'STU-002',studentName:'Marcus Rivera',course:'BUS-480',courseName:'Business Capstone',type:'Add',status:'Pending Review',position:null,submitted:'2025-01-14',notes:'Academic probation — requires advisor approval.'},
+  {id:'ENR-005',student:'STU-007',studentName:'Priya Nair',course:'CS-495',courseName:'Senior Capstone II',type:'Add',status:'Approved',position:null,submitted:'2025-01-09',notes:'Approved. Graduation clearance still pending separately.'},
+  {id:'ENR-006',student:'STU-001',studentName:'Emily Chen',course:'CS-401',courseName:'Advanced Algorithms',type:'Drop',status:'Approved',position:null,submitted:'2025-01-20',notes:'Student requested drop within add/drop window.'},
+  {id:'ENR-007',student:'STU-009',studentName:'Rachel Torres',course:'NURS-350',courseName:'Clinical Rotation II',type:'Waitlist',status:'Waitlisted',position:2,submitted:'2025-01-08',notes:'Waitlisted pending seat availability.'},
+  {id:'ENR-008',student:'STU-003',studentName:'Aisha Johnson',course:'BIOL-315',courseName:'Genetics',type:'Add',status:'Approved',position:null,submitted:'2025-01-13',notes:'Prerequisites verified. Enrolled.'},
+  {id:'ENR-009',student:'STU-011',studentName:'Megan Walsh',course:'EDUC-495',courseName:'Student Teaching',type:'Add',status:'Blocked',position:null,submitted:'2025-01-15',notes:'Blocked by Background Check hold.'},
+  {id:'ENR-010',student:'STU-006',studentName:'James Kim',course:'CS-301',courseName:'Data Structures',type:'Add',status:'Approved',position:null,submitted:'2025-01-10',notes:'Approved as cross-listed elective.'},
+],
+deadlines: [
+  {id:'DL-001',title:'Spring 2025 Add/Drop Deadline',date:'2025-01-24',category:'Enrollment',status:'Overdue',daysPast:41,impact:'Students cannot add/drop without late fee and registrar override.'},
+  {id:'DL-002',title:'FERPA Annual Training — Faculty',date:'2025-02-01',category:'Compliance',status:'Overdue',daysPast:33,impact:'12 faculty members have not completed required FERPA training.'},
+  {id:'DL-003',title:'Withdrawal Deadline (W Grade)',date:'2025-03-14',category:'Enrollment',status:'Upcoming',daysPast:-6,impact:'Students withdrawing after this date receive WF grade affecting GPA.'},
+  {id:'DL-004',title:'Graduation Application Deadline',date:'2025-02-15',category:'Graduation',status:'Overdue',daysPast:19,impact:'3 seniors have not submitted graduation applications.'},
+  {id:'DL-005',title:'Spring Grade Submission Deadline',date:'2025-05-15',category:'Grading',status:'Upcoming',daysPast:-67,impact:'Faculty must submit all grades within 72 hours of final exam.'},
+  {id:'DL-006',title:'Summer 2025 Registration Opens',date:'2025-03-10',category:'Registration',status:'Upcoming',daysPast:-2,impact:'Current students with priority registration may register starting March 10.'},
+  {id:'DL-007',title:'Financial Aid Enrollment Certification',date:'2025-01-20',category:'Financial Aid',status:'Overdue',daysPast:45,impact:'7 students enrolled but not certified — aid disbursement at risk.'},
+],
+systems: [
+  {id:'SYS-01',name:'Banner SIS',icon:'B',color:'#1A6BA0',status:'healthy',lastSync:'2025-03-08T06:00:00',errors:1,
+   description:'Core student information system. Source of record for enrollment, grades, and academic history.',
+   errors_list:[{id:'ERR-001',type:'Sync Lag',field:'Enrollment Status',msg:'3 enrollment status changes from Jan 24 not yet propagated to Canvas LMS',severity:'medium',resolution:'Trigger manual sync for affected student IDs: STU-004, STU-008, STU-011.'}]},
+  {id:'SYS-02',name:'Oracle Student Cloud',icon:'OC',color:'#C0392B',status:'warning',lastSync:'2025-03-07T22:00:00',errors:3,
+   description:'Cloud-based records and degree audit. Receives enrollment and academic standing data from Banner.',
+   errors_list:[
+    {id:'ERR-002',type:'Record Mismatch',field:'Credit Count',msg:'STU-002 shows 105 credits in Oracle vs 98 in Banner SIS',severity:'high',resolution:'Verify Banner as source of truth. Rerun sync for student record STU-002.'},
+    {id:'ERR-003',type:'Holds Not Synced',field:'Student Holds',msg:'Financial holds for STU-004 and STU-008 not reflected in Oracle Cloud',severity:'high',resolution:'Trigger hold sync workflow. Check Boomi integration route for hold status field mapping.'},
+    {id:'ERR-004',type:'Stale Graduation Status',field:'Graduation Flag',msg:'STU-010 graduation application not reflected in Oracle degree audit',severity:'medium',resolution:'Manually update graduation flag in Oracle. Verify Boomi graduation workflow trigger.'},
+   ]},
+  {id:'SYS-03',name:'Financial Aid System',icon:'FA',color:'#d97706',status:'error',lastSync:'2025-03-06T14:00:00',errors:2,
+   description:'Manages aid eligibility, disbursement certification, and enrollment verification for federal reporting.',
+   errors_list:[
+    {id:'ERR-005',type:'Certification Missing',field:'Enrollment Certification',msg:'7 students enrolled full-time but not certified — aid disbursement suspended',severity:'critical',resolution:'Run enrollment certification batch. Notify Financial Aid office. Deadline was Jan 20.'},
+    {id:'ERR-006',type:'Enrollment Mismatch',field:'Credit Hours',msg:'STU-009 shows part-time (9 credits) in FA system but is enrolled full-time (12 credits)',severity:'high',resolution:'Update FA system enrollment status for STU-009. Rerun certification for this student.'},
+   ]},
+  {id:'SYS-04',name:'Canvas LMS',icon:'C',color:'#E66000',status:'healthy',lastSync:'2025-03-08T04:00:00',errors:0,
+   description:'Learning management system. Receives course rosters from Banner via nightly enrollment sync.',
+   errors_list:[]},
+  {id:'SYS-05',name:'Housing & Meal Plans',icon:'H',color:'#16a34a',status:'healthy',lastSync:'2025-03-08T02:00:00',errors:0,
+   description:'Residential and dining system. Cross-references enrollment status for housing eligibility.',
+   errors_list:[]},
+],
+notifications: [
+  {title:'Financial Aid certification overdue — 7 students at risk',time:'2 hours ago',sev:'critical'},
+  {title:'Add/Drop deadline passed — 3 pending requests need override',time:'3 hours ago',sev:'high'},
+  {title:'FERPA training overdue for 12 faculty members',time:'1 day ago',sev:'high'},
+  {title:'Oracle Cloud sync errors — hold data not propagating',time:'1 day ago',sev:'medium'},
+  {title:'Priya Nair thesis deadline: March 15 — 6 days remaining',time:'2 days ago',sev:'medium'},
+],
+};
+
+// ===================== STATE =====================
+let STATE = JSON.parse(JSON.stringify(SEED));
+let selectedStudent = null;
+let selectedStudentTab = 'overview';
+let selectedSystem = null;
+
+// ===================== HELPERS =====================
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function fmtDate(d){ if(!d)return'—'; const dt=new Date(d+'T12:00:00'); return dt.toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}); }
+function statusBadge(s){
+  const map={
+    'Good Standing':'badge-success','Academic Probation':'badge-danger',
+    'Approved':'badge-success','Blocked':'badge-danger','Pending Review':'badge-warning',
+    'Waitlisted':'badge-primary','healthy':'badge-success','warning':'badge-warning','error':'badge-danger',
+  };
+  return `<span class="badge ${map[s]||'badge-neutral'}">${esc(s)}</span>`;
+}
+function holdBadge(h){ return `<span class="hold-tag">${esc(h)}</span>`; }
+function gpaColor(g){ return g>=3.5?'var(--success)':g>=2.5?'var(--warning)':'var(--danger)'; }
+
+// ===================== ROUTING =====================
+let currentRoute = '/dashboard';
+function navigate(route){
+  currentRoute = route;
+  selectedStudent = null;
+  selectedStudentTab = 'overview';
+  document.querySelectorAll('.nav-item').forEach(el=>{
+    el.classList.toggle('active', el.dataset.route === route);
+  });
+  const main = document.getElementById('main');
+  main._stuSearch=''; main._stuProgram=''; main._stuStatus=''; main._stuHold='';
+  render();
+  updateAISuggestions();
+}
+function render(){
+  const el = document.getElementById('main');
+  if(currentRoute==='/dashboard') renderDashboard(el);
+  else if(currentRoute==='/students') renderStudents(el);
+  else if(currentRoute==='/enrollment') renderEnrollment(el);
+  else if(currentRoute==='/courses') renderCourses(el);
+  else if(currentRoute==='/deadlines') renderDeadlines(el);
+  else if(currentRoute==='/systems') renderSystems(el);
+  else if(currentRoute==='/reports') renderReports(el);
+}
+
+// ===================== DASHBOARD =====================
+function renderDashboard(el){
+  const totalEnrolled = STATE.students.length;
+  const withHolds = STATE.students.filter(s=>s.holds.length>0).length;
+  const onProbation = STATE.students.filter(s=>s.status==='Academic Probation').length;
+  const waitlisted = STATE.enrollmentRequests.filter(r=>r.status==='Waitlisted').length;
+  const pendingRequests = STATE.enrollmentRequests.filter(r=>r.status==='Pending Review'||r.status==='Blocked').length;
+  const sysErrors = STATE.systems.reduce((a,s)=>a+s.errors,0);
+  const overdueDeadlines = STATE.deadlines.filter(d=>d.status==='Overdue').length;
+  const fullCourses = STATE.courses.filter(c=>c.enrolled>=c.capacity).length;
+
+  const pq = buildPriorityQueue();
+
+  el.innerHTML = `
+<div class="page-header">
+  <div><div class="page-title">Dashboard</div><div class="page-subtitle">Spring 2025 — Friday, March 8, 2025 — Good morning, Sarah</div></div>
+  <button class="btn btn-secondary btn-sm" onclick="navigate('/reports')">View Reports</button>
+</div>
+<div class="kpi-grid">
+  <div class="kpi-card kpi-primary"><div class="kpi-label">Active Students</div><div class="kpi-value">${totalEnrolled}</div><div class="kpi-sub">Spring 2025 term</div></div>
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Students with Holds</div><div class="kpi-value">${withHolds}</div><div class="kpi-sub">${onProbation} on academic probation</div></div>
+  <div class="kpi-card kpi-warning"><div class="kpi-label">Pending Requests</div><div class="kpi-value">${pendingRequests}</div><div class="kpi-sub">add/drop needing action</div></div>
+  <div class="kpi-card kpi-teal"><div class="kpi-label">Waitlisted</div><div class="kpi-value">${waitlisted}</div><div class="kpi-sub">across ${STATE.courses.filter(c=>c.waitlist>0).length} courses</div></div>
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Overdue Deadlines</div><div class="kpi-value">${overdueDeadlines}</div><div class="kpi-sub">compliance items past due</div></div>
+  <div class="kpi-card kpi-warning"><div class="kpi-label">System Errors</div><div class="kpi-value">${sysErrors}</div><div class="kpi-sub">${fullCourses} courses at capacity</div></div>
+</div>
+<div class="grid-2">
+  <div class="card"><div class="card-header"><span class="card-title">Priority Queue</span><span class="badge badge-danger">${pq.length} items</span></div>
+    <div class="card-body" style="padding:0 16px">
+      ${pq.map(p=>`<div class="pq-item" onclick="${p.action}">
+        <span class="sev sev-${p.sev.toLowerCase()}" style="margin-top:5px"></span>
+        <div class="pq-content"><div class="pq-title">${esc(p.title)}</div><div class="pq-meta">${esc(p.cat)}${p.due?` <span class="pq-due"> · ${p.due}</span>`:''}</div></div>
+        <span class="badge ${p.sev==='Critical'?'badge-danger':p.sev==='High'?'badge-warning':'badge-primary'}">${p.sev}</span>
+      </div>`).join('')}
+    </div>
+  </div>
+  <div>
+    <div class="card mb-3"><div class="card-header"><span class="card-title">Enrollment by Status</span></div><div class="card-body">
+      ${[['Good Standing',STATE.students.filter(s=>s.status==='Good Standing').length,'var(--success)'],
+         ['Academic Probation',STATE.students.filter(s=>s.status==='Academic Probation').length,'var(--danger)']].map(([label,cnt,color])=>`
+      <div class="mb-3"><div class="flex justify-between mb-1"><span class="text-sm">${label}</span><span class="text-sm fw-600">${cnt}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(cnt/totalEnrolled*100)}%;background:${color}"></div></div></div>`).join('')}
+      <div class="divider"></div>
+      <div class="flex justify-between text-sm text-muted"><span>Courses at Capacity</span><span class="fw-600">${fullCourses} of ${STATE.courses.length}</span></div>
+    </div></div>
+    <div class="card"><div class="card-header"><span class="card-title">Upcoming Deadlines</span></div><div class="card-body" style="padding:0 16px">
+      ${STATE.deadlines.filter(d=>d.status==='Upcoming').slice(0,3).map(d=>`
+      <div class="deadline-item"><div><div class="text-sm fw-600">${esc(d.title)}</div><div class="text-xs text-muted">${esc(d.category)}</div></div><span class="badge badge-primary">${fmtDate(d.date)}</span></div>`).join('')}
+    </div></div>
+  </div>
+</div>`;
+}
+
+function buildPriorityQueue(){
+  const q=[];
+  STATE.deadlines.filter(d=>d.status==='Overdue').forEach(d=>{
+    q.push({title:d.title,cat:'Deadline · '+d.category,sev:d.daysPast>30?'Critical':'High',due:'Past due '+d.daysPast+'d',action:`navigate('/deadlines')`});
+  });
+  STATE.systems.filter(s=>s.errors>0).forEach(s=>{
+    s.errors_list.filter(e=>e.severity==='critical').forEach(e=>{
+      q.push({title:s.name+': '+e.msg.substring(0,55)+'…',cat:'System Error',sev:'Critical',due:'',action:`navigate('/systems')`});
+    });
+  });
+  STATE.enrollmentRequests.filter(r=>r.status==='Blocked').forEach(r=>{
+    q.push({title:r.studentName+' — '+r.courseName+' blocked',cat:'Enrollment · '+r.type,sev:'High',due:'',action:`navigate('/enrollment')`});
+  });
+  STATE.students.filter(s=>s.status==='Academic Probation').forEach(s=>{
+    q.push({title:s.name+' — Academic Probation (GPA '+s.gpa+')',cat:'Student · '+s.program,sev:'High',due:'',action:`openStudent('${s.id}')`});
+  });
+  return q.slice(0,8);
+}
+
+// ===================== STUDENTS =====================
+function renderStudents(el){
+  if(selectedStudent){ renderStudent360(el); return; }
+  const search = el._stuSearch||'';
+  const progFilter = el._stuProgram||'';
+  const statFilter = el._stuStatus||'';
+  const holdFilter = el._stuHold||'';
+  const programs=[...new Set(STATE.students.map(s=>s.program))].sort();
+
+  let students = STATE.students.filter(s=>{
+    if(search && !s.name.toLowerCase().includes(search.toLowerCase()) && !s.id.toLowerCase().includes(search.toLowerCase()) && !s.email.toLowerCase().includes(search.toLowerCase())) return false;
+    if(progFilter && s.program!==progFilter) return false;
+    if(statFilter && s.status!==statFilter) return false;
+    if(holdFilter==='has-holds' && s.holds.length===0) return false;
+    if(holdFilter==='no-holds' && s.holds.length>0) return false;
+    return true;
+  });
+
+  el.innerHTML = `
+<div class="page-header"><div><div class="page-title">Student Directory</div><div class="page-subtitle">${STATE.students.length} enrolled — Spring 2025</div></div></div>
+<div class="filter-bar">
+  <input type="text" placeholder="Search name, ID, email…" value="${esc(search)}" id="stu-search" oninput="stuFilter(this.value,'search')">
+  <select onchange="stuFilter(this.value,'program')" id="stu-prog-sel"><option value="">All Programs</option>${programs.map(p=>`<option value="${esc(p)}" ${progFilter===p?'selected':''}>${esc(p)}</option>`).join('')}</select>
+  <select onchange="stuFilter(this.value,'status')" id="stu-stat-sel"><option value="">All Statuses</option>${['Good Standing','Academic Probation'].map(s=>`<option value="${esc(s)}" ${statFilter===s?'selected':''}>${esc(s)}</option>`).join('')}</select>
+  <select onchange="stuFilter(this.value,'hold')" id="stu-hold-sel"><option value="">All Holds</option><option value="has-holds" ${holdFilter==='has-holds'?'selected':''}>Has Holds</option><option value="no-holds" ${holdFilter==='no-holds'?'selected':''}>No Holds</option></select>
+  <span class="text-xs text-muted">${students.length} results</span>
+</div>
+<div class="card"><div class="table-wrap"><table>
+<thead><tr><th>Student</th><th>Program</th><th>Level</th><th>GPA</th><th>Credits</th><th>Status</th><th>Holds</th><th>Actions</th></tr></thead>
+<tbody>${students.map(s=>`<tr>
+  <td><div class="flex items-center gap-2"><div class="avatar" style="background:var(--primary);width:28px;height:28px;font-size:11px">${s.name.split(' ').map(n=>n[0]).join('')}</div><div><div class="fw-600 link" onclick="openStudent('${s.id}')">${esc(s.name)}</div><div class="text-xs text-muted">${esc(s.id)} · ${esc(s.email)}</div></div></div></td>
+  <td class="text-sm">${esc(s.program)}</td>
+  <td class="text-sm">${esc(s.level)}</td>
+  <td><span style="font-weight:700;color:${gpaColor(s.gpa)}">${s.gpa.toFixed(1)}</span></td>
+  <td class="text-sm">${s.credits.completed} / ${s.credits.required}</td>
+  <td>${statusBadge(s.status)}</td>
+  <td>${s.holds.length?s.holds.map(holdBadge).join(''):'<span class="badge badge-success">None</span>'}</td>
+  <td><button class="btn btn-secondary btn-sm" onclick="openStudent('${s.id}')">View 360</button></td>
+</tr>`).join('')}
+</tbody></table></div></div>`;
+  el._stuSearch=search; el._stuProgram=progFilter; el._stuStatus=statFilter; el._stuHold=holdFilter;
+}
+
+function stuFilter(val,type){
+  const el=document.getElementById('main');
+  if(type==='search') el._stuSearch=val;
+  else if(type==='program') el._stuProgram=val;
+  else if(type==='status') el._stuStatus=val;
+  else if(type==='hold') el._stuHold=val;
+  renderStudents(el);
+}
+
+function openStudent(id){
+  selectedStudent = STATE.students.find(s=>s.id===id);
+  selectedStudentTab='overview';
+  currentRoute='/students';
+  render();
+}
+
+function renderStudent360(el){
+  const s=selectedStudent;
+  const reqs=STATE.enrollmentRequests.filter(r=>r.student===s.id);
+  const tabs=['overview','enrollment','history','holds','notes'];
+  el.innerHTML=`
+<div class="page-header">
+  <div class="flex items-center gap-2">
+    <button class="btn btn-secondary btn-sm" onclick="navigate('/students')">← Students</button>
+    <div class="page-title">${esc(s.name)}</div>
+    ${statusBadge(s.status)}
+  </div>
+  <button class="btn btn-primary btn-sm" onclick="showModal('add-enrollment')">Add / Drop Course</button>
+</div>
+<div class="student-header">
+  <div class="avatar avatar-lg">${s.name.split(' ').map(n=>n[0]).join('')}</div>
+  <div style="flex:1">
+    <div style="font-size:18px;font-weight:700">${esc(s.name)}</div>
+    <div class="text-sm text-muted">${esc(s.id)} · ${esc(s.email)}</div>
+    <div class="student-meta-grid mt-2">
+      <div class="meta-item"><div class="label">Program</div><div class="value">${esc(s.program)}</div></div>
+      <div class="meta-item"><div class="label">Level</div><div class="value">${esc(s.level)}</div></div>
+      <div class="meta-item"><div class="label">GPA</div><div class="value" style="color:${gpaColor(s.gpa)};font-weight:700">${s.gpa.toFixed(2)}</div></div>
+      <div class="meta-item"><div class="label">Advisor</div><div class="value">${esc(s.advisor)}</div></div>
+      <div class="meta-item"><div class="label">Credits Completed</div><div class="value">${s.credits.completed} / ${s.credits.required}</div></div>
+      <div class="meta-item"><div class="label">In Progress</div><div class="value">${s.credits.inProgress} credits</div></div>
+    </div>
+    <div class="mt-2">
+      <div class="progress-bar" style="height:8px"><div class="progress-fill" style="width:${Math.round(s.credits.completed/s.credits.required*100)}%"></div></div>
+      <div class="text-xs text-muted mt-1">${Math.round(s.credits.completed/s.credits.required*100)}% toward degree</div>
+    </div>
+    ${s.holds.length?`<div class="mt-2">${s.holds.map(holdBadge).join('')}</div>`:''}
+  </div>
+</div>
+<div class="tabs">${tabs.map(t=>`<div class="tab ${selectedStudentTab===t?'active':''}" onclick="switchStudentTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</div>`).join('')}</div>
+<div id="student-tab-content">${renderStudentTab(s,reqs)}</div>`;
+}
+
+function switchStudentTab(tab){
+  selectedStudentTab=tab;
+  const s=selectedStudent;
+  const reqs=STATE.enrollmentRequests.filter(r=>r.student===s.id);
+  document.getElementById('student-tab-content').innerHTML=renderStudentTab(s,reqs);
+}
+
+function renderStudentTab(s,reqs){
+  if(selectedStudentTab==='overview'){
+    return `<div class="grid-2">
+    <div class="card"><div class="card-header"><span class="card-title">Current Enrollment</span></div><div class="card-body" style="padding:0 16px">
+      ${s.enrolledCourses.map(cid=>{const c=STATE.courses.find(x=>x.id===cid);if(!c)return'';return`
+      <div class="deadline-item"><div><div class="text-sm fw-600">${esc(c.name)}</div><div class="text-xs text-muted">${esc(c.id)} · ${esc(c.schedule)}</div></div><span class="badge badge-primary">${c.credits} cr</span></div>`;}).join('')}
+    </div></div>
+    <div class="card"><div class="card-header"><span class="card-title">Academic Standing</span></div><div class="card-body">
+      <div class="text-sm text-muted mb-1">Current Status</div>
+      <div class="mb-3">${statusBadge(s.status)}</div>
+      <div class="text-sm text-muted mb-1">Degree Progress</div>
+      <div class="progress-bar mb-1"><div class="progress-fill" style="width:${Math.round(s.credits.completed/s.credits.required*100)}%"></div></div>
+      <div class="text-xs text-muted">${s.credits.completed} of ${s.credits.required} credits completed</div>
+      <div class="divider"></div>
+      <div class="text-sm text-muted mb-1">Advisor Notes</div>
+      <div class="text-sm">${esc(s.notes)}</div>
+    </div></div>
+    </div>`;
+  }
+  if(selectedStudentTab==='enrollment'){
+    if(!reqs.length) return`<div style="text-align:center;padding:40px;color:var(--text3)">No enrollment requests for this term.</div>`;
+    return`<div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Request ID</th><th>Course</th><th>Type</th><th>Status</th><th>Submitted</th><th>Notes</th></tr></thead>
+    <tbody>${reqs.map(r=>`<tr>
+      <td class="text-sm fw-600">${esc(r.id)}</td>
+      <td><div class="fw-600">${esc(r.courseName)}</div><div class="text-xs text-muted">${esc(r.course)}</div></td>
+      <td><span class="badge badge-neutral">${esc(r.type)}</span></td>
+      <td>${statusBadge(r.status)}${r.position?` <span class="text-xs text-muted">#${r.position}</span>`:''}</td>
+      <td class="text-sm text-muted">${fmtDate(r.submitted)}</td>
+      <td class="text-sm text-muted">${esc(r.notes)}</td>
+    </tr>`).join('')}</tbody></table></div></div>`;
+  }
+  if(selectedStudentTab==='history'){
+    return`<div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Term</th><th>Courses</th><th>Credits</th><th>Term GPA</th></tr></thead>
+    <tbody>${s.history.map(h=>`<tr>
+      <td class="fw-600">${esc(h.term)}</td>
+      <td class="text-sm">${h.courses.join(', ')}</td>
+      <td>${h.credits}</td>
+      <td><span style="font-weight:700;color:${gpaColor(h.gpa)}">${h.gpa.toFixed(2)}</span></td>
+    </tr>`).join('')}</tbody></table></div></div>`;
+  }
+  if(selectedStudentTab==='holds'){
+    if(!s.holds.length) return`<div class="card"><div class="card-body" style="text-align:center;padding:40px;color:var(--text3)">No active holds on this student account.</div></div>`;
+    return`<div class="card"><div class="card-body">${s.holds.map(h=>`
+    <div style="padding:14px;background:var(--danger-light);border:1px solid var(--danger);border-radius:var(--radius);margin-bottom:10px">
+      <div class="flex items-center justify-between mb-2"><span class="fw-600 text-danger">${esc(h)}</span><button class="btn btn-sm btn-secondary" onclick="clearHold('${esc(s.id)}','${esc(h)}')">Clear Hold</button></div>
+      <div class="text-sm text-muted">Active hold preventing enrollment changes. Contact the appropriate office to resolve.</div>
+    </div>`).join('')}</div></div>`;
+  }
+  if(selectedStudentTab==='notes'){
+    return`<div class="card"><div class="card-body"><div class="text-sm fw-600 mb-2">Advisor Notes</div><div class="text-sm">${esc(s.notes)}</div></div></div>`;
+  }
+  return '';
+}
+
+function clearHold(studentId, hold){
+  const s=STATE.students.find(x=>x.id===studentId);
+  if(s){ s.holds=s.holds.filter(h=>h!==hold); selectedStudent=s; }
+  renderStudent360(document.getElementById('main'));
+  addAIMsg('assistant',`Hold "${hold}" cleared for ${s.name}. Their account will now allow enrollment changes for any courses not otherwise restricted.`);
+}
+
+// ===================== ENROLLMENT =====================
+function renderEnrollment(el){
+  const pending=STATE.enrollmentRequests.filter(r=>r.status==='Pending Review'||r.status==='Blocked');
+  const approved=STATE.enrollmentRequests.filter(r=>r.status==='Approved');
+  const waitlisted=STATE.enrollmentRequests.filter(r=>r.status==='Waitlisted');
+
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Enrollment Requests</div><div class="page-subtitle">Spring 2025 add/drop queue</div></div>
+<button class="btn btn-primary btn-sm" onclick="showModal('add-enrollment')">+ New Request</button></div>
+
+<div class="kpi-grid" style="grid-template-columns:repeat(4,1fr)">
+  <div class="kpi-card kpi-danger"><div class="kpi-label">Needs Action</div><div class="kpi-value">${pending.length}</div></div>
+  <div class="kpi-card kpi-success"><div class="kpi-label">Approved</div><div class="kpi-value">${approved.length}</div></div>
+  <div class="kpi-card kpi-teal"><div class="kpi-label">Waitlisted</div><div class="kpi-value">${waitlisted.length}</div></div>
+  <div class="kpi-card kpi-primary"><div class="kpi-label">Total Requests</div><div class="kpi-value">${STATE.enrollmentRequests.length}</div></div>
+</div>
+
+${pending.length?`<div class="card mb-4"><div class="card-header"><span class="card-title">Needs Action</span><span class="badge badge-danger">${pending.length}</span></div>
+<div class="table-wrap"><table>
+<thead><tr><th>ID</th><th>Student</th><th>Course</th><th>Type</th><th>Status</th><th>Notes</th><th>Actions</th></tr></thead>
+<tbody>${pending.map(r=>`<tr>
+  <td class="text-sm text-muted">${esc(r.id)}</td>
+  <td><div class="fw-600 link" onclick="openStudent('${r.student}')">${esc(r.studentName)}</div><div class="text-xs text-muted">${esc(r.student)}</div></td>
+  <td><div class="fw-600">${esc(r.courseName)}</div><div class="text-xs text-muted">${esc(r.course)}</div></td>
+  <td><span class="badge badge-neutral">${esc(r.type)}</span></td>
+  <td>${statusBadge(r.status)}</td>
+  <td class="text-sm text-muted" style="max-width:200px">${esc(r.notes)}</td>
+  <td><div class="flex gap-2"><button class="btn btn-success btn-sm" onclick="approveRequest('${r.id}')">Approve</button><button class="btn btn-danger btn-sm" onclick="denyRequest('${r.id}')">Deny</button></div></td>
+</tr>`).join('')}</tbody></table></div></div>`:''}
+
+<div class="card mb-4"><div class="card-header"><span class="card-title">Waitlist Queue</span></div>
+<div class="table-wrap"><table>
+<thead><tr><th>Position</th><th>Student</th><th>Course</th><th>Submitted</th><th>Notes</th></tr></thead>
+<tbody>${waitlisted.map(r=>`<tr>
+  <td><span class="badge badge-teal">#${r.position||'—'}</span></td>
+  <td><div class="fw-600 link" onclick="openStudent('${r.student}')">${esc(r.studentName)}</div></td>
+  <td><div class="fw-600">${esc(r.courseName)}</div><div class="text-xs text-muted">${esc(r.course)}</div></td>
+  <td class="text-sm text-muted">${fmtDate(r.submitted)}</td>
+  <td class="text-sm text-muted">${esc(r.notes)}</td>
+</tr>`).join('')}</tbody></table></div></div>
+
+<div class="card"><div class="card-header"><span class="card-title">Recently Approved</span></div>
+<div class="table-wrap"><table>
+<thead><tr><th>Student</th><th>Course</th><th>Type</th><th>Notes</th></tr></thead>
+<tbody>${approved.map(r=>`<tr>
+  <td><div class="fw-600">${esc(r.studentName)}</div></td>
+  <td><div>${esc(r.courseName)}</div><div class="text-xs text-muted">${esc(r.course)}</div></td>
+  <td><span class="badge badge-neutral">${esc(r.type)}</span></td>
+  <td class="text-sm text-muted">${esc(r.notes)}</td>
+</tr>`).join('')}</tbody></table></div></div>`;
+}
+
+function approveRequest(id){
+  const r=STATE.enrollmentRequests.find(x=>x.id===id);
+  if(r){ r.status='Approved'; render(); addAIMsg('assistant',`Enrollment request ${id} for ${r.studentName} (${r.courseName}) has been approved.`); }
+}
+function denyRequest(id){
+  const r=STATE.enrollmentRequests.find(x=>x.id===id);
+  if(r){ r.status='Denied'; render(); addAIMsg('assistant',`Enrollment request ${id} for ${r.studentName} (${r.courseName}) has been denied.`); }
+}
+
+// ===================== COURSES =====================
+function renderCourses(el){
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Course Catalog</div><div class="page-subtitle">Spring 2025 — ${STATE.courses.length} sections</div></div></div>
+<div class="card"><div class="table-wrap"><table>
+<thead><tr><th>Course</th><th>Instructor</th><th>Schedule</th><th>Enrollment</th><th>Waitlist</th><th>Credits</th></tr></thead>
+<tbody>${STATE.courses.map(c=>{
+  const pct=Math.round(c.enrolled/c.capacity*100);
+  const capColor=pct>=100?'var(--danger)':pct>=80?'var(--warning)':'var(--success)';
+  return`<tr>
+  <td><div class="fw-600">${esc(c.name)}</div><div class="text-xs text-muted">${esc(c.id)} · ${esc(c.dept)}</div></td>
+  <td class="text-sm">${esc(c.instructor)}</td>
+  <td class="text-sm text-muted">${esc(c.schedule)}</td>
+  <td>
+    <div class="course-cap">
+      <span class="text-sm fw-600" style="color:${capColor}">${c.enrolled}/${c.capacity}</span>
+      <div class="cap-bar"><div class="cap-fill" style="width:${pct}%;background:${capColor}"></div></div>
+    </div>
+    ${c.enrolled>=c.capacity?'<span class="badge badge-danger" style="margin-top:3px">Full</span>':''}
+  </td>
+  <td>${c.waitlist?`<span class="badge badge-teal">${c.waitlist} waiting</span>`:'<span class="text-muted text-xs">—</span>'}</td>
+  <td class="text-sm">${c.credits} cr</td>
+</tr>`;}).join('')}</tbody></table></div></div>`;
+}
+
+// ===================== DEADLINES =====================
+function renderDeadlines(el){
+  const overdue=STATE.deadlines.filter(d=>d.status==='Overdue');
+  const upcoming=STATE.deadlines.filter(d=>d.status==='Upcoming');
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Academic Deadlines</div><div class="page-subtitle">Spring 2025 calendar & compliance</div></div></div>
+${overdue.length?`<div class="card mb-4" style="border-color:var(--danger)"><div class="card-header" style="background:var(--danger-light)"><span class="card-title text-danger">Overdue — Action Required</span><span class="badge badge-danger">${overdue.length}</span></div>
+<div class="card-body" style="padding:0 16px">
+${overdue.map(d=>`<div class="deadline-item">
+  <div style="flex:1"><div class="fw-600">${esc(d.title)}</div><div class="text-xs text-muted mt-1">${esc(d.impact)}</div></div>
+  <div style="text-align:right;flex-shrink:0;margin-left:12px">
+    <div class="text-sm text-danger fw-600">${fmtDate(d.date)}</div>
+    <div class="text-xs text-muted">${d.daysPast}d past due</div>
+    <span class="badge badge-neutral mt-1">${esc(d.category)}</span>
+  </div>
+</div>`).join('')}
+</div></div>`:''}
+<div class="card"><div class="card-header"><span class="card-title">Upcoming</span></div>
+<div class="card-body" style="padding:0 16px">
+${upcoming.map(d=>`<div class="deadline-item">
+  <div style="flex:1"><div class="fw-600">${esc(d.title)}</div><div class="text-xs text-muted mt-1">${esc(d.impact)}</div></div>
+  <div style="text-align:right;flex-shrink:0;margin-left:12px">
+    <div class="text-sm fw-600">${fmtDate(d.date)}</div>
+    <span class="badge badge-neutral mt-1">${esc(d.category)}</span>
+  </div>
+</div>`).join('')}
+</div></div>`;
+}
+
+// ===================== SYSTEMS =====================
+function renderSystems(el){
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Connected Systems</div><div class="page-subtitle">Integration health — powered by Boomi</div></div>
+<button class="btn btn-secondary btn-sm" onclick="triggerSync()">Trigger Sync</button></div>
+<div class="int-grid mb-4">
+${STATE.systems.map(s=>`
+<div class="int-card ${selectedSystem===s.id?'selected':''}" onclick="selectSystem('${s.id}')">
+  <div class="flex justify-between items-center mb-2">
+    <div class="flex items-center gap-2"><div class="avatar" style="background:${s.color};width:32px;height:32px;font-size:10px;border-radius:6px">${esc(s.icon)}</div><span class="fw-600">${esc(s.name)}</span></div>
+    <div class="int-status"><div class="status-dot status-${s.status}"></div>${s.status==='healthy'?'Healthy':s.status==='warning'?'Warning':'Error'}</div>
+  </div>
+  <div class="text-xs text-muted mb-2">${esc(s.description)}</div>
+  <div class="text-xs text-muted">Last sync: ${new Date(s.lastSync).toLocaleString()}</div>
+  ${s.errors?`<div class="mt-2"><span class="badge badge-danger">${s.errors} error${s.errors>1?'s':''}</span></div>`:`<div class="mt-2"><span class="badge badge-success">No errors</span></div>`}
+</div>`).join('')}
+</div>
+${selectedSystem?renderSystemDetail():'<div class="card"><div class="card-body" style="text-align:center;padding:40px;color:var(--text3)">Select a system above to view details and errors.</div></div>'}`;
+}
+
+function selectSystem(id){
+  selectedSystem = selectedSystem===id ? null : id;
+  renderSystems(document.getElementById('main'));
+}
+
+function renderSystemDetail(){
+  const s=STATE.systems.find(x=>x.id===selectedSystem);
+  if(!s)return'';
+  if(!s.errors_list.length) return`<div class="card"><div class="card-body" style="text-align:center;padding:30px;color:var(--success)">All clear — no errors detected for ${esc(s.name)}.</div></div>`;
+  return`<div class="card"><div class="card-header"><span class="card-title">${esc(s.name)} — Error Details</span><span class="badge badge-danger">${s.errors_list.length} error${s.errors_list.length>1?'s':''}</span></div>
+<div class="card-body">
+${s.errors_list.map(e=>`<div class="error-panel mb-3">
+  <div class="flex justify-between items-center mb-2">
+    <span class="fw-600">${esc(e.type)}</span>
+    <span class="badge ${e.severity==='critical'?'badge-danger':e.severity==='high'?'badge-warning':'badge-primary'}">${e.severity}</span>
+  </div>
+  <div class="text-sm mb-2">${esc(e.msg)}</div>
+  <div class="text-xs text-muted"><span class="fw-600">Resolution:</span> ${esc(e.resolution)}</div>
+</div>`).join('')}
+</div></div>`;
+}
+
+function triggerSync(){
+  addAIMsg('assistant','Sync triggered across all connected systems. Boomi is processing enrollment status, hold data, and certification records. Results will be reflected within 5 minutes.');
+}
+
+// ===================== REPORTS =====================
+function renderReports(el){
+  const totalCredits=STATE.students.reduce((a,s)=>a+s.credits.inProgress,0);
+  const avgGPA=(STATE.students.reduce((a,s)=>a+s.gpa,0)/STATE.students.length).toFixed(2);
+  const fullLoad=STATE.students.filter(s=>s.credits.inProgress>=12).length;
+  const nearGrad=STATE.students.filter(s=>s.credits.completed+s.credits.inProgress>=s.credits.required*0.9).length;
+
+  el.innerHTML=`
+<div class="page-header"><div><div class="page-title">Reports</div><div class="page-subtitle">Spring 2025 enrollment analytics</div></div></div>
+<div class="kpi-grid">
+  <div class="kpi-card kpi-primary"><div class="kpi-label">Total Credits In Progress</div><div class="kpi-value">${totalCredits}</div><div class="kpi-sub">across all students</div></div>
+  <div class="kpi-card kpi-success"><div class="kpi-label">Average GPA</div><div class="kpi-value">${avgGPA}</div></div>
+  <div class="kpi-card kpi-teal"><div class="kpi-label">Full-Time Students</div><div class="kpi-value">${fullLoad}</div><div class="kpi-sub">12+ credits</div></div>
+  <div class="kpi-card kpi-primary"><div class="kpi-label">Near Graduation</div><div class="kpi-value">${nearGrad}</div><div class="kpi-sub">≥90% credits complete</div></div>
+</div>
+<div class="grid-2">
+  <div class="card"><div class="card-header"><span class="card-title">Enrollment by Program</span></div><div class="card-body">
+    ${[...new Set(STATE.students.map(s=>s.program))].sort().map(prog=>{
+      const cnt=STATE.students.filter(s=>s.program===prog).length;
+      return`<div class="mb-3"><div class="flex justify-between mb-1"><span class="text-sm">${esc(prog)}</span><span class="text-sm fw-600">${cnt}</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${Math.round(cnt/STATE.students.length*100)}%"></div></div></div>`;
+    }).join('')}
+  </div></div>
+  <div class="card"><div class="card-header"><span class="card-title">Course Capacity Summary</span></div><div class="card-body">
+    ${STATE.courses.map(c=>{
+      const pct=Math.round(c.enrolled/c.capacity*100);
+      const color=pct>=100?'var(--danger)':pct>=80?'var(--warning)':'var(--success)';
+      return`<div class="mb-3"><div class="flex justify-between mb-1"><span class="text-sm">${esc(c.id)} — ${esc(c.name)}</span><span class="text-sm fw-600" style="color:${color}">${pct}%</span></div>
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%;background:${color}"></div></div></div>`;
+    }).join('')}
+  </div></div>
+</div>`;
+}
+
+// ===================== BOOMI API CONFIG =====================
+const BOOMI_API_BASE='http://localhost:8077';
+const BOOMI_API_USER='boomi_brianmerrick-4SYB9W.N0OO9W';
+const BOOMI_API_SECRET='37b5b313-5c46-4912-bf82-6f804bd856ea';
+const BOOMI_STATUS_URL=BOOMI_API_BASE+'/ws/rest/v1/HigherEd/RegistrarStatus';
+
+async function fetchRegistrarStatus(userInput){
+  const creds=btoa(BOOMI_API_USER+':'+BOOMI_API_SECRET);
+  try{
+    const resp=await fetch(BOOMI_STATUS_URL,{
+      method:'POST',
+      headers:{'Authorization':'Basic '+creds,'Accept':'application/json','Content-Type':'application/json'},
+      body:JSON.stringify({question:userInput})
+    });
+    if(!resp.ok) return {ok:false,status:resp.status};
+    const data=await resp.json();
+    return {ok:true,data};
+  }catch(e){
+    return {ok:false,error:e.message};
+  }
+}
+
+// ===================== AI PANEL =====================
+const AI_RESPONSES = [
+  {k:['hold','holds','blocked'],r:()=>{const wh=STATE.students.filter(s=>s.holds.length>0);return`${wh.length} student${wh.length>1?'s have':' has'} active holds:\n${wh.map(s=>`• ${s.name} (${s.id}): ${s.holds.join(', ')}`).join('\n')}\n\nHolds prevent enrollment changes until resolved with the appropriate office.`;}},
+  {k:['waitlist','wait list','waiting'],r:()=>{const wl=STATE.enrollmentRequests.filter(r=>r.status==='Waitlisted');return`${wl.length} students are currently waitlisted:\n${wl.map(r=>`• ${r.studentName} — ${r.courseName} (Position #${r.position})`).join('\n')}`;}},
+  {k:['probation','academic probation'],r:()=>{const ap=STATE.students.filter(s=>s.status==='Academic Probation');return`${ap.length} student${ap.length>1?'s are':'is'} on academic probation:\n${ap.map(s=>`• ${s.name} (GPA: ${s.gpa})`).join('\n')}\n\nThese students require advisor meetings before enrollment changes can be confirmed.`;}},
+  {k:['full','capacity','no seats'],r:()=>{const f=STATE.courses.filter(c=>c.enrolled>=c.capacity);return`${f.length} course${f.length>1?'s are':'is'} at full capacity:\n${f.map(c=>`• ${c.id} — ${c.name} (${c.enrolled}/${c.capacity})`).join('\n')}`;}},
+  {k:['deadline','overdue','past due','late'],r:()=>{const od=STATE.deadlines.filter(d=>d.status==='Overdue');return`${od.length} deadlines are currently overdue:\n${od.map(d=>`• ${d.title} — ${d.daysPast} days past due\n  Impact: ${d.impact}`).join('\n\n')}`;}},
+  {k:['system','integration','sync','banner','oracle','canvas'],r:()=>{const errs=STATE.systems.filter(s=>s.errors>0);return`${errs.length} connected system${errs.length>1?'s have':' has'} errors:\n${errs.map(s=>`• ${s.name}: ${s.errors} error${s.errors>1?'s':''}`).join('\n')}\n\nNavigate to Systems to view resolution steps.`;}},
+  {k:['gpa','grade point'],r:()=>{const avg=(STATE.students.reduce((a,s)=>a+s.gpa,0)/STATE.students.length).toFixed(2);const top=STATE.students.sort((a,b)=>b.gpa-a.gpa).slice(0,3);return`Spring 2025 cohort average GPA: ${avg}\n\nTop students by GPA:\n${top.map(s=>`• ${s.name}: ${s.gpa.toFixed(2)}`).join('\n')}`;}},
+  {k:['graduation','graduate','grad'],r:()=>{const g=STATE.students.filter(s=>s.credits.completed+s.credits.inProgress>=s.credits.required*0.9);return`${g.length} students are near or eligible for graduation:\n${g.map(s=>`• ${s.name} (${s.program}) — ${s.credits.completed}/${s.credits.required} credits complete`).join('\n')}`;}},
+  {k:['financial','fee','balance','aid'],r:()=>{return`Financial Aid System currently has a critical error: 7 students enrolled full-time have not been certified, putting their aid disbursement at risk. The enrollment certification deadline was January 20th.\n\nAdditionally, 2 students (Tyler Brooks, Devon Mitchell) have financial holds blocking enrollment changes.\n\nRecommend contacting the Financial Aid office immediately.`;}},
+  {k:['ferpa','privacy','compliance'],r:()=>{return`FERPA compliance alert: 12 faculty members have not completed their annual FERPA training, which was due February 1st (33 days ago).\n\nStudent privacy records cannot be shared by non-compliant faculty. Recommend sending an escalation notice to department chairs.`;}},
+  {k:['nursing','nurs','clinical'],r:()=>{const nurs=STATE.students.filter(s=>s.program==='Nursing');return`${nurs.length} Nursing student${nurs.length>1?'s are':'is'} enrolled:\n${nurs.map(s=>`• ${s.name}: ${s.holds.length?s.holds.join(', '):'No holds'}`).join('\n')}\n\nNote: Rachel Torres has an Immunization Hold that must be cleared before clinical placement can be confirmed.`;}},
+  {k:['enroll','enrollment','request'],r:()=>{const p=STATE.enrollmentRequests.filter(r=>r.status==='Pending Review'||r.status==='Blocked');return`${p.length} enrollment request${p.length>1?'s need':'needs'} action:\n${p.map(r=>`• ${r.studentName} — ${r.courseName} (${r.status})`).join('\n')}\n\nNavigate to Enrollment to approve or deny.`;}},
+];
+
+function getAIResponse(msg,status){
+  const lower=msg.toLowerCase();
+  for(const rule of AI_RESPONSES){
+    if(rule.k.some(k=>lower.includes(k))) return rule.r();
+  }
+  const apiStatus=status?`\n\n[API Status: ${status.status} — ${status.message}]`:'';
+  return `I can help you with enrollment management, student holds, course capacity, academic deadlines, and system integration status for Spring 2025. Try asking:\n• "Which students have holds?"\n• "What courses are full?"\n• "Show overdue deadlines"\n• "What's the FERPA status?"${apiStatus}`;
+}
+
+function formatAIMsg(text){
+  return esc(text)
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/```([\s\S]*?)```/g,'<pre style="background:#f1f5f9;padding:8px;border-radius:4px;font-size:11px;overflow-x:auto;margin-top:4px;white-space:pre-wrap">$1</pre>')
+    .replace(/\n/g,'<br>');
+}
+
+function scrollAI(){const el=document.getElementById('ai-messages');if(el)el.scrollTop=el.scrollHeight;}
+
+function addAIMsg(role,text,apiResult){
+  const container=document.getElementById('ai-messages');
+  const div=document.createElement('div');
+  div.className=`ai-msg ${role}`;
+  let badge='';
+  if(role==='assistant'&&apiResult!==undefined){
+    badge=apiResult&&apiResult.ok
+      ?`<div class="ai-api-badge ok">✓ Boomi AI Connected</div>`
+      :`<div class="ai-api-badge err">◌ Boomi AI Offline</div>`;
+  }
+  div.innerHTML=formatAIMsg(text)+badge;
+  container.appendChild(div);
+  scrollAI();
+}
+
+async function sendAI(){
+  const inp=document.getElementById('ai-input');
+  const msg=inp.value.trim();
+  if(!msg)return;
+  addAIMsg('user',msg);
+  inp.value='';
+  const sendBtn=document.getElementById('ai-send');
+  if(sendBtn)sendBtn.disabled=true;
+  const thinkingEl=document.createElement('div');
+  thinkingEl.className='ai-msg assistant';
+  thinkingEl.innerHTML='<div class="ai-typing"><span></span><span></span><span></span></div>';
+  document.getElementById('ai-messages').appendChild(thinkingEl);
+  scrollAI();
+  const [apiResult]=await Promise.all([
+    fetchRegistrarStatus(msg),
+    new Promise(r=>setTimeout(r,500))
+  ]);
+  thinkingEl.remove();
+  let response;
+  if(apiResult&&apiResult.ok&&apiResult.data!==undefined){
+    const d=apiResult.data;
+    response=typeof d==='string'?d:(typeof d?.data==='string'?d.data:(d?.data?.answer!==undefined?d.data.answer:(d.answer!==undefined?d.answer:JSON.stringify(d,null,2))));
+  } else {
+    response=getAIResponse(msg,null);
+  }
+  addAIMsg('assistant',response,apiResult);
+  if(sendBtn)sendBtn.disabled=false;
+}
+
+function updateAISuggestions(){
+  const suggestions={
+    '/dashboard':['Who has holds?','What deadlines are overdue?','Show system errors'],
+    '/students':['Students on probation','Who is near graduation?','Show students with holds'],
+    '/enrollment':['What requests are blocked?','Who is on the waitlist?','Show pending approvals'],
+    '/courses':['Which courses are full?','Show courses with waitlists'],
+    '/deadlines':['What is past due?','Show FERPA compliance status','Financial aid deadline status'],
+    '/systems':['What are the Banner errors?','Oracle sync status','Trigger a system sync'],
+    '/reports':['What is the average GPA?','Show enrollment by program'],
+  };
+  const suggs=suggestions[currentRoute]||suggestions['/dashboard'];
+  document.getElementById('ai-suggestions').innerHTML=`<div class="ai-sugg-label">Suggested</div>${suggs.map(s=>`<button class="ai-sugg-btn" onclick="aiSuggClick('${esc(s)}')">${esc(s)}</button>`).join('')}`;
+}
+
+function aiSuggClick(text){
+  document.getElementById('ai-input').value=text;
+  sendAI();
+}
+
+// ===================== SEARCH =====================
+document.getElementById('global-search').addEventListener('input',function(){
+  const q=this.value.trim().toLowerCase();
+  const res=document.getElementById('search-results');
+  if(q.length<2){res.classList.remove('show');return;}
+  const hits=STATE.students.filter(s=>s.name.toLowerCase().includes(q)||s.id.toLowerCase().includes(q)||s.email.toLowerCase().includes(q)||s.program.toLowerCase().includes(q)).slice(0,6);
+  if(!hits.length){res.classList.remove('show');return;}
+  res.innerHTML=hits.map(s=>`<div class="search-item" onclick="openStudentFromSearch('${s.id}')"><div class="s-name">${esc(s.name)}</div><div class="s-meta">${esc(s.id)} · ${esc(s.program)} · ${esc(s.level)}</div></div>`).join('');
+  res.classList.add('show');
+});
+document.addEventListener('click',e=>{if(!e.target.closest('.search-wrap'))document.getElementById('search-results').classList.remove('show');});
+function openStudentFromSearch(id){
+  document.getElementById('search-results').classList.remove('show');
+  document.getElementById('global-search').value='';
+  currentRoute='/students';
+  document.querySelectorAll('.nav-item').forEach(el=>el.classList.toggle('active',el.dataset.route==='/students'));
+  selectedStudent=STATE.students.find(s=>s.id===id);
+  selectedStudentTab='overview';
+  render();
+}
+
+// ===================== NOTIFICATIONS =====================
+document.getElementById('notif-btn').addEventListener('click',function(e){
+  e.stopPropagation();
+  const dd=document.getElementById('notif-dropdown');
+  if(!dd.classList.contains('show')){
+    dd.innerHTML=`<div class="notif-header"><span>Notifications</span><span class="badge badge-danger">${STATE.notifications.length}</span></div>`+
+      STATE.notifications.map(n=>`<div class="notif-item"><div class="notif-title">${esc(n.title)}</div><div class="notif-time">${esc(n.time)}</div></div>`).join('');
+  }
+  dd.classList.toggle('show');
+});
+document.addEventListener('click',e=>{if(!e.target.closest('#notif-btn'))document.getElementById('notif-dropdown').classList.remove('show');});
+
+// ===================== MODALS =====================
+function showModal(type){
+  const overlay=document.createElement('div');
+  overlay.className='modal-overlay';
+  overlay.onclick=e=>{if(e.target===overlay)overlay.remove();};
+  let html='';
+  if(type==='add-enrollment'){
+    html=`<div class="modal"><div class="modal-header"><span class="modal-title">Add / Drop Course</span><button class="btn btn-secondary btn-sm" onclick="this.closest('.modal-overlay').remove()">✕</button></div>
+    <div class="modal-body">
+      <div class="form-group"><label class="form-label">Student</label>
+      <select class="form-control" id="enr-student"><option value="">Select student…</option>${STATE.students.map(s=>`<option value="${s.id}">${esc(s.name)} (${s.id})</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Course</label>
+      <select class="form-control" id="enr-course"><option value="">Select course…</option>${STATE.courses.map(c=>`<option value="${c.id}">${esc(c.id)} — ${esc(c.name)} (${c.enrolled}/${c.capacity})</option>`).join('')}</select></div>
+      <div class="form-group"><label class="form-label">Request Type</label>
+      <select class="form-control" id="enr-type"><option value="Add">Add</option><option value="Drop">Drop</option><option value="Waitlist">Add to Waitlist</option></select></div>
+      <div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="enr-notes" rows="3" placeholder="Reason or override justification…"></textarea></div>
+    </div>
+    <div class="modal-footer"><button class="btn btn-secondary" onclick="this.closest('.modal-overlay').remove()">Cancel</button><button class="btn btn-primary" onclick="submitEnrollment()">Submit Request</button></div>
+    </div>`;
+  }
+  overlay.innerHTML=html;
+  document.getElementById('modals').appendChild(overlay);
+}
+
+function submitEnrollment(){
+  const sid=document.getElementById('enr-student').value;
+  const cid=document.getElementById('enr-course').value;
+  const type=document.getElementById('enr-type').value;
+  const notes=document.getElementById('enr-notes').value;
+  if(!sid||!cid){alert('Please select a student and course.');return;}
+  const student=STATE.students.find(s=>s.id===sid);
+  const course=STATE.courses.find(c=>c.id===cid);
+  const hasHold=student&&student.holds.length>0;
+  const newReq={id:'ENR-'+String(STATE.enrollmentRequests.length+1).padStart(3,'0'),student:sid,studentName:student?.name||sid,course:cid,courseName:course?.name||cid,type,status:hasHold?'Blocked':'Pending Review',position:type==='Waitlist'?course.waitlist+1:null,submitted:new Date().toISOString().slice(0,10),notes:hasHold?'Blocked by '+student.holds.join(', '):notes};
+  STATE.enrollmentRequests.push(newReq);
+  if(course&&type==='Waitlist')course.waitlist++;
+  document.querySelector('.modal-overlay')?.remove();
+  navigate('/enrollment');
+  addAIMsg('assistant',`Enrollment request submitted for ${student?.name||sid} — ${type} ${course?.name||cid}. Status: ${newReq.status}.`);
+}
+
+// ===================== NAV & SIDEBAR =====================
+document.querySelectorAll('.nav-item[data-route]').forEach(el=>{
+  el.addEventListener('click',()=>navigate(el.dataset.route));
+});
+document.getElementById('ai-send').addEventListener('click',sendAI);
+document.getElementById('ai-input').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendAI();}});
+document.getElementById('ai-clear').addEventListener('click',()=>{document.getElementById('ai-messages').innerHTML='';addAIMsg('system','Chat cleared');});
+
+// ===================== INIT =====================
+navigate('/dashboard');
+addAIMsg('assistant','Good morning, Sarah! Spring 2025 enrollment is active. You have '+STATE.deadlines.filter(d=>d.status==='Overdue').length+' overdue deadlines, '+STATE.students.filter(s=>s.holds.length>0).length+' students with holds, and '+STATE.systems.filter(s=>s.errors>0).length+' system integration issues requiring attention. How can I help?');
+updateAISuggestions();
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+           componentId=""
+           folderId="Rjo4MzgxNTQy"
+           name="Registrar - Get Notifications"
+           type="process"
+           version="">
+  <bns:encryptedValues/>
+  <bns:description/>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="76cb739c-d347-4051-bfd9-69a2b0e1fa73">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Mock notifications data" x="288.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"total":5,"unread":5,"notifications":[{"id":"NOTIF-001","title":"Financial Aid certification overdue - 7 students at risk","time":"2025-03-08T06:00:00Z","timeLabel":"2 hours ago","severity":"critical","category":"Financial Aid","read":false},{"id":"NOTIF-002","title":"Add/Drop deadline passed - 3 pending requests need override","time":"2025-03-08T05:00:00Z","timeLabel":"3 hours ago","severity":"high","category":"Enrollment","read":false},{"id":"NOTIF-003","title":"FERPA training overdue for 12 faculty members","time":"2025-03-07T08:00:00Z","timeLabel":"1 day ago","severity":"high","category":"Compliance","read":false},{"id":"NOTIF-004","title":"Oracle Cloud sync errors - hold data not propagating","time":"2025-03-07T08:00:00Z","timeLabel":"1 day ago","severity":"medium","category":"Systems","read":false},{"id":"NOTIF-005","title":"Priya Nair thesis deadline: March 15 - 6 days remaining","time":"2025-03-06T08:00:00Z","timeLabel":"2 days ago","severity":"medium","category":"Graduation","read":false}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="464.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" x="480.0" y="94.0">
+          <configuration>
+            <returndocuments/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

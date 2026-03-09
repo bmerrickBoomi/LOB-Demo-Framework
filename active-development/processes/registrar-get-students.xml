@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+           componentId=""
+           folderId="Rjo4MzgxNTQy"
+           name="Registrar - Get Students"
+           type="process"
+           version="">
+  <bns:encryptedValues/>
+  <bns:description/>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="31eb9c5a-2285-4b28-98ae-19ad9ae2de2f">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Mock student directory data" x="288.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"term":"Spring 2025","total":12,"students":[{"id":"STU-001","name":"Emily Chen","email":"e.chen@university.edu","program":"Computer Science","level":"Junior","gpa":3.8,"status":"Good Standing","advisor":"Dr. Michael Torres","creditsCompleted":78,"creditsInProgress":15,"creditsRequired":120,"holds":[],"enrolledCourses":["CS-401","MATH-301","CS-350"]},{"id":"STU-002","name":"Marcus Rivera","email":"m.rivera@university.edu","program":"Business Administration","level":"Senior","gpa":2.4,"status":"Academic Probation","advisor":"Prof. Linda Walsh","creditsCompleted":98,"creditsInProgress":12,"creditsRequired":128,"holds":["Academic Hold"],"enrolledCourses":["BUS-415","ECON-301"]},{"id":"STU-003","name":"Aisha Johnson","email":"a.johnson@university.edu","program":"Biology","level":"Sophomore","gpa":3.5,"status":"Good Standing","advisor":"Dr. Rebecca Park","creditsCompleted":32,"creditsInProgress":16,"creditsRequired":128,"holds":[],"enrolledCourses":["BIOL-302","CHEM-210","BIOL-315"]},{"id":"STU-004","name":"Tyler Brooks","email":"t.brooks@university.edu","program":"Civil Engineering","level":"Junior","gpa":3.1,"status":"Good Standing","advisor":"Prof. James Okafor","creditsCompleted":75,"creditsInProgress":15,"creditsRequired":132,"holds":["Financial Hold"],"enrolledCourses":["ENG-310","MATH-320","ENG-305"]},{"id":"STU-005","name":"Sofia Garcia","email":"s.garcia@university.edu","program":"Psychology","level":"Senior","gpa":3.6,"status":"Good Standing","advisor":"Dr. Amy Chen","creditsCompleted":105,"creditsInProgress":9,"creditsRequired":120,"holds":[],"enrolledCourses":["PSY-401","PSY-450"]},{"id":"STU-006","name":"James Kim","email":"j.kim@university.edu","program":"Mathematics","level":"Junior","gpa":3.9,"status":"Good Standing","advisor":"Prof. Elena Vasquez","creditsCompleted":82,"creditsInProgress":12,"creditsRequired":120,"holds":[],"enrolledCourses":["MATH-401","MATH-420","CS-301"]},{"id":"STU-007","name":"Priya Nair","email":"p.nair@university.edu","program":"Computer Science","level":"Senior","gpa":3.4,"status":"Good Standing","advisor":"Dr. Michael Torres","creditsCompleted":108,"creditsInProgress":12,"creditsRequired":120,"holds":["Graduation Clearance Pending"],"enrolledCourses":["CS-490","CS-460"]},{"id":"STU-008","name":"Devon Mitchell","email":"d.mitchell@university.edu","program":"History","level":"Sophomore","gpa":2.2,"status":"Academic Probation","advisor":"Prof. Carl Steele","creditsCompleted":28,"creditsInProgress":9,"creditsRequired":120,"holds":["Academic Hold","Financial Hold"],"enrolledCourses":["HIST-201"]},{"id":"STU-009","name":"Rachel Torres","email":"r.torres@university.edu","program":"Nursing","level":"Junior","gpa":3.3,"status":"Good Standing","advisor":"Prof. Marie Dubois","creditsCompleted":72,"creditsInProgress":12,"creditsRequired":136,"holds":["Immunization Hold"],"enrolledCourses":["NURS-302","BIOL-320"]},{"id":"STU-010","name":"Alex Oduya","email":"a.oduya@university.edu","program":"Physics","level":"Senior","gpa":3.7,"status":"Good Standing","advisor":"Dr. Sandra Lee","creditsCompleted":110,"creditsInProgress":15,"creditsRequired":126,"holds":[],"enrolledCourses":["PHYS-450","PHYS-490","MATH-410"]},{"id":"STU-011","name":"Megan Walsh","email":"m.walsh@university.edu","program":"Education","level":"Junior","gpa":3.2,"status":"Good Standing","advisor":"Prof. Karen Ng","creditsCompleted":68,"creditsInProgress":12,"creditsRequired":124,"holds":["Background Check Pending"],"enrolledCourses":["EDUC-310","EDUC-320","PSY-201"]},{"id":"STU-012","name":"Noah Patel","email":"n.patel@university.edu","program":"Business Administration","level":"Sophomore","gpa":3.0,"status":"Good Standing","advisor":"Prof. Linda Walsh","creditsCompleted":35,"creditsInProgress":15,"creditsRequired":128,"holds":[],"enrolledCourses":["BUS-201","ECON-101","ACCT-201","MGMT-200"]}]}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="464.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" x="480.0" y="94.0">
+          <configuration>
+            <returndocuments/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

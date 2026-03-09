@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+           componentId=""
+           folderId="Rjo4MzgxNTQy"
+           name="Registrar - Get Status"
+           type="process"
+           version="">
+  <bns:encryptedValues/>
+  <bns:description/>
+  <bns:object>
+    <process allowSimultaneous="true" enableUserLog="false" processLogOnErrorOnly="false" purgeDataImmediately="false" updateRunDates="false" workload="general">
+      <shapes>
+        <shape image="start" name="shape1" shapetype="start" userlabel="" x="96.0" y="94.0">
+          <configuration>
+            <connectoraction actionType="Listen" allowDynamicCredentials="NONE" connectorType="wss" hideSettings="true" operationId="55f1ca03-022b-49cf-aad7-bde9a1f35ea4">
+              <parameters/>
+              <dynamicProperties/>
+            </connectoraction>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape1.dragpoint1" toShape="shape2" x="272.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="message_icon" name="shape2" shapetype="message" userlabel="Static status message" x="288.0" y="94.0">
+          <configuration>
+            <message combined="false">
+              <msgTxt>'{"status":"operational","message":"Registrar Enrollment Portal API is active and ready. Spring 2025 term data is available across all endpoints.","term":"Spring 2025","asOf":"2025-03-08","version":"1.0","endpoints":{"dashboard":"/ws/simple/getRegistrarDashboard","students":"/ws/simple/getRegistrarStudents","student":"/ws/simple/queryRegistrarStudent","enrollmentRequests":"/ws/simple/getRegistrarEnrollmentRequests","createEnrollmentRequest":"/ws/simple/createRegistrarEnrollmentRequest","updateEnrollmentStatus":"/ws/simple/updateRegistrarEnrollmentStatus","courses":"/ws/simple/getRegistrarCourses","deadlines":"/ws/simple/getRegistrarDeadlines","systems":"/ws/simple/getRegistrarSystems","notifications":"/ws/simple/getRegistrarNotifications"}}'</msgTxt>
+              <msgParameters/>
+            </message>
+          </configuration>
+          <dragpoints>
+            <dragpoint name="shape2.dragpoint1" toShape="shape3" x="464.0" y="120.0"/>
+          </dragpoints>
+        </shape>
+        <shape image="returndocuments_icon" name="shape3" shapetype="returndocuments" x="480.0" y="94.0">
+          <configuration>
+            <returndocuments/>
+          </configuration>
+          <dragpoints/>
+        </shape>
+      </shapes>
+    </process>
+  </bns:object>
+  <bns:processOverrides/>
+</bns:Component>

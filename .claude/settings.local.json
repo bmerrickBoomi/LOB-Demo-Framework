@@ -27,7 +27,10 @@
       "Bash(sed:*)",
       "WebFetch(domain:www.brandcolorcode.com)",
       "WebFetch(domain:brandfetch.com)",
-      "WebFetch(domain:brandpalettes.com)"
+      "WebFetch(domain:brandpalettes.com)",
+      "Bash(for f in /mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/active-development/operations/registrar-*.xml)",
+      "Read(//mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/**)",
+      "Bash(done)"
     ]
   }
 }
