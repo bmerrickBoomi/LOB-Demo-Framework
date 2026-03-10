@@ -12,7 +12,13 @@ from matplotlib.patches import FancyBboxPatch
 # ─── Canvas — 16:9 for Google Slides ──────────────────────────────────────────
 FW, FH = 16, 9
 fig, ax = plt.subplots(figsize=(FW, FH))
-BG = '#EDF2F7'
+# ── Boomi brand palette ────────────────────────────────────────────────────────
+# Primary:    #003C57  (navy/teal,  Pantone 302 C)
+# Deep navy:  #082B55  (Madison,    Brandfetch)
+# Brand blue: #083F69  (Brandfetch)
+# Coral:      #FF7864  (accent,     Pantone 805 C)
+# Derived tints from the two anchors fill the remaining roles.
+BG = '#E8F2F6'   # very light tint of Boomi primary navy
 fig.patch.set_facecolor(BG)
 ax.set_facecolor(BG)
 ax.set_xlim(0, FW)
@@ -20,28 +26,28 @@ ax.set_ylim(0, FH)
 ax.axis('off')
 
 WHITE      = '#FFFFFF'
-NAVY       = '#082B55'
-ARROW_CLR  = '#94A3B8'
+NAVY       = '#003C57'   # Boomi primary navy (text / titles)
+ARROW_CLR  = '#7FBFD4'   # light tint of primary navy
 
 # ─── Phase definitions ─────────────────────────────────────────────────────────
 # (display label, header/accent color, step fill color)
 PHASES = [
-    ('1   MODEL DESIGN',  '#1565C0', '#1976D2'),
-    ('2   DEPLOY',        '#2E7D32', '#388E3C'),
-    ('3   INBOUND SYNC',  '#00695C', '#00897B'),
-    ('4   STEWARDSHIP',   '#C62828', '#E53935'),
-    ('5   OUTBOUND SYNC', '#283593', '#3949AB'),
+    ('1   MODEL DESIGN',  '#003C57', '#0D5175'),   # Boomi primary navy
+    ('2   DEPLOY',        '#083F69', '#1A5A8A'),   # Boomi brand blue
+    ('3   INBOUND SYNC',  '#1A6E99', '#2480B0'),   # medium blue tint
+    ('4   STEWARDSHIP',   '#FF7864', '#FF8E7D'),   # Boomi coral accent
+    ('5   OUTBOUND SYNC', '#082B55', '#0E3D75'),   # Boomi deep navy
 ]
 
 # ─── Persona badge definitions ──────────────────────────────────────────────────
 # key: (badge_color, text_color, long_label)
 PERSONA = {
-    'DA':   ('#0D47A1', WHITE, 'Data Architect'),
-    'PA':   ('#37474F', WHITE, 'Platform Admin'),
-    'ID':   ('#4A148C', WHITE, 'Integration Dev'),
-    'DS':   ('#B71C1C', WHITE, 'Data Steward'),
-    'HDO':  ('#1B5E20', WHITE, 'HR Data Owner / Governance'),
-    'AUTO': ('#455A64', WHITE, 'Hub (Automated)'),
+    'DA':   ('#003C57', WHITE, 'Data Architect'),          # Boomi primary navy
+    'PA':   ('#082B55', WHITE, 'Platform Admin'),          # Boomi deep navy
+    'ID':   ('#083F69', WHITE, 'Integration Dev'),         # Boomi brand blue
+    'DS':   ('#FF7864', WHITE, 'Data Steward'),            # Boomi coral
+    'HDO':  ('#1A6E99', WHITE, 'HR Data Owner / Governance'), # medium blue tint
+    'AUTO': ('#2D5A7B', WHITE, 'Hub (Automated)'),         # mid-tone tint
 }
 
 # ─── Steps per phase (2-line labels for slide readability) ────────────────────
@@ -51,7 +57,7 @@ STEPS = [
         ('Define Fields\nEmpID · Name · Dept · Email', ['DA', 'HDO']),
         ('Data Quality Steps\nValidation & Enrichment',['DA']),
         ('Match Rules\nExact · Fuzzy · Threshold',     ['DA', 'HDO']),
-        ('Configure Sources\nWorkday · ADP · ServiceNow', ['DA', 'ID']),
+        ('Configure Sources\nLenel Badge · PeopleSoft', ['DA', 'ID']),
     ],
     [  # Phase 2: Deploy
         ('Publish Model\nVersion Auto-Assigned',       ['DA']),
@@ -72,7 +78,7 @@ STEPS = [
         ('Generate Channel Updates\nFULL or DIFF Mode',['AUTO']),
         ('Build Outbound Process\nOne per Target',     ['ID']),
         ('Fetch Channel Updates\nDataHub Connector',   ['ID', 'AUTO']),
-        ('Sync to Downstream\nADP · Lattice · HRIS',  ['ID', 'AUTO']),
+        ('Sync to Downstream\nLenel Badge',            ['ID', 'AUTO']),
     ],
 ]
 
