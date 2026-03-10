@@ -30,7 +30,11 @@
       "WebFetch(domain:brandpalettes.com)",
       "Bash(for f in /mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/active-development/operations/registrar-*.xml)",
       "Read(//mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Read(//tmp/**)",
+      "Read(//mnt/c/users/BrianMerrick/AppData/Local/Temp/**)",
+      "Bash(uv run:*)",
+      "WebFetch(domain:brand.boomi.com)"
     ]
   }
 }
