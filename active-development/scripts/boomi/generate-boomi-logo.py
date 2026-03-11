@@ -12,7 +12,7 @@ from matplotlib.patches import Circle
 import numpy as np
 
 # ─── Figure ────────────────────────────────────────────────────
-BG_COLOR = '#061C3C'   # deep Boomi navy background
+BG_COLOR = '#082B55'   # Boomi Madison deep navy (Brandfetch confirmed)
 fig, ax = plt.subplots(figsize=(14, 7))
 fig.patch.set_facecolor(BG_COLOR)
 ax.set_facecolor(BG_COLOR)
@@ -21,12 +21,16 @@ ax.set_ylim(0, 7)
 ax.axis('off')
 ax.set_aspect('equal')
 
-# ─── Palette (official Boomi brand colors) ─────────────────────
-EMBLEM_BG  = '#082B55'   # Madison — dark navy
-BOOMI_BLUE = '#083F69'   # Boomi primary blue
-BLUE_MID   = '#1A6BA0'   # mid blue for edges / connections
-BLUE_LIGHT = '#4DB8E8'   # light blue — node highlights
-CORAL      = '#FF7C66'   # Boomi coral/salmon accent
+# ─── Palette — confirmed Boomi brand colors ────────────────────
+# Primary navy/teal: #003C57  (Pantone 302 C)
+# Deep navy:         #082B55  (Madison, Brandfetch)
+# Brand blue:        #083F69  (Brandfetch)
+# Coral accent:      #FF7864  (Pantone 805 C)
+EMBLEM_BG  = '#003C57'   # Boomi primary navy/teal — Pantone 302 C
+BOOMI_BLUE = '#083F69'   # Boomi brand blue — Brandfetch confirmed
+BLUE_MID   = '#1A6E99'   # derived tint of primary navy
+BLUE_LIGHT = '#7FBFD4'   # light tint of primary navy
+CORAL      = '#FF7864'   # Boomi coral accent — Pantone 805 C
 WHITE      = '#FFFFFF'
 
 # ─── Emblem (left half) ────────────────────────────────────────
