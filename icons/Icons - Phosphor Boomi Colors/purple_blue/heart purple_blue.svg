@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="heart purple_blue.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#4b4fe2ff;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#a03291;stop-opacity:1;"
+         offset="0.76340693"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="232.4884"
+       y1="23.847498"
+       x2="23.977745"
+       y2="232.35815"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <path
+     id="path1"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:url(#linearGradient2);stroke-linecap:round;stroke-linejoin:round;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1;fill-opacity:1"
+     d="M 78 40 C 43.853103 40 16 67.853103 16 102 C 16 139.20202 44.056614 170.94296 70.798828 193.82812 C 97.541042 216.71329 124.20703 231.04297 124.20703 231.04297 A 8.0008 8.0008 0 0 0 131.79297 231.04297 C 131.79297 231.04297 158.45896 216.71331 185.20117 193.82812 C 211.94339 170.94296 240 139.20202 240 102 C 240 67.853103 212.1469 40 178 40 C 157.71112 40 139.38469 49.101297 128 64.246094 C 116.61531 49.101297 98.288876 40 78 40 z M 78 56 C 97.683699 56 113.79344 66.413817 120.5957 83.03125 A 8.0008 8.0008 0 0 0 135.4043 83.03125 C 142.20656 66.413817 158.3163 56 178 56 C 203.49986 56 224 76.500144 224 102 C 224 130.79798 200.05661 160.05704 174.79883 181.67188 C 155.04262 198.57863 135.68934 210.35536 128 214.80078 C 120.31066 210.35536 100.95738 198.57863 81.201172 181.67188 C 55.943386 160.05704 32 130.79798 32 102 C 32 76.500144 52.500144 56 78 56 z " />
+</svg>

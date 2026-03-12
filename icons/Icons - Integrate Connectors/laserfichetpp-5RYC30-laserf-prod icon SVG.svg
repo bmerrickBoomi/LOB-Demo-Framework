@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="192px" height="192px" viewBox="0 0 192 192" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>LF_Sqaure_Icon</title>
+    <g id="LF_Sqaure_Icon" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <rect fill="#D15B05" x="0" y="0" width="192" height="192"></rect>
+        <g id="icon" transform="translate(73.600000, 48.000000)" fill="#FFFFFF" fill-rule="nonzero">
+            <polygon id="Path" points="0 0 23.8 0 23.8 76.3 55.8 76.3 55.8 96 0 96"></polygon>
+        </g>
+    </g>
+</svg>

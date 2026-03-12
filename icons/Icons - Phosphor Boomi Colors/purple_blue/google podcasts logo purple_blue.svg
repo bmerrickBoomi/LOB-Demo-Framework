@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="google podcasts logo purple_blue.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#4b4fe2ff;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#a03291;stop-opacity:1;"
+         offset="0.76340693"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="232.4884"
+       y1="23.847498"
+       x2="23.977745"
+       y2="232.35815"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <defs
+     id="defs9" />
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <path
+     id="line1"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:url(#linearGradient2);stroke-linecap:round;stroke-linejoin:round;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1;fill-opacity:1"
+     d="M 128 8 A 8 8 0 0 0 120 16 L 120 48 A 8 8 0 0 0 128 56 A 8 8 0 0 0 136 48 L 136 16 A 8 8 0 0 0 128 8 z M 80 56 A 8 8 0 0 0 72 64 L 72 120 A 8 8 0 0 0 80 128 A 8 8 0 0 0 88 120 L 88 64 A 8 8 0 0 0 80 56 z M 176 56 A 8 8 0 0 0 168 64 L 168 96 A 8 8 0 0 0 176 104 A 8 8 0 0 0 184 96 L 184 64 A 8 8 0 0 0 176 56 z M 128 80 A 8 8 0 0 0 120 88 L 120 168 A 8 8 0 0 0 128 176 A 8 8 0 0 0 136 168 L 136 88 A 8 8 0 0 0 128 80 z M 32 104 A 8 8 0 0 0 24 112 L 24 144 A 8 8 0 0 0 32 152 A 8 8 0 0 0 40 144 L 40 112 A 8 8 0 0 0 32 104 z M 224 104 A 8 8 0 0 0 216 112 L 216 144 A 8 8 0 0 0 224 152 A 8 8 0 0 0 232 144 L 232 112 A 8 8 0 0 0 224 104 z M 176 128 A 8 8 0 0 0 168 136 L 168 192 A 8 8 0 0 0 176 200 A 8 8 0 0 0 184 192 L 184 136 A 8 8 0 0 0 176 128 z M 80 152 A 8 8 0 0 0 72 160 L 72 192 A 8 8 0 0 0 80 200 A 8 8 0 0 0 88 192 L 88 160 A 8 8 0 0 0 80 152 z M 128 200 A 8 8 0 0 0 120 208 L 120 240 A 8 8 0 0 0 128 248 A 8 8 0 0 0 136 240 L 136 208 A 8 8 0 0 0 128 200 z " />
+</svg>

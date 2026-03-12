@@ -53,45 +53,54 @@ PERSONA = {
 # ─── Steps per phase (2-line labels for slide readability) ────────────────────
 STEPS = [
     [  # Phase 1: Model Design
-        ('Create Model\nName + Root Element',          ['DA']),
-        ('Define Fields\nEmpID · Name · Dept · Email', ['DA', 'HDO']),
-        ('Data Quality Steps\nValidation & Enrichment',['DA']),
-        ('Match Rules\nExact · Fuzzy · Threshold',     ['DA', 'HDO']),
-        ('Configure Sources\nLenel Badge · PeopleSoft', ['DA', 'ID']),
+        ('Create Model\nName + Root Element',               ['DA']),
+        ('Define Fields\nEmpID · Name · Dept · Email',      ['DA', 'HDO']),
+        ('Data Quality Steps\nValidation & Enrichment',     ['DA']),
+        ('Match Rules\nExact · Fuzzy · Threshold',          ['DA', 'HDO']),
+        ('Configure Sources\nLenel Badge · PeopleSoft',     ['DA', 'ID']),
     ],
     [  # Phase 2: Deploy
-        ('Publish Model\nVersion Auto-Assigned',       ['DA']),
-        ('Deploy to Repository\nActivates Domain',     ['PA']),
+        ('Publish Model\nVersion Auto-Assigned',            ['DA']),
+        ('Deploy to Repository\nActivates Domain',          ['PA']),
     ],
     [  # Phase 3: Inbound Sync
-        ('Build Inbound Process\nOne per Source',      ['ID']),
-        ('Sources Contribute\nEmployee Records to Hub',['ID', 'AUTO']),
-        ('Hub Creates / Updates\nGolden Records',      ['AUTO']),
+        ('Build Inbound Process\nOne per Source',           ['ID']),
+        ('HR Contributes\n30 Sample Employee Records',      ['ID', 'AUTO']),   # ← 30 records
+        ('Hub Creates / Updates\n30 Golden Records',        ['AUTO']),          # ← 30 records
     ],
     [  # Phase 4: Stewardship
-        ('Quarantine Review\nDuplicates & Errors',     ['DS']),
-        ('Resolve Duplicates\nMerge or End-Date',      ['DS', 'HDO']),
-        ('Enrich & Fix Data\nManual Corrections',      ['DS', 'HDO']),
-        ('Governance & Audit\nApprovals + Trail',      ['HDO', 'DA']),
+        ('Quarantine Review\nDuplicates & Errors',          ['DS']),
+        ('Resolve Duplicates\nMerge or End-Date',           ['DS', 'HDO']),
+        ('Enrich & Fix Data\nManual Corrections',           ['DS', 'HDO']),
+        ('Governance & Audit\nApprovals + Trail',           ['HDO', 'DA']),
     ],
     [  # Phase 5: Outbound Sync
-        ('Generate Channel Updates\nFULL or DIFF Mode',['AUTO']),
-        ('Build Outbound Process\nOne per Target',     ['ID']),
-        ('Fetch Channel Updates\nDataHub Connector',   ['ID', 'AUTO']),
-        ('Sync to Downstream\nLenel Badge',            ['ID', 'AUTO']),
+        ('Generate Channel Updates\nFULL or DIFF Mode',     ['AUTO']),
+        ('Build Outbound Process\nOne per Target',          ['ID']),
+        ('Fetch Channel Updates\nDataHub Connector',        ['ID', 'AUTO']),
+        ('Sync to Downstream\nLenel Badge',                 ['ID', 'AUTO']),
     ],
 ]
 
+# ─── Step indices that get a "30 records" callout ribbon ───────────────────────
+# (phase_index, step_index, ribbon_text)
+RECORD_CALLOUTS = {
+    (0, 1): '★  Fields modeled from\n30 HR-provided sample records',
+    (2, 1): '★  HR provided 30 validated\nemployee records to seed domain',
+    (2, 2): '★  30 golden records created\nDQ rules & mapping confirmed',
+}
+
 # ─── Layout constants (tuned for 16:9) ─────────────────────────────────────────
 MARGIN_X   = 0.25
-MARGIN_Y_B = 0.72     # single-row legend
-MARGIN_Y_T = 0.48     # title
+MARGIN_Y_B = 0.80     # single-row legend
+MARGIN_Y_T = 0.55     # title
 GAP        = 0.07     # gap between phase bands
 PHASE_H    = (FH - MARGIN_Y_B - MARGIN_Y_T - 4 * GAP) / 5   # ~1.49
-STEP_W     = 2.62
-STEP_H     = 0.94
-BADGE_W    = 0.58
-BADGE_H    = 0.17
+STEP_W     = 2.75
+STEP_H     = 1.02
+BADGE_W    = 0.64
+BADGE_H    = 0.20
+CALLOUT_H  = 0.30     # height of the 30-records ribbon below a step (2 lines)
 
 
 def phase_bottom(i):
@@ -125,7 +134,7 @@ def draw_phase_band(i, label, hdr_color):
 
     # Phase label (top-left of band)
     ax.text(MARGIN_X + 0.14, y1 - 0.14, label,
-            fontsize=6.5, fontweight='bold', color=hdr_color,
+            fontsize=9, fontweight='bold', color=hdr_color,
             va='top', ha='left', zorder=3, fontfamily='sans-serif')
 
 
@@ -143,16 +152,16 @@ def draw_step(cx, cy, label, personas, fill_color):
         edgecolor=WHITE, linewidth=1.0, zorder=3))
 
     # Step label
-    ax.text(cx, cy + 0.08, label,
+    ax.text(cx, cy + 0.10, label,
             ha='center', va='center',
-            fontsize=5.8, color=WHITE, fontweight='bold',
+            fontsize=8, color=WHITE, fontweight='bold',
             linespacing=1.3, zorder=4)
 
     # Persona badges (bottom of box)
     n      = len(personas)
     total  = n * BADGE_W + (n - 1) * 0.06
     x0     = cx - total / 2
-    by     = cy - STEP_H / 2 + 0.07
+    by     = cy - STEP_H / 2 + 0.08
 
     for j, p in enumerate(personas):
         bx             = x0 + j * (BADGE_W + 0.06) + BADGE_W / 2
@@ -163,7 +172,7 @@ def draw_step(cx, cy, label, personas, fill_color):
             edgecolor='none', alpha=0.92, zorder=5))
         ax.text(bx, by + BADGE_H / 2, p,
                 ha='center', va='center',
-                fontsize=4.8, color=tc, fontweight='bold', zorder=6)
+                fontsize=6.5, color=tc, fontweight='bold', zorder=6)
 
 
 def h_arrow(x1, x2, y):
@@ -175,8 +184,22 @@ def h_arrow(x1, x2, y):
 # ─── Title ─────────────────────────────────────────────────────────────────────
 ax.text(FW / 2, FH - MARGIN_Y_T / 2 + 0.05,
         'Boomi DataHub  —  Employee 360 HR Domain  —  End-to-End Lifecycle',
-        ha='center', va='center', fontsize=10, fontweight='bold',
+        ha='center', va='center', fontsize=13, fontweight='bold',
         color=NAVY, zorder=5)
+
+# ─── Callout ribbon helper ──────────────────────────────────────────────────────
+def draw_callout(cx, cy, text, fill_color='#FF7864'):
+    """Draw a slim highlighted ribbon below a step box."""
+    rw = STEP_W + 0.10
+    ry = cy - STEP_H / 2 - CALLOUT_H - 0.04
+    ax.add_patch(FancyBboxPatch(
+        (cx - rw/2, ry), rw, CALLOUT_H,
+        boxstyle='round,pad=0.03', facecolor=fill_color,
+        edgecolor='none', alpha=0.92, zorder=6))
+    ax.text(cx, ry + CALLOUT_H / 2, text,
+            ha='center', va='center',
+            fontsize=5.2, color=WHITE, fontweight='bold',
+            linespacing=1.3, multialignment='center', zorder=7)
 
 # ─── Draw phases & steps ───────────────────────────────────────────────────────
 all_centers = []   # list of lists: all_centers[phase_i][step_j] = (cx, cy)
@@ -185,13 +208,17 @@ for i, ((label, hdr, fill), phase_steps) in enumerate(zip(PHASES, STEPS)):
     draw_phase_band(i, label, hdr)
 
     y0  = phase_bottom(i)
-    cy  = y0 + PHASE_H / 2 - 0.05   # step vertical center in band
+    cy  = y0 + PHASE_H / 2 - 0.02   # step vertical center in band
     xs  = step_cx_positions(len(phase_steps))
     row = []
 
     for j, ((step_label, personas), cx) in enumerate(zip(phase_steps, xs)):
         draw_step(cx, cy, step_label, personas, fill)
         row.append((cx, cy))
+
+        # Draw 30-records callout ribbon where applicable
+        if (i, j) in RECORD_CALLOUTS:
+            draw_callout(cx, cy, RECORD_CALLOUTS[(i, j)], fill_color='#C05040')
 
         if j > 0:
             prev_cx = xs[j - 1]
@@ -216,26 +243,26 @@ ly     = 0.35
 col_w  = (FW - 2 * MARGIN_X - 0.2) / n
 
 ax.text(lx0 - 0.05, ly + 0.04, 'ROLES:',
-        fontsize=5.8, fontweight='bold', color=NAVY, va='center')
+        fontsize=7.5, fontweight='bold', color=NAVY, va='center')
 
 for idx, (key, (color, tc, long_label)) in enumerate(items):
     lx = lx0 + 0.55 + idx * col_w
 
     ax.add_patch(FancyBboxPatch(
-        (lx, ly - 0.10), 0.50, 0.18,
+        (lx, ly - 0.11), 0.56, 0.21,
         boxstyle='round,pad=0.03', facecolor=color,
         edgecolor='none', zorder=5))
-    ax.text(lx + 0.25, ly - 0.01, key,
+    ax.text(lx + 0.28, ly - 0.01, key,
             ha='center', va='center',
-            fontsize=4.8, color=tc, fontweight='bold', zorder=6)
-    ax.text(lx + 0.60, ly - 0.01, f'= {long_label}',
+            fontsize=6.5, color=tc, fontweight='bold', zorder=6)
+    ax.text(lx + 0.65, ly - 0.01, f'= {long_label}',
             ha='left', va='center',
-            fontsize=5.5, color=NAVY, zorder=6)
+            fontsize=7, color=NAVY, zorder=6)
 
 # ─── Footer ────────────────────────────────────────────────────────────────────
 ax.text(FW / 2, 0.05,
-        'Boomi DataHub  ·  MDM Lifecycle  ·  Employee 360 HR Domain',
-        ha='center', va='bottom', fontsize=5, color='#94A3B8', style='italic')
+        'Boomi DataHub  ·  MDM Lifecycle  ·  Employee 360 HR Domain  ·  30 HR sample records used for domain validation',
+        ha='center', va='bottom', fontsize=6.5, color='#94A3B8', style='italic')
 
 # ─── Save — 200 DPI for crisp rendering at full slide size ────────────────────
 output_path = ('/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/'

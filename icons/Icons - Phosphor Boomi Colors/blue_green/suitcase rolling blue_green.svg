@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg5"
+   sodipodi:docname="suitcase rolling blue_green.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#0ec38bff;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#4b4fe2ff;stop-opacity:1;"
+         offset="0.76340693"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="232.4884"
+       y1="23.847498"
+       x2="23.977745"
+       y2="232.35815"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <defs
+     id="defs5" />
+  <sodipodi:namedview
+     id="namedview5"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <path
+     id="line1"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:url(#linearGradient2);stroke-linecap:round;stroke-linejoin:round;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1;fill-opacity:1"
+     d="M 112 0 C 98.839923 0 88 10.839923 88 24 L 88 48 L 64 48 C 55.274378 48 48 55.274378 48 64 L 48 208 C 48 216.72562 55.274378 224 64 224 L 80 224 L 80 240 A 8 8 0 0 0 88 248 A 8 8 0 0 0 96 240 L 96 224 L 160 224 L 160 240 A 8 8 0 0 0 168 248 A 8 8 0 0 0 176 240 L 176 224 L 192 224 C 200.72562 224 208 216.72562 208 208 L 208 64 C 208 55.274378 200.72562 48 192 48 L 168 48 L 168 24 C 168 10.839923 157.16008 0 144 0 L 112 0 z M 112 16 L 144 16 C 148.51304 16 152 19.486965 152 24 L 152 48 L 104 48 L 104 24 C 104 19.486965 107.48696 16 112 16 z M 64 64 L 96 64 L 160 64 L 192 64 L 192 208 L 64 208 L 64 64 z M 96 80 A 8 8 0 0 0 88 88 L 88 184 A 8 8 0 0 0 96 192 A 8 8 0 0 0 104 184 L 104 88 A 8 8 0 0 0 96 80 z M 128 80 A 8 8 0 0 0 120 88 L 120 184 A 8 8 0 0 0 128 192 A 8 8 0 0 0 136 184 L 136 88 A 8 8 0 0 0 128 80 z M 160 80 A 8 8 0 0 0 152 88 L 152 184 A 8 8 0 0 0 160 192 A 8 8 0 0 0 168 184 L 168 88 A 8 8 0 0 0 160 80 z " />
+</svg>

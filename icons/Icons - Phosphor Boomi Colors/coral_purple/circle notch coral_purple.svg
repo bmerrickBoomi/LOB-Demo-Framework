@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="circle notch coral_purple.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#a03291;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#ff7c66;stop-opacity:1;"
+         offset="0.76340693"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="232.4884"
+       y1="23.847498"
+       x2="23.977745"
+       y2="232.35815"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <path
+     id="path1"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:url(#linearGradient2);stroke-linecap:round;stroke-linejoin:round;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1;fill-opacity:1"
+     d="M 87.650391 32.007812 A 8 8 0 0 0 84.619141 32.75 C 47.627059 50.002758 23.964773 87.182942 24 128 L 24 128.00391 C 24.000001 128.00491 23.999999 128.00681 24 128.00781 C 24.00428 185.3469 70.659782 232 128 232 C 185.34022 232 231.99572 185.34709 232 128.00781 L 232 128.00391 C 232.03675 87.185399 208.37413 50.003311 171.38086 32.75 A 8 8 0 0 0 160.75 36.619141 A 8 8 0 0 0 164.61914 47.25 C 196.00839 61.889648 216.03247 93.356898 216 127.99219 A 8.0008 8.0008 0 0 0 216 128 C 216 176.69585 176.69582 216 128 216 C 79.304178 216 40 176.69585 40 128 A 8.0008 8.0008 0 0 0 40 127.99219 C 39.96753 93.356898 59.991614 61.889648 91.380859 47.25 A 8 8 0 0 0 95.25 36.619141 A 8 8 0 0 0 90.736328 32.482422 A 8 8 0 0 0 87.650391 32.007812 z " />
+</svg>

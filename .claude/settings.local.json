@@ -40,7 +40,17 @@
       "WebFetch(domain:www.schemecolor.com)",
       "WebFetch(domain:cdn.worldvectorlogo.com)",
       "WebFetch(domain:usbrandcolors.com)",
-      "WebFetch(domain:www.color-hex.com)"
+      "WebFetch(domain:www.color-hex.com)",
+      "WebFetch(domain:developer.boomi.com)",
+      "WebFetch(domain:www.vistavusolutions.com)",
+      "WebFetch(domain:neosalpha.com)",
+      "WebFetch(domain:mykolamatsiakh.medium.com)",
+      "Bash(echo \"ICONS FOLDER SUMMARY\"\necho \"====================\"\necho \"\"\necho \"Boomi Services \\(18 files\\):\"\nls -1 /mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/icons/\"Icons - Boomi Services\"/ | head -20\necho \"\"\necho \"---\"\necho \"File count by folder:\"\nfind /mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/icons -maxdepth 2 -type f | cut -d/ -f9 | sort | uniq -c)",
+      "Bash(cd /mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/temp && file *)",
+      "Bash(cd /mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/temp && which pdftotext && pdftotext \"Enterprise Integration Platform 06893 RFP - Proposal.pdf\" - | head -500)",
+      "Bash(apt list:*)",
+      "Bash(fc-list | grep -i poppins 2>/dev/null && echo \"found\" || echo \"not found\")",
+      "Bash(cd /tmp && curl -sL \"https://fonts.google.com/download?family=Poppins\" -o poppins.zip && unzip -q poppins.zip -d poppins && ls poppins/*.ttf | head -5)"
     ]
   }
 }

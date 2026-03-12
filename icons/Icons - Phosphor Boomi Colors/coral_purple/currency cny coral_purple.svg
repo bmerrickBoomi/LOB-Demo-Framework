@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg3"
+   sodipodi:docname="currency cny coral_purple.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#a03291;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#ff7c66;stop-opacity:1;"
+         offset="0.76340693"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="232.4884"
+       y1="23.847498"
+       x2="23.977745"
+       y2="232.35815"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview3"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <path
+     id="line1"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:url(#linearGradient2);stroke-linecap:round;stroke-linejoin:round;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1;fill-opacity:1"
+     d="M 64 48 A 8 8 0 0 0 56 56 A 8 8 0 0 0 64 64 L 192 64 A 8 8 0 0 0 200 56 A 8 8 0 0 0 192 48 L 64 48 z M 48 104 A 8 8 0 0 0 40 112 A 8 8 0 0 0 48 120 L 96 120 L 96 128 C 96 159.0227 71.022703 184 40 184 A 8 8 0 0 0 32 192 A 8 8 0 0 0 40 200 C 79.669745 200 112 167.66974 112 128 L 112 120 L 144 120 L 144 168 C 144 185.57835 158.42165 200 176 200 L 216 200 A 8.0008 8.0008 0 0 0 224 192 L 224 168 A 8 8 0 0 0 216 160 A 8 8 0 0 0 208 168 L 208 184 L 176 184 C 167.06869 184 160 176.93131 160 168 L 160 120 L 208 120 A 8 8 0 0 0 216 112 A 8 8 0 0 0 208 104 L 104 104 L 48 104 z " />
+</svg>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg9"
+   sodipodi:docname="dots nine purple_blue.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#4b4fe2ff;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#a03291;stop-opacity:1;"
+         offset="0.76340693"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="232.4884"
+       y1="23.847498"
+       x2="23.977745"
+       y2="232.35815"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <defs
+     id="defs9" />
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <path
+     id="circle1"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:url(#linearGradient2);stroke-linecap:round;stroke-linejoin:round;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1;fill-opacity:1"
+     d="M 60 48 A 12 12 0 0 0 48 60 A 12 12 0 0 0 60 72 A 12 12 0 0 0 72 60 A 12 12 0 0 0 60 48 z M 128 48 A 12 12 0 0 0 116 60 A 12 12 0 0 0 128 72 A 12 12 0 0 0 140 60 A 12 12 0 0 0 128 48 z M 196 48 A 12 12 0 0 0 184 60 A 12 12 0 0 0 196 72 A 12 12 0 0 0 208 60 A 12 12 0 0 0 196 48 z M 60 116 A 12 12 0 0 0 48 128 A 12 12 0 0 0 60 140 A 12 12 0 0 0 72 128 A 12 12 0 0 0 60 116 z M 128 116 A 12 12 0 0 0 116 128 A 12 12 0 0 0 128 140 A 12 12 0 0 0 140 128 A 12 12 0 0 0 128 116 z M 196 116 A 12 12 0 0 0 184 128 A 12 12 0 0 0 196 140 A 12 12 0 0 0 208 128 A 12 12 0 0 0 196 116 z M 60 184 A 12 12 0 0 0 48 196 A 12 12 0 0 0 60 208 A 12 12 0 0 0 72 196 A 12 12 0 0 0 60 184 z M 128 184 A 12 12 0 0 0 116 196 A 12 12 0 0 0 128 208 A 12 12 0 0 0 140 196 A 12 12 0 0 0 128 184 z M 196 184 A 12 12 0 0 0 184 196 A 12 12 0 0 0 196 208 A 12 12 0 0 0 208 196 A 12 12 0 0 0 196 184 z " />
+</svg>

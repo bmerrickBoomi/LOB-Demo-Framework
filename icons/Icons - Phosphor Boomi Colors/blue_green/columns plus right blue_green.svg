@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 256 256"
+   version="1.1"
+   id="svg4"
+   sodipodi:docname="columns plus right blue_green.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs3">
+    <linearGradient
+       id="linearGradient1"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#0ec38bff;stop-opacity:1;"
+         offset="0"
+         id="stop1" />
+      <stop
+         style="stop-color:#4b4fe2ff;stop-opacity:1;"
+         offset="0.76340693"
+         id="stop2" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient1"
+       id="linearGradient2"
+       x1="232.4884"
+       y1="23.847498"
+       x2="23.977745"
+       y2="232.35815"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="namedview4"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1" />
+  <path
+     id="rect2"
+     style="baseline-shift:baseline;display:inline;overflow:visible;vector-effect:none;fill:url(#linearGradient2);stroke-linecap:round;stroke-linejoin:round;enable-background:accumulate;stop-color:#000000;stop-opacity:1;opacity:1;fill-opacity:1"
+     d="M -28 140 C -28 148.72562 -20.725622 156 -12 156 L 148 156 C 156.72562 156 164 148.72562 164 140 L 164 116 C 164 107.27438 156.72562 100 148 100 L -12 100 C -20.725622 100 -28 107.27438 -28 116 L -28 140 z M -28 68 C -28 76.72562 -20.725622 84 -12 84 L 148 84 C 156.72562 84 164 76.72562 164 68 L 164 44 C 164 35.27438 156.72562 28 148 28 L -12 28 C -20.725622 28 -28 35.27438 -28 44 L -28 68 z M -12 140 L -12 116 L 148 116 L 148 140 L -12 140 z M -12 68 L -12 44 L 148 44 L 148 68 L -12 68 z M 36 -20 A 8 8 0 0 0 44 -12 L 60 -12 L 60 4 A 8 8 0 0 0 68 12 A 8 8 0 0 0 76 4 L 76 -12 L 92 -12 A 8 8 0 0 0 100 -20 A 8 8 0 0 0 92 -28 L 76 -28 L 76 -44 A 8 8 0 0 0 68 -52 A 8 8 0 0 0 60 -44 L 60 -28 L 44 -28 A 8 8 0 0 0 36 -20 z "
+     transform="translate(196 60) rotate(90)" />
+</svg>
