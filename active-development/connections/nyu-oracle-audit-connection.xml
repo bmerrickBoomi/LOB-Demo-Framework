@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - Oracle Audit Log Connection"
+               type="connector-settings"
+               subType="officialboomi-X3979C-dbv2da-prod"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues>
+    <bns:encryptedValue isSet="true" path="//GenericConnectionConfig/field[@type='password']"/>
+  </bns:encryptedValues>
+  <bns:description>JDBC connection to the NYU Langone Oracle audit and compliance database. Every integration event is written here for HIPAA audit trail requirements, compliance reporting, and operational monitoring. Demo talking point: "Notice that this is a second database connector in the same process - this time Oracle instead of SQL Server. Boomi treats both identically. You swap the JDBC driver, point to a different host, and the rest is the same design pattern. Two databases, one process, zero custom code."</bns:description>
+  <bns:object>
+    <GenericConnectionConfig>
+      <field id="url" type="string" value="jdbc:oracle:thin:@nyulh-audit-oracle.corp.nyulangone.org:1521:AUDITDB"/>
+      <field id="className" type="string" value="oracle.jdbc.driver.OracleDriver"/>
+      <field id="username" type="string" value="boomi_audit_svc"/>
+      <field id="password" type="password" value="placeholder_configure_in_gui"/>
+      <field id="CustomProperties" type="customproperties">
+        <customProperties/>
+      </field>
+      <field id="schemaName" type="string" value="AUDIT_SCHEMA"/>
+      <field id="connectTimeOut" type="integer"/>
+      <field id="readTimeOut" type="integer"/>
+      <field id="enablePooling" type="boolean" value="false"/>
+      <field id="maximumConnections" type="integer" value=""/>
+      <field id="minimumConnections" type="integer" value=""/>
+      <field id="maximumIdleTime" type="integer" value=""/>
+      <field id="whenExhaustedAction" type="string" value=""/>
+      <field id="maximumWaitTime" type="integer" value=""/>
+      <field id="testOnBorrow" type="boolean" value=""/>
+      <field id="testOnReturn" type="boolean" value=""/>
+      <field id="testWhileIdle" type="boolean" value=""/>
+      <field id="validationQuery" type="string" value="SELECT 1 FROM DUAL"/>
+    </GenericConnectionConfig>
+  </bns:object>
+</bns:Component>

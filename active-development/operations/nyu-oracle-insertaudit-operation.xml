@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - Oracle Insert Onboarding Audit Record"
+               type="connector-action"
+               subType="officialboomi-X3979C-dbv2da-prod"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>Standard INSERT operation that writes a complete audit record to the Oracle ONBOARDING_LOG table. Captures the employee ID, hire date, department, the ServiceNow ticket number that was created, the Workday worker ID that was provisioned, and a process timestamp. This supports HIPAA audit trail requirements and compliance reporting. Demo talking point: "This is our compliance step. Every time this process runs, it writes a full audit record to Oracle - which system received the data, which ticket was created, what the Workday ID is, and when it all happened. Your compliance team gets a complete, queryable audit trail without any manual effort. This is the kind of thing that turns a findings list into a closed item."</bns:description>
+  <bns:object>
+    <Operation returnApplicationErrors="true" trackResponse="false">
+      <Archiving directory="" enabled="false"/>
+      <Configuration>
+        <GenericOperationConfig
+          customOperationType="CREATE"
+          objectTypeId="ONBOARDING_LOG"
+          operationType="CREATE"
+          requestProfile="e739f7b9-aa4f-439f-b510-500bae16d097"
+          requestProfileType="json"
+          responseProfileType="json">
+          <field id="InsertionType" type="string" value="Standard Insert"/>
+          <field id="schemaName" type="string" value="AUDIT_SCHEMA"/>
+          <field id="query" type="string" value="INSERT INTO ONBOARDING_LOG (EMPLOYEE_ID, HIRE_DATE, DEPARTMENT_CODE, SERVICENOW_TICKET_ID, WORKDAY_WORKER_ID, ONBOARDING_STATUS, PROCESS_TIMESTAMP) VALUES (?,?,?,?,?,?,?)"/>
+          <field id="joinTransaction" type="boolean" value="false"/>
+          <field id="CommitOption" type="string" value="Commit By Rows"/>
+          <field id="batchCount" type="integer" value="1"/>
+          <Options>
+            <QueryOptions>
+              <Fields>
+                <ConnectorObject name="ONBOARDING_LOG">
+                  <FieldList>
+                    <ConnectorField filterable="true" name="EMPLOYEE_ID" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="HIRE_DATE" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="DEPARTMENT_CODE" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="SERVICENOW_TICKET_ID" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="WORKDAY_WORKER_ID" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="ONBOARDING_STATUS" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="PROCESS_TIMESTAMP" selectable="true" selected="true" sortable="true"/>
+                  </FieldList>
+                </ConnectorObject>
+              </Fields>
+              <Inputs/>
+            </QueryOptions>
+          </Options>
+        </GenericOperationConfig>
+      </Configuration>
+      <Tracking><TrackedFields/></Tracking>
+      <Caching/>
+    </Operation>
+  </bns:object>
+</bns:Component>

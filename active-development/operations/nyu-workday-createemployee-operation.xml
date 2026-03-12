@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - Workday Create Worker Record"
+               type="connector-action"
+               subType="officialboomi-X3979C-rest-prod"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>REST POST operation that provisions a new worker record in Workday HCM. Sets legal name, hire date, position, cost center assignment, and manager reference from the enriched employee profile assembled earlier in the process. Demo talking point: "Here Boomi is calling Workday's REST API to create the official HR record. All the data we collected from Salesforce and enriched from SQL Server is now being written into Workday in a single, structured API call. Your HR team does not have to key this in manually - it is there before they even know the new hire exists."</bns:description>
+  <bns:object>
+    <Operation returnApplicationErrors="true" trackResponse="false">
+      <Archiving directory="" enabled="false"/>
+      <Configuration>
+        <GenericOperationConfig customOperationType="POST" operationType="EXECUTE">
+          <field id="followRedirects" type="string" value="NONE"/>
+          <field id="path" type="string" value="/workers"/>
+          <field id="queryParameters" type="customproperties">
+            <customProperties/>
+          </field>
+          <field id="requestHeaders" type="customproperties">
+            <customProperties>
+              <properties key="Content-Type" value="application/json"/>
+              <properties key="Accept" value="application/json"/>
+            </customProperties>
+          </field>
+          <Options/>
+        </GenericOperationConfig>
+      </Configuration>
+      <Tracking><TrackedFields/></Tracking>
+      <Caching/>
+    </Operation>
+  </bns:object>
+</bns:Component>

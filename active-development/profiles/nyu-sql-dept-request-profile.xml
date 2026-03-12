@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - SQL Server Dept Lookup Request"
+               type="profile.json"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>Input profile for the SQL Server department lookup query. Passes the department_code extracted from the Salesforce response into the HR_Departments table query. Demo talking point: "Boomi takes the department code from Salesforce and uses it as a live query parameter against your SQL Server database - no hardcoding, no manual lookups."</bns:description>
+  <bns:object>
+    <JSONProfile strict="false">
+      <DataElements>
+        <JSONRootValue dataType="character" isMappable="true" isNode="true" key="1" name="Root">
+          <DataFormat><ProfileCharacterFormat/></DataFormat>
+          <JSONObject isMappable="false" isNode="true" key="2" name="Object">
+            <JSONObjectEntry dataType="character" isMappable="true" isNode="true" key="3" name="department_code">
+              <DataFormat><ProfileCharacterFormat/></DataFormat>
+            </JSONObjectEntry>
+          </JSONObject>
+          <Qualifiers><QualifierList/></Qualifiers>
+        </JSONRootValue>
+      </DataElements>
+      <tagLists/>
+    </JSONProfile>
+  </bns:object>
+</bns:Component>

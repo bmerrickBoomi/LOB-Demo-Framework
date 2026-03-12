@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId="5d9b67af-6241-406e-bb7d-f92e709408ad"
+               name="NYU - FTP Drop Off Benefits Onboarding File"
+               type="connector-action"
+               subType="ftp"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>FTP Send operation that uploads the onboarding CSV file to the benefits vendor SFTP endpoint. The file name is set dynamically by the preceding Set Properties step using the employee ID and current date. Demo talking point: "This is the file delivery step. Boomi drops the CSV onto the benefits vendor SFTP directory. The filename is auto-generated and the transfer is fully logged."</bns:description>
+  <bns:object>
+    <Operation>
+      <Archiving directory="" enabled="false"/>
+      <Configuration>
+        <FTPSendAction ftpaction="actionput"
+                       moveToDirectory=""
+                       remoteDirectory="/inbound/onboarding/"
+                       transferType="binary"/>
+      </Configuration>
+      <Tracking><TrackedFields/></Tracking>
+      <Caching/>
+    </Operation>
+  </bns:object>
+</bns:Component>

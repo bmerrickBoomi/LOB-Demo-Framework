@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - SQL Server HR Data Connection"
+               type="connector-settings"
+               subType="officialboomi-X3979C-dbv2da-prod"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues>
+    <bns:encryptedValue isSet="true" path="//GenericConnectionConfig/field[@type='password']"/>
+  </bns:encryptedValues>
+  <bns:description>JDBC connection to the NYU Langone SQL Server HR Data Warehouse. Hosts the HR_Departments table with cost center codes, manager hierarchies, building locations, and job family classifications. This enrichment data is combined with Salesforce new hire records in real time during the onboarding process. Demo talking point: "This is a direct JDBC connection to your SQL Server database. Boomi supports Oracle, MySQL, PostgreSQL, and any ANSI SQL database using the same connector - you simply swap the driver and connection string. No ETL pipelines, no middleware layer."</bns:description>
+  <bns:object>
+    <GenericConnectionConfig>
+      <field id="url" type="string" value="jdbc:sqlserver://nyulh-hrdata-sql.corp.nyulangone.org:1433;databaseName=HRMaster;encrypt=true;trustServerCertificate=false"/>
+      <field id="className" type="string" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+      <field id="username" type="string" value="boomi_integration_svc"/>
+      <field id="password" type="password" value="placeholder_configure_in_gui"/>
+      <field id="CustomProperties" type="customproperties">
+        <customProperties/>
+      </field>
+      <field id="schemaName" type="string" value="dbo"/>
+      <field id="connectTimeOut" type="integer"/>
+      <field id="readTimeOut" type="integer"/>
+      <field id="enablePooling" type="boolean" value="false"/>
+      <field id="maximumConnections" type="integer" value=""/>
+      <field id="minimumConnections" type="integer" value=""/>
+      <field id="maximumIdleTime" type="integer" value=""/>
+      <field id="whenExhaustedAction" type="string" value=""/>
+      <field id="maximumWaitTime" type="integer" value=""/>
+      <field id="testOnBorrow" type="boolean" value=""/>
+      <field id="testOnReturn" type="boolean" value=""/>
+      <field id="testWhileIdle" type="boolean" value=""/>
+      <field id="validationQuery" type="string" value="SELECT 1"/>
+    </GenericConnectionConfig>
+  </bns:object>
+</bns:Component>

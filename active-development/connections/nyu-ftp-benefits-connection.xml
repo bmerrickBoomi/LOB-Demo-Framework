@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId="4313c438-66b3-4e02-a18d-03c8a0d08d95"
+               name="NYU - FTP Benefits Vendor Connection"
+               type="connector-settings"
+               subType="ftp"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>SFTP connection for secure delivery of onboarding enrollment files to the NYU Langone benefits vendor. Demo talking point: "This is Boomi's built-in FTP connector configured for SFTP. Boomi handles connection management and delivery. Your benefits vendor receives the file on their SFTP endpoint automatically."</bns:description>
+  <bns:object>
+    <FTPSettings connectionMode="passive" host="sftp.benefits-vendor.com" port="22">
+      <AuthSettings password="placeholder_configure_credentials" user="nyu_benefits_ftp"/>
+      <SSLOptions clientauth="false" sslmode="none"/>
+    </FTPSettings>
+  </bns:object>
+</bns:Component>

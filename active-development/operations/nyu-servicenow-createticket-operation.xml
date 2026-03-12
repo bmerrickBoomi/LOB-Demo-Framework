@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - ServiceNow Create IT Onboarding Request"
+               type="connector-action"
+               subType="officialboomi-X3979C-rest-prod"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>REST POST operation that creates a Service Catalog Request in ServiceNow for new employee IT setup. The request includes laptop provisioning, badge access, email account creation, and standard application access based on the employee's department and job family. Demo talking point: "One API call to ServiceNow creates the entire IT onboarding ticket - laptop, badge, accounts, all pre-populated from the employee record. The IT team gets a complete, structured request in their queue automatically. No email, no manual intake form. That is what it looks like when integration eliminates administrative overhead."</bns:description>
+  <bns:object>
+    <Operation returnApplicationErrors="true" trackResponse="false">
+      <Archiving directory="" enabled="false"/>
+      <Configuration>
+        <GenericOperationConfig customOperationType="POST" operationType="EXECUTE">
+          <field id="followRedirects" type="string" value="NONE"/>
+          <field id="path" type="string" value="/now/table/sc_request"/>
+          <field id="queryParameters" type="customproperties">
+            <customProperties/>
+          </field>
+          <field id="requestHeaders" type="customproperties">
+            <customProperties>
+              <properties key="Content-Type" value="application/json"/>
+              <properties key="Accept" value="application/json"/>
+            </customProperties>
+          </field>
+          <Options/>
+        </GenericOperationConfig>
+      </Configuration>
+      <Tracking><TrackedFields/></Tracking>
+      <Caching/>
+    </Operation>
+  </bns:object>
+</bns:Component>

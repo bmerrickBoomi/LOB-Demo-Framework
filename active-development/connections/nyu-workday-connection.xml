@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - Workday HCM Connection"
+               type="connector-settings"
+               subType="officialboomi-X3979C-rest-prod"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>REST connection to the Workday Human Capital Management API. Provisions official employee records in the system of record for all NYU Langone HR data. This connection handles the Workday worker provisioning step during new hire onboarding. Demo talking point: "Workday is the system of record for all employee data at NYU Langone. Boomi calls Workday's REST API to create the worker record directly - same REST connector, just a different base URL and credentials. This is the power of a platform approach: one integration skill serves every application."</bns:description>
+  <bns:object>
+    <GenericConnectionConfig>
+      <field id="url" type="string" value="https://wd2-impl-services1.workday.com/ccx/api/v1/nyulangone"/>
+      <field id="auth" type="string" value="BASIC"/>
+      <field id="username" type="string" value="boomi_svc@nyulangone"/>
+      <field id="password" type="password" value="placeholder_configure_in_gui"/>
+      <field id="preemptive" type="boolean" value="true"/>
+      <field id="connectTimeout" type="integer" value="30000"/>
+      <field id="readTimeout" type="integer" value="60000"/>
+      <field id="cookieScope" type="string" value="GLOBAL"/>
+      <field id="enableConnectionPooling" type="boolean" value="false"/>
+      <field id="domain" type="string" value=""/>
+      <field id="workstation" type="string" value=""/>
+      <field id="customAuthCredentials" type="password" value=""/>
+      <field id="awsAccessKey" type="string" value=""/>
+      <field id="awsSecretKey" type="password" value=""/>
+      <field id="awsService" type="string" value=""/>
+      <field id="customAwsService" type="string" value=""/>
+      <field id="awsRegion" type="string" value=""/>
+      <field id="customAwsRegion" type="string" value=""/>
+      <field id="awsProfileArn" type="string" value=""/>
+      <field id="awsRoleArn" type="string" value=""/>
+      <field id="awsTrustAnchorArn" type="string" value=""/>
+      <field id="awsRolesAnywhereRegion" type="string" value=""/>
+      <field id="awsRolesAnywhereCustomRegion" type="string" value=""/>
+      <field id="awsSessionName" type="string" value=""/>
+      <field id="awsDuration" type="integer" value=""/>
+      <field id="awsPublicCertificate" type="publiccertificate" value=""/>
+      <field id="awsPrivateKey" type="privatecertificate" value=""/>
+      <field id="oauthContext" type="oauth">
+        <OAuth2Config grantType="code">
+          <credentials clientId=""/>
+          <authorizationTokenEndpoint url=""><sslOptions/></authorizationTokenEndpoint>
+          <authorizationParameters/>
+          <accessTokenEndpoint url=""><sslOptions/></accessTokenEndpoint>
+          <accessTokenParameters/>
+          <scope/>
+          <jwtParameters><expiration>0</expiration></jwtParameters>
+        </OAuth2Config>
+      </field>
+      <field id="privateCertificate" type="privatecertificate"/>
+      <field id="publicCertificate" type="publiccertificate"/>
+      <field id="maxTotal" type="integer" value=""/>
+      <field id="idleTimeout" type="integer" value=""/>
+    </GenericConnectionConfig>
+  </bns:object>
+</bns:Component>

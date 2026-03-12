@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bns:Component xmlns:bns="http://api.platform.boomi.com/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               componentId=""
+               name="NYU - SQL Server Get Department Data"
+               type="connector-action"
+               subType="officialboomi-X3979C-dbv2da-prod"
+               folderId="Rjo4MzkxODQ4">
+  <bns:encryptedValues/>
+  <bns:description>Standard GET operation that queries the HR_Departments table in SQL Server to retrieve enrichment data for a new hire. Takes the department_code from Salesforce as a named parameter and returns the full department record including cost center, manager hierarchy, and building location. Demo talking point: "The SQL is clean and readable - a standard SELECT with a named parameter. Boomi substitutes the department code from the Salesforce record at runtime, executes the query, and returns a structured JSON response. Your database team can review and adjust the query directly in Boomi without touching any application code."</bns:description>
+  <bns:object>
+    <Operation returnApplicationErrors="true" trackResponse="false">
+      <Archiving directory="" enabled="false"/>
+      <Configuration>
+        <GenericOperationConfig
+          customOperationType="GET"
+          objectTypeId="HR_Departments"
+          operationType="EXECUTE"
+          requestProfile="c1d25091-d71c-477f-846b-ca5051775959"
+          requestProfileType="json"
+          responseProfile="5b506932-188f-47f9-b65e-6a90ab79848d"
+          responseProfileType="json">
+          <field id="GetType" type="string" value="Standard Get"/>
+          <field id="INClause" type="boolean" value="false"/>
+          <field id="query" type="string" value="SELECT department_name, cost_center, manager_id, building_location, job_family FROM HR_Departments WHERE department_code = $department_code"/>
+          <field id="linkElement" type="string" value=""/>
+          <field id="maxRows" type="integer"/>
+          <field id="maxFieldSize" type="integer"/>
+          <field id="batchCount" type="integer"/>
+          <field id="fetchSize" type="integer"/>
+          <Options>
+            <QueryOptions>
+              <Fields>
+                <ConnectorObject name="HR_Departments">
+                  <FieldList>
+                    <ConnectorField filterable="true" name="department_name" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="cost_center" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="manager_id" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="building_location" selectable="true" selected="true" sortable="true"/>
+                    <ConnectorField filterable="true" name="job_family" selectable="true" selected="true" sortable="true"/>
+                  </FieldList>
+                </ConnectorObject>
+              </Fields>
+              <Inputs>
+                <Input key="1" name="department_code"/>
+              </Inputs>
+            </QueryOptions>
+          </Options>
+        </GenericOperationConfig>
+      </Configuration>
+      <Tracking><TrackedFields/></Tracking>
+      <Caching/>
+    </Operation>
+  </bns:object>
+</bns:Component>
