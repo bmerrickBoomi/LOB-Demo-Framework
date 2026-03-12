@@ -150,7 +150,7 @@ ax.text(14.55, 8.18, 'BOOMI API CONTROL PLANE', color=PURPLE, fontsize=8,
 ax.text(14.55, 7.94,
     'Federated Discovery  •  Multi-Gateway Governance  •  OWASP Security  •  OpenAPI Conformance',
     color=PURPLE_DARK, fontsize=8.5, ha='center', va='center', zorder=6, style='italic')
-step_badge(17.4, 8.68, '3', PURPLE, size=10)
+step_badge(17.4, 8.68, '4', PURPLE, size=10)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # COMPONENT C — HTTP arrow: Console → Boomi Runtime  STEP 5
@@ -163,7 +163,7 @@ ax.text(7.8, 9.0, 'POST /api/enrollment/register', color=PURPLE, fontsize=7.5,
     bbox=dict(boxstyle='round,pad=0.15', facecolor=CARD, edgecolor=BORDER, alpha=0.9))
 ax.text(7.8, 8.77, '{ "term": "Spring-2025", "event": "enrollment" }', color=PURPLE_DARK,
     fontsize=7, ha='center', va='center', rotation=-18, zorder=7)
-step_badge(7.82, 7.65, '5', PURPLE, size=10)
+step_badge(7.82, 7.65, '3', PURPLE, size=10)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # COMPONENT DH — Boomi Data Hub  STEP 4
@@ -193,7 +193,7 @@ ax.text(3.0, 4.3,  'Boomi Data Hub', color=TEXT, fontsize=11,
 ax.text(3.0, 4.02, 'Student  •  Employee  •  Finance', color=TEXT2, fontsize=9,
     ha='center', va='center', zorder=5)
 
-step_badge(1.4, 7.95, '4', PURPLE, size=10)
+step_badge(1.4, 7.95, '5', PURPLE, size=10)
 
 # Bidirectional: Data Hub ↔ Boomi Runtime
 arrow(4.5, 6.1, 8.1, 6.1, PURPLE_DARK, lw=2.0, style='<->', zorder=6)

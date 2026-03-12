@@ -34,7 +34,13 @@
       "Read(//tmp/**)",
       "Read(//mnt/c/users/BrianMerrick/AppData/Local/Temp/**)",
       "Bash(uv run:*)",
-      "WebFetch(domain:brand.boomi.com)"
+      "WebFetch(domain:brand.boomi.com)",
+      "Bash(python3.11 -c \"import docx; print\\('ok'\\)\" 2>&1 || pip3.11 install python-docx 2>&1 | tail -5)",
+      "WebFetch(domain:www.figma.com)",
+      "WebFetch(domain:www.schemecolor.com)",
+      "WebFetch(domain:cdn.worldvectorlogo.com)",
+      "WebFetch(domain:usbrandcolors.com)",
+      "WebFetch(domain:www.color-hex.com)"
     ]
   }
 }
