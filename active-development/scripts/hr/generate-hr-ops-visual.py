@@ -104,7 +104,7 @@ ax.text(12.3, 8.18, 'BOOMI API CONTROL PLANE', color=PURPLE, fontsize=8,
 ax.text(12.3, 7.94, 'Federated Discovery  •  Multi-Gateway Governance  •  OWASP Security  •  OpenAPI Conformance',
         color=PURPLE_DARK, fontsize=8.5, ha='center', va='center', zorder=6, style='italic')
 # Step badge 3 — Boomi API Control Plane
-step_badge(8.6, 8.68, '3', '#7c3aed', size=10)
+step_badge(8.6, 8.68, '5', '#7c3aed', size=10)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # TITLE & SUBTITLE
@@ -205,7 +205,7 @@ ax.text(6.6, 7.99, '{ "question": "..." }', color=PURPLE_DARK, fontsize=7,
         ha='center', va='center', rotation=-18, zorder=7)
 
 # Step badge 5 (consolidated: HTTP POST arrow + Boomi Runtime)
-step_badge(6.2, 7.68, '5', '#7c3aed', size=10)
+step_badge(6.2, 7.68, '3', '#7c3aed', size=10)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # COMPONENT DH — Boomi Data Hub (left of Boomi Runtime, Employee 360)
@@ -442,8 +442,7 @@ ax.text(11.5, 10.82, '{ "success": true, "data": { "answer": "..." } }',
         bbox=dict(boxstyle='round,pad=0.2', facecolor=CARD, edgecolor=BORDER, alpha=0.9))
 
 # Step badges 9 and 10
-step_badge(17.2, 8.5, '9', '#16a34a', size=10)
-step_badge(10.5, 11.5, '10', '#16a34a', size=10)
+step_badge(10.5, 11.5, '9', '#16a34a', size=10)
 
 # ═══════════════════════════════════════════════════════════════════════════════
 # COMPONENT J — Final display in AI panel
@@ -462,10 +461,10 @@ ax.text(5.675, 9.125, 'Boomi AI Connected', color='white', fontsize=4.5,
         ha='center', va='center', zorder=8)
 
 # Final step badge (checkmark)
-circle(5.3, 12.45, 0.32, '#16a34a', 'white', 1.5, zorder=9)
-ax.text(5.3, 12.45, '✓', color='white', fontsize=11,
+circle(5.3, 12.75, 0.32, '#16a34a', 'white', 1.5, zorder=9)
+ax.text(5.3, 12.75, '✓', color='white', fontsize=11,
         fontweight='bold', ha='center', va='center', zorder=10)
-ax.text(5.3, 12.0, 'FINAL', color=GREEN_SOFT, fontsize=7,
+ax.text(5.3, 12.3, 'FINAL', color=GREEN_SOFT, fontsize=7,
         ha='center', va='center', zorder=9)
 
 # ═══════════════════════════════════════════════════════════════════════════════
