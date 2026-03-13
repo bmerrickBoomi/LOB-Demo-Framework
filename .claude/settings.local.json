@@ -53,7 +53,8 @@
       "Bash(cd /tmp && curl -sL \"https://fonts.google.com/download?family=Poppins\" -o poppins.zip && unzip -q poppins.zip -d poppins && ls poppins/*.ttf | head -5)",
       "Bash(cd /tmp && unzip -q \"/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/temp/Enterprise Integration Platform - Technology Questionnaire.xlsx\" -d tech_questionnaire 2>&1 | head -20 && find tech_questionnaire -name \"*.xml\" -type f | head -5)",
       "Bash(unzip -q \"/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/temp/Enterprise Integration Platform Questionnaire - Appendix A.xlsx\" -d /tmp/appendix_a 2>&1 && echo \"Extracted Appendix A\")",
-      "Bash(unzip -q \"/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/temp/NYU Langone company profile.xlsx\" -d /tmp/company_profile 2>&1 && echo \"Extracted Company Profile\")"
+      "Bash(unzip -q \"/mnt/c/users/BrianMerrick/Documents/Dev/ClaudeCode/boomicompanion_template_workspace/temp/NYU Langone company profile.xlsx\" -d /tmp/company_profile 2>&1 && echo \"Extracted Company Profile\")",
+      "WebFetch(domain:)"
     ]
   }
 }
